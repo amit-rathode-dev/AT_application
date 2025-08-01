@@ -1,0 +1,417 @@
+<div class="container-fluid custom-wrapper">
+  <div class="card">
+    <div class="card-body">
+      <div class="row mb-4">
+
+
+
+        <div class="col-md-6  mb-3 mb-md-0">
+          <div class="search-container">
+            <input type="text" class="form-control custm-search search-input" placeholder="Search Category..."
+              (input)="applyFilterGlobal($event, 'contains')">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+        </div>
+
+
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+
+
+          <button class="btn btn-success btn-sm" type="button" (click)="CreateNew()">
+            <span class="pi pi-plus p-1"></span> Create New
+          </button>
+
+        </div>
+      </div>
+
+      <p-table #dt [value]="categoryData" [paginator]="true" [rows]="7" [rowsPerPageOptions]="[7, 10, 20, 50]"
+        [globalFilterFields]="['name', 'fuel', 'lowRange' ,'highRange','description']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+        dataKey="org_name" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th pSortableColumn="sr.no" style="text-align: center;">Sr.No</th>
+            <th pSortableColumn="category_name" style="text-align: center;">Category Name</th>
+            <th pSortableColumn="roles">Fuel</th>
+            <th pSortableColumn="roles">Product Ranges</th>
+            <th pSortableColumn="roles">Category Type</th>
+            <!-- <th pSortableColumn="roles">Category Type Image</th> -->
+            <th pSortableColumn="occurrences">Category Details</th>
+            <th pSortableColumn="occurrences">Category Image</th>
+            <th pSortableColumn="occurrences">Action</th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item let-itr="rowIndex">
+          <tr>
+            <td class="text-center">{{ itr + 1 }}</td>
+            <td class="org-name-column">{{ item.name }}</td>
+
+            <td class="org-name-column">
+              <div *ngFor="let f of item.fuel">
+                {{ f.name }}
+              </div>
+            </td>
+
+            <td class="org-name-column">
+
+              <div>
+                <div *ngFor="let f of item.fuel" class="text-center">
+                  {{ f.lowRange }} - {{ f.highRange }}
+                </div>
+              </div>
+
+            </td>
+            <td class="text-center">
+              {{item.category_type_name}}
+            </td>
+
+            <!-- <td class="org-name-column">
+              <img [src]="environment + item.category_type_image" class="img-fluid cat-type-image" (click)="onImageClick(item,true)"/>
+
+            </td> -->
+
+            <td class=" ml-5" (click)="openDescription(item)"><a> <img src="/assets/eye.svg"
+                  class="iconimg2  teal-clickable"> </a></td>
+
+            <td class="org-name-column">
+              <img [src]="environment + item.image" class="img-fluid cat-img" (click)="onImageClick(item,false)" />
+
+            </td>
+
+            <td>
+              <div class="action-buttons">
+
+                <a> <img src="/assets/trash-icon.svg" (click)="deleteCategory(item)"> </a>
+
+                <a> <img src="/assets/file-upload.svg" class="iconimg2" (click)="editProductImage(item)"> </a>
+
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{width: '100%', maxWidth: '700px'}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  class="custom-border-popup">
+
+  <div class="org-popup-container px-4">
+    <div class="popup-header d-flex justify-content-between align-items-center p-2">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      <h4 class="mb-3 pt-3 custom-color-h4">Create Category</h4>
+
+      <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn"><img
+          src="/assets/close.svg"></button>
+    </div>
+
+    <div class="popup-body p-3">
+
+      <form [formGroup]="categoryForm" (ngSubmit)="submitForm()">
+        <div class="row">
+
+          <div class="col-12 col-md-4">
+            <label class="form-label">Category Name <span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-input custom-placeholder "
+              placeholder="Enter Category" formControlName="category_name" />
+            <div class="text-danger custom-error"
+              *ngIf="categoryForm.get('category_name')?.invalid && (categoryForm.get('category_name')?.touched || formSubmitted)">
+              Category is required
+            </div>
+          </div>
+
+
+          <div class="col-12 col-md-4">
+            <label for="organization" class="form-label">Fuel <span class="text-danger">*</span></label>
+            <select class="form-select form-select-sm custom-input form-control" id="organization"
+              formControlName="fuel_id">
+
+              <option value="" class="custom-placeholder" selected>Select Fuel</option>
+              <option *ngFor="let itr of fuelData" [value]="itr.id">{{ itr.name }}</option>
+            </select>
+            <div class="text-danger custom-error"
+              *ngIf="categoryForm.get('fuel_id')?.invalid && (categoryForm.get('fuel_id')?.touched || formSubmitted)">
+              Fuel is required
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label for="organization" class="form-label">Category Type <span class="text-danger">*</span></label>
+            <select class="form-select form-select-sm custom-input form-control" id="organization"
+              formControlName="categoryType">
+
+              <option value="" class="custom-placeholder" selected>Select Category Type</option>
+              <option *ngFor="let itr of incomingCatTypeData" [value]="itr.id">{{ itr.name }}</option>
+            </select>
+            <div class="text-danger custom-error"
+              *ngIf="categoryForm.get('categoryType')?.invalid && (categoryForm.get('categoryType')?.touched || formSubmitted)">
+              Category Type is required
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4 mt-3">
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <label class="form-label">Product Ranges <span class="text-danger">*</span></label>
+              <div class="row">
+
+
+                <div class="col-6 col-md-4">
+                  <input type="number" min="0" step="0.01" class="form-control form-control-sm custom-input"
+                    placeholder="From" formControlName="range_from" (input)="onRangeFromChange($event)" />
+
+                </div>
+                <div class="col-6 col-md-4">
+                  <input type="number" class="form-control form-control-sm" placeholder="To" formControlName="range_to"
+                    (input)="onRangeToChange($event)" />
+
+
+                </div>
+
+                <div class="col-12 col-md-2 d-none d-md-block">
+                  <span class="fw-bold">KVA</span>
+                </div>
+
+                <div class="col-5">
+
+                  <div class="text-danger custom-error"
+                    *ngIf="categoryForm.get('range_from')?.invalid && categoryForm.get('range_from')?.touched">
+                    From value is required
+                  </div>
+
+                  <div class="text-danger custom-error" *ngIf="productRangeFromErrorMessage">
+                    {{ productRangeFromErrorMessage}}
+                  </div>
+                </div>
+
+
+                <div class="col-7">
+
+
+                </div>
+
+                <div class="text-danger custom-error"
+                  *ngIf="ismanuallyCleared && categoryForm.get('range_to')?.hasError('required') && categoryForm.get('range_to')?.touched  && !productRangeToErrorMessage">
+                  To value is required and it should be greater than From Value
+                </div>
+
+
+                <div class="text-danger custom-error" *ngIf="productRangeToErrorMessage">
+                  {{ productRangeToErrorMessage}}
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Product Range Image <span class="text-danger">*</span></label>
+
+              <div class="row">
+
+
+                <div class="col-12 col-md-9">
+                  <input #productRangeFileInput type="file" class="form-control form-control-sm custom-file-input"
+                    formControlName="prf" (change)="onFileSelected($event,productRangeFileInput)"
+                    (blur)="onProductImageTouched()" />
+
+
+                  <div class="text-danger custom-error"
+                    *ngIf="categoryForm.get('prf')?.touched && categoryForm.get('prf')?.invalid && !productRangeImageError">
+                    {{ productrangetouchError }}
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-3">
+                  <button type="button" class="btn btn-success btn-sm w-100" (click)="addProductRange()"
+                    [disabled]="product_range.length > 0">+ Add</button>
+                </div>
+
+                <div class="text-danger custom-error" *ngIf="productRangeImageError">
+                  {{ productRangeImageError }}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="table-responsive mb-3" *ngIf="product_range.length > 0">
+          <table class="table table-sm dotted-border align-middle text-center">
+            <thead class="custom-header">
+              <tr class="temp">
+                <th>From</th>
+                <th>To</th>
+                <th>Image</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let range of product_range; let i = index">
+                <td>{{ range.range_from }}</td>
+                <td>{{ range.range_to }}</td>
+                <td>
+                  <img [src]="range.preview" alt="Image" style="height: 40px;">
+
+                </td>
+                <td>
+                  <img class="action-buttons" src="/assets/remove-icon.svg" alt="Delete" (click)="removeRange(i)" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+        <div class="col-12 col-md-12 mb-3">
+          <label class="form-label">Category Description <span class="error">*</span></label>
+          <textarea class="form-control form-control-sm custom-placeholder custom-input" placeholder="Description"
+            formControlName="description" rows="3"></textarea>
+          <div class="text-danger custom-error"
+            *ngIf="categoryForm.get('description')?.invalid && (categoryForm.get('description')?.touched || formSubmitted)">
+            Description is required
+          </div>
+        </div>
+
+
+        <div class="row g-2 align-items-center">
+
+          <label class="form-label">Category Image <span class="text-danger">*</span></label>
+          <input #categoryImageInput type="file" class="form-control form-control-sm custom-file-input custom-input"
+            (change)="onCategoryImageSelected($event,categoryImageInput)" formControlName="category_image"
+            (blur)="onCategoryImageTouched()" />
+
+          <!-- <div class="text-danger custom-error" *ngIf="categoryImageError">
+            {{ categoryImageError }}
+          </div> -->
+
+          <div class="text-danger custom-error"
+            *ngIf="categoryForm.get('category_image')?.touched && categoryForm.get('category_image')?.invalid">
+            {{ categoryImageError }}
+          </div>
+
+        </div>
+
+        <div class="d-flex justify-content-center mt-5">
+          <button type="submit" class="btn btn-success custom-btn btn-width">Submit</button>
+
+        </div>
+      </form>
+
+    </div>
+  </div>
+</p-dialog>
+
+
+<!-- [style]="{ width:'100%', maxWidth:'900px', height: '100%'}"  -->
+
+<p-dialog [(visible)]="catDetailsView" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '90vw', maxWidth: '800px', height: 'auto', maxHeight: '90vh' }" [contentStyle]="{ padding: '1rem' }"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeImageDialog()"
+  styleClass="register-popup">
+
+
+
+  <ng-container>
+
+
+
+    <app-category-details></app-category-details>
+
+
+  </ng-container>
+
+
+
+
+</p-dialog>
+
+
+<p-dialog [(visible)]="isImageView" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '80vw', maxWidth: '800px', height: '500px', maxHeight: '90vh' }"
+  [contentStyle]="{ padding: '1rem' }" [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true"
+  (onHide)="closeImageDialog()" styleClass="register-popup">
+
+
+
+  <ng-container>
+
+
+
+    <app-image-view></app-image-view>
+
+
+  </ng-container>
+
+
+
+
+</p-dialog>
+
+
+
+
+
+<p-dialog [(visible)]="editProductImageVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '90vw', maxWidth: '800px', height: 'auto', maxHeight: '90vh' }" [contentStyle]="{ padding: '1rem' }"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  styleClass="register-popup">
+
+  <form [formGroup]="addImagesForm">
+    <div class="row">
+      <div class="col-md-4">
+        <label>Product File Name</label>
+        <input type="text" class="form-control" formControlName="image_names" placeholder="Product Image Name">
+      </div>
+
+      <div class="col-md-5">
+        <label>Product Image</label>
+        <input type="file" class="form-control" (change)="onImageSelect($event)">
+      </div>
+
+      <div class="col-md-3 d-flex align-items-end">
+        <button type="button" class="btn btn-primary" (click)="addImages()">Add</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Table for preview -->
+  <table class="table mt-4" *ngIf="changeProdImagePairs.length > 0">
+    <thead>
+      <tr>
+        <th>Product Image Name</th>
+        <th>File Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of changeProdImagePairs; let i = index">
+        <td>{{ item.name }}</td>
+        <td>{{ item.file.name }}</td>
+        <td>
+          <button class="btn btn-sm btn-danger">Remove</button>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <!-- Final submit -->
+  <div class="text-center mt-3">
+    <button class="btn btn-success" (click)="submitImages()">Submit All</button>
+  </div>
+
+
+
+
+</p-dialog>

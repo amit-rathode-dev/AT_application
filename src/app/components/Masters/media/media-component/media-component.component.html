@@ -1,0 +1,319 @@
+<div class="container-fluid custom-wrapper">
+    <div class="card">
+        <div class="card-body">
+
+
+
+            <div class="row mb-4 align-items-center">
+
+                <div class="col-md-8 mb-3 mb-md-0 d-flex flex-wrap align-items-center gap-2">
+                    <div class="search-container position-relative flex-grow-1" style="min-width: 250px;">
+                        <input type="text" class="form-control custm-search search-input" placeholder="Search Media..."
+                            (input)="applyFilterGlobal($event, 'contains')">
+                        <i class="fas fa-search search-icon position-absolute"
+                            style="right: 10px; top: 50%; transform: translateY(-50%); color: #999;"></i>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fas fa-filter icon-white"></i> Media Type
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item"
+                                    (click)="filterMediaType('presentation')">Presentation</button></li>
+                            <li><button class="dropdown-item"
+                                    (click)="filterMediaType('catalogues')">Catalogues</button>
+                            </li>
+
+                            <li><button class="dropdown-item" (click)="filterMediaType('customer_referance')">Customer
+                                    Reference</button>
+                            </li>
+                            <li><button class="dropdown-item" (click)="filterMediaType('activity')">Activity</button>
+                            </li>
+                            
+
+                        </ul>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fas fa-filter icon-white"></i> Type
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item"
+                                    (click)="filterMediaTypeCategorywise('Product')">Product</button></li>
+                            <li><button class="dropdown-item"
+                                    (click)="filterMediaTypeCategorywise('Ranges')">Ranges</button>
+                            </li>
+                            <!-- <li><button class="dropdown-item" (click)="filterMediaType('images')">Images</button></li> -->
+                            <li>
+                                <button class="dropdown-item text-danger"
+                                    (click)="filterMediaTypeCategorywise('Ranges')">Categories</button>
+                            </li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="btn-group">
+
+                        <a class="reset-icon-wrapper" (click)="resetMediaTypeFilter()">
+                            <img class="img-fluid custom-reset-img" src="/assets/reset-button.svg" tooltipPosition="top"
+                                pTooltip="Reset">
+                        </a>
+
+                    </div>
+
+
+
+                </div>
+
+
+                <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                    <button class="btn btn-success btn-sm" type="button" (click)="CreateNew()">
+                        <span class="pi pi-plus p-1"></span> Create New
+                    </button>
+                </div>
+
+            </div>
+
+
+
+            <p-table #table [value]="tableData" [paginator]="true" [rows]="7" [rowsPerPageOptions]="[7, 10, 20, 50]"
+                [globalFilterFields]="['type', 'name','file_name','product_name', 'from_Date' ,'to' ,'media_type']"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+                dataKey="org_name" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll"
+                [scrollable]="true">
+                <ng-template pTemplate="header">
+                    <tr class="user-table-header">
+                        <th class="text-center align-items">Sr.No</th>
+
+                        <th class="text-center align-items">Media Type</th>
+                        <th class="text-center align-items">File Name</th>
+                        <th class="text-center align-items">Product/Range/Category</th>
+                        <th class="text-center align-items">File/Video Link</th>
+                        <th class="text-center align-items">Action </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-itr="rowIndex">
+                    <tr>
+                        <td class="text-center align-items">{{itr+1}}</td>
+                        <td class="text-center align-items">{{ item.media_type | noData}}
+                        </td>
+                        <td class="text-center align-items">{{ item.file_name | noData }}
+                        </td>
+                        <td class="text-center align-items">
+                            {{
+                            item.product_name ? item.product_name :
+                            item.category ? item.category :
+                            (item.range_from != null && item.range_to != null ? item.range_from + ' - ' + item.range_to
+                            : 'NA')
+                            }}
+                        </td>
+
+                        <td class="text-center align-items teal-clickable" (click)="openFile(item.file_path)"> View File
+                        </td>
+
+
+                        <td class="text-center align-items">
+                            <span class="p-column-title">Action</span>
+                            <div class="action-buttons">
+
+                                <a> <img src="/assets/trash-icon.svg" (click)="deleteMedia(item)"> </a>
+
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="true" [resizable]="true"
+    [style]="{width: '100%', maxWidth: '800px'}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+    [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+    styleClass="custom-media">
+
+    <div class="org-popup-container px-4">
+        <div class="popup-header d-flex justify-content-between align-items-center p-2">
+            <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+            <h4 class="mb-3 pt-3 custom-color-h4">Create Media</h4>
+
+            <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">×</button>
+        </div>
+
+        <div class="popup-body p-3">
+
+
+
+            <form [formGroup]="mediaForm" (ngSubmit)="onSubmit()">
+
+                <div class="row">
+
+                    <div class="col-md-12 mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control form-control-sm custom-input custom-placeholder"
+                            placeholder="Enter Name" id="Name" id="name" formControlName="name" required>
+                    </div>
+
+
+
+                    <div class="col-md-12 mb-3">
+                        <label for="media_type" class="form-label">Media Type</label>
+                        <select id="media_type" formControlName="media_type"
+                            class="form-select form-select-sm  form-control custom-input custom-placeholder"
+                            (change)="onMediaTypeChange($event)" id="category" required>
+                            <option value="" disabled selected>Select Media Type</option>
+                            <option value="presentation">PPT</option>
+                            <option value="catalogues">Catalogue</option>
+                            <option value="video">Video</option>
+                            <option value="customer_referance">Customer References</option>
+                            <option value="activity">Activity</option>
+                        </select>
+                    </div>
+
+
+                    <div class="col-md-12 mb-3 " *ngIf="showTypeSelect">
+                        <label for="type" class="form-label">Type</label>
+                        <select id="type" formControlName="type"
+                            class="form-select form-select-sm  form-control custom-input custom-placeholder" required
+                            (change)="onTypeChange($event)">
+                            <option value="" disabled selected>Select Type</option>
+                            <option value="product">Product</option>
+                            <option value="category">Category</option>
+                        </select>
+                    </div>
+
+
+                    <!-- <div class="col-md-12 mb-3" >
+                        <label for="selected_value" class="form-label">Please Select</label>
+
+                        <select *ngIf="selectedData.length > 0" id="selected_value" formControlName="selected_value"
+                            class="form-select form-select-sm  form-control custom-input custom-placeholder" required>
+                            <option value="" disabled selected>Select Value</option>
+                            <option *ngFor="let item of selectedData" [value]="item.id">{{ item.name }}</option>
+                        </select>
+
+
+                        <select *ngIf="selectedData.length === 0" id="selected_value" formControlName="selected_value"
+                            class="form-select form-select-sm  form-control custom-input custom-placeholder">
+                            <option value="" disabled selected>Select Value</option>
+                            <option *ngFor="let item of rangesData" [value]="item.productRangeId">{{ item?.lowRange }} -
+                                {{item?.highRange}}</option>
+                        </select>
+                    </div> -->
+
+
+
+
+                    <div class="col-md-12 mb-3"
+                        *ngIf="mediaForm.get('media_type')?.value !== 'activity' && mediaForm.get('media_type')?.value !== 'customer_referance' ">
+                        <label for="selected_value" class="form-label">Please Select</label>
+
+                        <select *ngIf="selectedData.length > 0" id="selected_value" formControlName="selected_value"
+                            class="form-select form-select-sm form-control custom-input custom-placeholder" required>
+                            <option value="" disabled selected>Select Value</option>
+                            <option *ngFor="let item of selectedData" [value]="item.id">{{ item.name }}</option>
+                        </select>
+
+                        <select *ngIf="selectedData.length === 0" id="selected_value" formControlName="selected_value"
+                            class="form-select form-select-sm form-control custom-input custom-placeholder">
+                            <option value="" disabled selected>Select Value</option>
+                            <option *ngFor="let item of rangesData" [value]="item.productRangeId">
+                                {{ item?.lowRange }} - {{ item?.highRange }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 mb-3" *ngIf="['catalogues',]
+                                  .includes(mediaForm.get('media_type')?.value)">
+                        <label for="attachments" class="form-label">Catalogue thumbnail</label>
+                        <input type="file" class="form-control" (change)="onThumbNailUpload($event)"
+                        accept="image/*" #fileInput>
+
+
+                    </div>
+
+
+                    <div class="col-md-12 mb-3" *ngIf="!['video', 'activity', 'customer_referance']
+                                  .includes(mediaForm.get('media_type')?.value)">
+                        <label for="attachments" class="form-label">Document</label>
+                        <input type="file" class="form-control form-control-sm custom-input custom-placeholder"
+                            id="attachments" (change)="onFileChange($event)" accept=".pdf,.doc,.docx,.ppt,.pptx"
+                            class="form-control" #fileInput>
+
+                    </div>
+
+                    <div class="col-md-12 mb-3" *ngIf="[ 'customer_referance']
+                                  .includes(mediaForm.get('media_type')?.value)">
+                        <label for="attachments" class="form-label">Upload Testimonal</label>
+                        <input type="file" class="form-control form-control-sm custom-input custom-placeholder"
+                            id="attachments" (change)="onFileUpload($event)" accept=".pdf,.doc,.docx,.ppt,.pptx"
+                            class="form-control" multiple>
+
+                    </div>
+
+
+
+                    <div
+                        *ngIf="mediaForm.get('media_type')?.value === 'video' || mediaForm.get('media_type')?.value === 'activity'  ">
+                        <div class="mb-3">
+                            <label for="videoLink" class="form-label">Activity Link</label>
+                            <span style="color: red; font-size: 12px;">
+                                (Paste video link below)
+                            </span>
+                            <input type="text" class="form-control form-control-sm custom-input custom-placeholder"
+                                id="videoLink" formControlName="videoLink" placeholder="Video Link">
+                        </div>
+                    </div>
+
+
+                    <div *ngIf="mediaForm.get('media_type')?.value === 'activity'  ">
+                        <div class="mb-3">
+                            <label for="description" class="form-label"> Description<span
+                                    class="text-danger">*</span></label>
+                            <textarea class="form-control form-control-sm custom-input custom-placeholder"
+                                id="description" rows="4" formControlName="description"
+                                placeholder="Description"></textarea>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="d-flex justify-content-center mt-5">
+                    <button type="submit" class="btn btn-success custom-btn btn-width update-button">Submit</button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog [(visible)]="isvisible" [modal]="true" [draggable]="true" [resizable]="true"
+    [style]="{ width:'100%', maxWidth:'900px', height: '90%'}" [contentStyle]="{ padding: '1rem' }" [showHeader]="false"
+    [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()" styleClass="custom-media">
+
+
+
+    <ng-container>
+
+
+
+        <app-view-medi></app-view-medi>
+
+
+    </ng-container>
+
+
+
+
+</p-dialog>

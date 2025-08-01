@@ -1,0 +1,19 @@
+<div class="layout-wrapper body">
+    <app-header></app-header>
+    
+    <div class="layout-content">
+    
+        <app-side-nav  (sidebarStateChange)="onSidebarStateChange($event)" ></app-side-nav>
+  
+        <main class="main-content" [ngClass]="{ 'app-side-nav-active': isSidebarVisible,  
+        'sidebar-close': isSidebarClose, 
+        'sidebar-open': !isSidebarClose}">
+          <div class="content-wrapper">
+            <router-outlet></router-outlet>
+          </div>
+        </main>
+     
+    </div>
+    
+    <!-- <app-footear></app-footear> -->
+  </div>

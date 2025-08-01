@@ -1,0 +1,47 @@
+<div class="custom-popup">
+
+
+    <div class="org-popup-container px-3 px-md-4">
+
+        <div class="popup-header d-flex justify-content-between align-items-center p-2">
+            <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+            <h4 class="mb-0 pt-2 pt-md-3 custom-color-h4 text-center flex-grow-1">Description</h4>
+            <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">
+                <img src="/assets/close.svg">
+            </button>
+        </div>
+
+
+        <div class="row mt-3 mb-3 mt-5">
+            <div class="col-12 teal-clickable ">
+                <h5>{{ categoryDetails?.name }}</h5>
+            </div>
+
+            <div class="col-12">
+                <p><strong>Description:</strong>
+                    <span>
+                        <p>{{ categoryDetails?.description }}</p>
+                    </span>
+                </p>
+
+            </div>
+
+
+        </div>
+
+        <p>
+            Image:
+        </p>
+
+        <div class="row mt-3 mb-2" *ngIf="categoryDetails?.image">
+            <div class="col-md-6">
+      
+                    <img [src]="environment + categoryDetails.image" alt="Category Image" class="img-fluid img-fix" />
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>

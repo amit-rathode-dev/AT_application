@@ -1,0 +1,67 @@
+<div class="container-fluid video-player-wrapper">
+  <div class="card">
+
+
+    <div class="row">
+      <div class="popup-header d-flex justify-content-between align-items-center">
+        <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30" style="margin-left: 0px;">
+        <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn" style="margin-right: 10px;">
+          <img src="assets/close.svg" alt="Close" />
+        </button>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="row mb-5">
+
+        <div class="col-md-6 m-5 custom-video-css">
+
+          <div class="mb-2">
+            <h5 *ngIf="currentVideo?.file_name" >
+              {{ currentVideo.file_name }}
+            </h5>
+          </div>
+
+          <div class="main-video" [ngClass]="{ 'fullscreen-video': isFullScreen }"   (dblclick)="onVideoDoubleClick()">
+            <iframe #videoIframe *ngIf="currentVideo" class="custom-video" [src]="sanitizeVideoUrl(currentVideo)"
+              frameborder="0" allow="autoplay; fullscreen" allowfullscreen width="100%" height="360px">
+            </iframe>
+          </div>
+      
+          <div class="mt-2">
+            <button class="btn btn-sm btn-success" (click)="openFullscreen()"> <img class="icon-size"
+                src="/assets/fullscreen.svg ">Open Fullscreen</button>
+                
+          </div>
+        </div>
+
+
+
+
+        <div class="col-md-4 mt-5 ml-8 custom-mar">
+          <div *ngIf="videoList.length > 0">
+            <div class="video-queue">
+              <h5>See All Videos</h5>
+
+
+              <div *ngFor="let video of videoList; let i = index" (click)="playVideo(i)">
+                <div class="video-name">{{ video.file_name }}</div>
+                <img [src]="'https://img.youtube.com/vi/' + getVideoId(video.video_link) + '/0.jpg'"
+                  alt="{{ video.file_name }}" class="video-thumbnail video-player-img" />
+
+              </div>
+
+            </div>
+          </div>
+
+          <div *ngIf="!videoList?.length">
+            <p>No videos available</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

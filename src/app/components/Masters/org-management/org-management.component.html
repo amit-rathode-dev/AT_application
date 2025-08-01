@@ -1,0 +1,320 @@
+<div class="container-fluid custom-wrapper">
+  <div class="card">
+    <div class="card-body">
+ 
+      <div class="row mb-4 align-items-center">
+
+        <div class="col-md-8 mb-3 mb-md-0 d-flex flex-wrap align-items-center gap-2">
+          <div class="search-container position-relative flex-grow-1" style="min-width: 250px;">
+            <input type="text" class="form-control custm-search search-input" placeholder="Search Org..."
+              (input)="applyFilterGlobal($event, 'contains')">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fas fa-filter icon-white"></i> Org Type
+            </button>
+            <ul class="dropdown-menu">
+              <li><button class="dropdown-item" (click)="filterOrg('GOEM')">GOEM</button></li>
+              <li><button class="dropdown-item" (click)="filterOrg('KGD')">KGD</button>
+              </li>
+
+              <li><button class="dropdown-item" (click)="filterOrg('Self')">KOEL</button>
+              </li>
+
+
+            </ul>
+          </div>
+
+          <div class="btn-group">
+
+            <a class="reset-icon-wrapper" (click)="resetOrgFilter()">
+              <img class="delete-icon" src="/assets/reset-button.svg" tooltipPosition="top" pTooltip="Reset">
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-md-4 text-md-end mt-2 mt-md-0">
+          <button class="btn btn-success btn-sm" type="button" (click)="createOrganization()"><span
+              class="pi pi-plus p-1"></span> Create New</button>
+        </div>
+
+      </div>
+
+
+      <p-table #dt [value]="orgData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[ 10, 20, 50]"
+        [globalFilterFields]="['org_name', 'role']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+        dataKey="org_name" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th>Sr.No</th>
+            <th style="text-align: center;">Org Name </th>
+            <th>Roles</th>
+
+
+            <th>Occurrences</th>
+            <th>Org Type</th>
+            <th>Action </th>
+
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+          <tr>
+            <td>{{rowIndex +1}}</td>
+            <td class="text-center align-middle wrap-text ">{{ item.org_name }}</td>
+            <td>
+              <div *ngFor="let role of item.roles; let i = index">
+                <ng-container *ngIf="role !== 'Admin'">
+                  {{ role }}
+                </ng-container>
+              </div>
+            </td>
+            <td>
+              <div *ngFor="let occ of item.occurrences; let i = index">
+                <ng-container *ngIf="item.roles[i] !== 'Admin'">
+                  {{ occ }}
+                </ng-container>
+              </div>
+            </td>
+            <td class="org-name-column">{{ item.org_type_name }}</td>
+            <td>
+              <span class="p-column-title">Action</span>
+              <div class="action-buttons">
+
+                <a> <img src="/assets/edit-icon.svg" (click)="editOrg(item)"></a>
+
+                <a> <img src="/assets/trash-icon.svg" (click)="deleteOrg(item)"> </a>
+
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{width: '100%', maxWidth: '800px'}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  class="custom-border-popup">
+
+  <div class="org-popup-container px-5">
+    <div class="popup-header d-flex justify-content-between align-items-center p-2">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      <h4 *ngIf="!isEditOrg" class="mb-3 pt-3 custom-color-h4">Organization Information</h4>
+      <h4 *ngIf="isEditOrg" class="mb-3 pt-3 custom-color-h4"> Edit Organization Role Hierarchy </h4>
+
+      <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">×</button>
+    </div>
+
+    <div class="popup-body p-3">
+
+      <div class="organization-form-container">
+        <form [formGroup]="orgForm" (ngSubmit)="submitForm()">
+          <div class="row g-3" style="align-items: center;">
+            <div class="col-12 col-lg-4 col-md-6">
+              <label class="form-label">Organization Name <span class="error">*</span></label>
+              <input type="text" class="form-control form-control-sm" placeholder="Enter Organization"
+                formControlName="name">
+              <div class="text-danger small" style="min-height: 18px;">
+                <span *ngIf="orgForm.get('name')?.invalid && orgForm.get('name')?.touched">
+
+                  Organization required
+                </span>
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-lg-4 col-md-6" *ngIf="!isEditOrg">
+              <label class="form-label">Org Type <span class="error">*</span></label>
+              <select class="form-select form-select-sm" formControlName="selectedOrgtype">
+                <option value="" disabled selected>--Select--</option>
+                <option *ngFor="let item of orgTypeData" [value]="item.id">{{ item.name }}</option>
+              </select>
+              <div class="text-danger small" style="min-height: 18px;">
+                <span *ngIf="orgForm.get('selectedOrgtype')?.invalid && orgForm.get('selectedOrgtype')?.touched">
+                  Org Type is required
+                </span>
+              </div>
+            </div>
+
+
+            <div class="col-12 col-lg-4 col-md-8" *ngIf="!isEditOrg">
+              <label class="form-label">Zone <span class="error">*</span></label>
+              <select class="form-select form-select-sm" formControlName="selectedZone" (change)="onRoleChange($event)">
+                <option value="" disabled selected>--Select--</option>
+                <option *ngFor="let zone of zoneData" [value]="zone.id">
+                  {{ zone.name }}
+                </option>
+              </select>
+              <div class="text-danger small" style="min-height: 18px;">
+                <span *ngIf="orgForm.get('selectedZone')?.invalid && orgForm.get('selectedZone')?.touched">
+                  Role is required
+                </span>
+              </div>
+            </div>
+
+
+            <div class="col-12 col-lg-4 col-md-8" *ngIf="isEditOrg">
+              <label class="form-label">Zone<span class="error">*</span></label>
+              <select class="form-select form-select-sm" formControlName="selectedZone">
+                <option value="" disabled selected>--Select--</option>
+                <option *ngFor="let zone of zoneData" [value]="zone.id">
+                  {{ zone.name }}
+                </option>
+              </select>
+              <div class="text-danger small" style="min-height: 18px;">
+                <span *ngIf="orgForm.get('selectedZone')?.invalid && orgForm.get('selectedZone')?.touched">
+                  Role is required
+                </span>
+              </div>
+            </div>
+
+
+            <div class="col-12 col-lg-4 col-md-6 temp" *ngIf="isEditOrg">
+              <label class="form-label" style="margin-top: -3px;">Org Type <span class="error">*</span></label>
+              <input type="text" class="form-control form-control-sm" formControlName="selectedOrgtype" readonly />
+
+            </div>
+
+          </div>
+
+          <div class="row g-3" style="align-items: center;">
+
+
+            <div class="col-12 col-lg-10 col-md-8" *ngIf="!isEditOrg">
+              <label class="form-label">Role <span class="error">*</span></label>
+              <select class="form-select form-select-sm" formControlName="selectedRoleId"
+                (change)="onRoleChange($event)">
+                <option value="" disabled selected>--Select--</option>
+                <option *ngFor="let role of availableRoles" [value]="role.id">{{ role.name }}</option>
+              </select>
+              <div class="text-danger small" style="min-height: 18px;">
+                <span *ngIf="orgForm.get('selectedRoleId')?.invalid && orgForm.get('selectedRoleId')?.touched">
+                  Role is required
+                </span>
+              </div>
+            </div>
+
+
+
+            <div class="col-12 col-lg-10 col-md-8" *ngIf="isEditOrg">
+              <label class="form-label">Role <span class="error">*</span></label>
+              <select class="form-select form-select-sm" formControlName="selectedRoleId"
+                (change)="onRoleChange($event)">
+                <option value="" disabled selected>--Select--</option>
+                <option *ngFor="let role of filteredDropdownRoles" [value]="role.id">
+                  {{ role.name }}
+                </option>
+              </select>
+              <div class="text-danger small" style="min-height: 18px;">
+                <span *ngIf="orgForm.get('selectedRoleId')?.invalid && orgForm.get('selectedRoleId')?.touched">
+                  Role is required
+                </span>
+              </div>
+            </div>
+
+
+
+
+
+
+
+
+            <div class="col-12 col-lg-2 col-md-4 d-flex align-items-end">
+              <div class="w-100 mt-2">
+                <button type="button" class="btn w-100 custom-add-btn" (click)="addRole()" [disabled]="!selectedRole">
+                  Add
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+
+          <!-- <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Organization Name <span class="required">*</span></label>
+        <input type="text" class="form-control" placeholder="Enter Organization" formControlName="name">
+        <div class="error-message" *ngIf="orgForm.get('name')?.invalid && orgForm.get('name')?.touched">
+          Organization name required
+        </div>
+      </div>
+
+
+      <div class="form-group" *ngIf="!isEditOrg">
+        <label class="form-label">Org Type <span class="required">*</span></label>
+        <select class="form-select" formControlName="selectedOrgtype">
+          <option value="" disabled>--Select--</option>
+          <option *ngFor="let item of orgTypeData" [value]="item.id">{{ item.name }}</option>
+        </select>
+        <div class="error-message" *ngIf="orgForm.get('selectedOrgtype')?.invalid && orgForm.get('selectedOrgtype')?.touched">
+          Org Type is required
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="isEditOrg">
+        <label class="form-label">Org Type <span class="required">*</span></label>
+        <input type="text" class="form-control" formControlName="selectedOrgtype" readonly />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Role <span class="required">*</span></label>
+        <select class="form-select" formControlName="selectedRoleId" (change)="onRoleChange($event)">
+          <option value="" disabled selected>--Select--</option>
+          <option *ngFor="let role of availableRoles" [value]="role.id">{{ role.name }}</option>
+        </select>
+      </div>
+
+      <div class="add-button-container">
+        <button type="button" class="btn add-btn" (click)="addRole()" [disabled]="!selectedRole">
+          Add
+        </button>
+      </div>
+    </div> -->
+
+          <div class="mt-5" *ngIf="addedRoles && addedRoles.length > 0">
+            <div class="table-responsive table-sm dotted-border lign-middle text-center">
+              <table class="table text-center">
+                <thead class="custom-header">
+                  <tr>
+                    <th>Role Name</th>
+                    <th>Order</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let role of addedRoles; let i = index">
+                    <td>{{ role.name }}</td>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+
+                      <a> <img src="/assets/trash-icon.svg" class="iconimg2" (click)="removeRole(i)"> </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center mt-3">
+            <button *ngIf="!isEditing" type="submit" class="btn btn-success custom-btn">Submit</button>
+            <button *ngIf="isEditing" type="button" class="btn btn-success custom-btn" (click)="updateOrg()">
+              Update
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</p-dialog>

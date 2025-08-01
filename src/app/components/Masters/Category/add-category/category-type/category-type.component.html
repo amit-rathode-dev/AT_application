@@ -1,0 +1,84 @@
+<div class="container-fluid custom-wrapper">
+  <div class="card">
+    <div class="card-body">
+      <div class="row mb-4">
+
+        <div class="col-md-6  mb-3 mb-md-0">
+          <div class="search-container">
+            <input type="text" class="form-control custm-search search-input" placeholder="Search Category..."
+              (input)="applyFilterGlobal($event, 'contains')">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+        </div>
+
+
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+
+
+          <button class="btn btn-success btn-sm" type="button" (click)="CreateNew()">
+            <span class="pi pi-plus p-1"></span> Create New
+          </button>
+
+        </div>
+      </div>
+
+      <p-table #dt [value]="categoryData" [paginator]="true" [rows]="7" [rowsPerPageOptions]="[7, 10, 20, 50]"
+        [globalFilterFields]="['name', 'name', 'lowRange' ,'highRange','description']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+        dataKey="org_name" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th pSortableColumn="sr.no" style="text-align: center;">Sr.No</th>
+            <th pSortableColumn="category_name" style="text-align: center;">Category Name</th>
+            <th pSortableColumn="roles">Fuel</th>
+            <th pSortableColumn="roles">Product Ranges</th>
+            <th pSortableColumn="occurrences">Category Details</th>
+            <th pSortableColumn="occurrences">Category Image</th>
+            <th>Action </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item let-itr="rowIndex">
+          <tr>
+            <td class="text-center">{{ itr + 1 }}</td>
+            <td class="org-name-column">{{ item.name }}</td>
+
+            <td class="org-name-column">
+              <div *ngFor="let f of item.fuel">
+                {{ f.name }}
+              </div>
+            </td>
+
+            <td class="org-name-column">
+
+              <div>
+                <div *ngFor="let f of item.fuel" class="text-center">
+                  {{ f.lowRange }} - {{ f.highRange }}
+                </div>
+              </div>
+
+            </td>
+
+            <td class=" ml-5" (click)="openDescription(item)"><a> <img src="/assets/eye.svg" class="iconimg2"> </a></td>
+
+            <td class="org-name-column">
+              <img [src]="environment + item.image" class="img-fluid cat-img" />
+
+            </td>
+
+            <td>
+              <div class="action-buttons">
+
+                <a> <img src="/assets/trash-icon.svg" (click)="deleteCategory(item)"> </a>
+
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+

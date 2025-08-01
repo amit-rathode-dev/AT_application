@@ -1,0 +1,240 @@
+<div class="container-fluid p-0 custom-wrapper">
+
+  <div class="row g-4 mb-3">
+
+
+    <div class="col-12 col-md-8 col-lg-8 col-xl-8">
+      <div class="card h-80 border-0 rounded-4">
+        <div class="card-body">
+          <div class="d-flex flex-column">
+            <h6 class="text-secondary mb-2">Total Leads</h6>
+            <div class="d-flex justify-content-between align-items-center">
+              <h1 class="display-5 fw-bold mb-0">{{totalLeadCount()}}</h1>
+              <div class="percentage-badge">
+                <span class="text-success">↑23%</span>
+              </div>
+            </div>
+            <p class="text-secondary small mt-1 mb-3">The total number of leads generated this month is {{currentMonthLeadCount()}}</p>
+
+            <div class="d-flex gap-3 flex-wrap">
+              <!-- GOEMs -->
+              <div class="small-card p- rounded flex-grow-1 shadow-sm" style="background: #F9F9F9;">
+                <div class="d-flex flex-column">
+                  <span class="text-secondary small fw-semibold mb-1">GOEMs</span>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="fw-bold mb-0">{{totalGoemCount()}}</h4>
+                  </div>
+                </div>
+              </div>
+
+              <!-- KGDs -->
+              <div class="small-card p-3 rounded flex-grow-1 shadow-sm" style="background: #F9F9F9;">
+                <div class="d-flex flex-column">
+                  <span class="text-secondary small fw-semibold mb-1">KGDs</span>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="fw-bold mb-0">{{totalKgdCount()}}</h4>
+                    <div class="d-flex align-items-center text-success bg-light px-2 py-1 rounded w-auto">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 16L10 10L14 14L20 8" stroke="green" stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M16 8H20V12" stroke="green" stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                      </svg>
+                      <span class="ms-1 fw-semibold">+76%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nodes -->
+              <div class="small-card p-3 rounded flex-grow-1 shadow-sm" style="background: #F9F9F9;">
+                <div class="d-flex flex-column">
+                  <span class="text-secondary small fw-semibold mb-1">Nodes</span>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="fw-bold mb-0">{{totalNodesCount()}}</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+      <div class="card h-90 border-0 rounded-4">
+        <div class="card-body">
+          <div class="d-flex flex-column">
+            <h6 class="text-dark mb-5">Uploaded Content</h6>
+
+
+            <div class="d-flex justify-content-between align-items-center rounded-3 px-3 py-2 mb-2 mt-2"
+              style="background: #F9F9F9; height: 60px;">
+              <div class="d-flex align-items-center">
+                <span class="me-2 rounded"
+                  style="width: 20px; height: 10px; border-radius: 0 !important; background-color: #C17E60;"></span>
+                <span class="small text-dark">Presentation</span>
+              </div>
+              <span class="fw-bold fs-5 text-dark">{{totalPresentationCount()}}</span>
+            </div>
+
+
+            <div class="d-flex justify-content-between align-items-center rounded-3 px-3 py-2"
+              style="background: #F9F9F9;height: 60px;">
+              <div class="d-flex align-items-center">
+                <span class="me-2 rounded"
+                  style="width: 20px; height: 10px; border-radius: 0 !important; background-color: #C17E60;"></span>
+                <span class="small text-dark">Catalogues</span>
+              </div>
+              <span class="fw-bold fs-5 text-dark">{{totalCataloguesCount()}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+
+
+  <div class="row g-4 mb-3">
+
+    <div class="col-12 col-lg-7">
+      <div class="card h-90 border-0 rounded-4" style="height: 300px;">
+        <div class="card-body ">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="card-title mb-0">Total Lead Generated</h6>
+            <div class="dropdown">
+
+
+              <button class="btn btn-sm btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown"  style="background-color: #F6F6F6; border-radius: 10px;">
+                {{ selectedYears }} <i class="pi pi-chevron-down"></i>
+              </button>
+
+              <ul class="dropdown-menu">
+                <li *ngFor="let year of years" (click)="selectYears(year)">
+                  <a class="dropdown-item">{{ year }}</a>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+
+
+          <div class="chart-container">
+
+            <div id="chart">
+              <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
+                [yaxis]="chartOptions.yaxis" [legend]="chartOptions.legend" [fill]="chartOptions.fill"
+                [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+                [xaxis]="chartOptions.xaxis"></apx-chart>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-5">
+      <div class="card h-90 border-0 rounded-4" style="height: 300px;">
+        <div class="card-body ">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="card-title mb-0">Zone Wise Leads</h6>
+            <div class="dropdown">
+
+
+              <button class="btn btn-sm btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown">
+                {{ selectedYears }} <i class="pi pi-chevron-down"></i>
+              </button>
+
+              <ul class="dropdown-menu">
+                <li *ngFor="let year of years" (click)="selectYears(year)">
+                  <a class="dropdown-item">{{ year }}</a>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+          <div class="chart-container">
+
+
+            <!-- <div id="chart">
+              <apx-chart [series]="secondChart.series" [chart]="secondChart.chart" [dataLabels]="secondChart.dataLabels"
+                [plotOptions]="secondChart.plotOptions" [yaxis]="secondChart.yaxis" [legend]="secondChart.legend"
+                [fill]="secondChart.fill" [stroke]="secondChart.stroke" [tooltip]="secondChart.tooltip"
+                [xaxis]="secondChart.xaxis"></apx-chart>
+            </div> -->
+
+             <div id="chart">
+              <apx-chart [series]="pieChart.series" [chart]="pieChart.chart" [labels]="pieChart.labels"
+                [responsive]="pieChart.responsive" [legend]="pieChart.legend"></apx-chart>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <div class="col-12 col-lg-6">
+      <div class="card border-0 rounded-4">
+        <div class="card-body">
+          <h6 class="card-title mb-3">Top 5 Categories</h6>
+          <div class="chart-container">
+
+
+            <!-- <div id="chart">
+              <apx-chart [series]="pieChart.series" [chart]="pieChart.chart" [labels]="pieChart.labels"
+                [responsive]="pieChart.responsive" [legend]="pieChart.legend"></apx-chart>
+            </div> -->
+
+             <div class="chart-container">
+
+
+              <div id="chart">
+                <apx-chart [series]="lastChartOption.series" [series]="lastChartOption.series"
+                  [chart]="lastChartOption.chart" [plotOptions]="lastChartOption.plotOptions"
+                  [dataLabels]="lastChartOption.dataLabels" [stroke]="lastChartOption.stroke"
+                  [xaxis]="lastChartOption.xaxis" [yaxis]="lastChartOption.yaxis"
+                  [fill]="lastChartOption.fill"></apx-chart>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-12 col-lg-6">
+      <div class="card border-0 rounded-4">
+        <div class="card-body ">
+          <h6 class="card-title mb-3">Top 5 Performing Nodes</h6>
+          <div class="chart-container">
+
+            <div id="chart">
+              <apx-chart
+               #nodeChart
+                [series]="nodeChartOptions.series" [chart]="nodeChartOptions.chart"
+                [dataLabels]="nodeChartOptions.dataLabels" [plotOptions]="nodeChartOptions.plotOptions"
+                [yaxis]="nodeChartOptions.yaxis" [legend]="nodeChartOptions.legend" [fill]="nodeChartOptions.fill"
+                [stroke]="nodeChartOptions.stroke" [tooltip]="nodeChartOptions.tooltip"
+                [xaxis]="nodeChartOptions.xaxis"></apx-chart>
+            </div>
+  
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

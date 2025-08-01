@@ -1,0 +1,292 @@
+.cusom-container {
+
+  width: calc(1250px + 4px);
+}
+
+.body {
+  background: #DFEEEC;
+
+}
+
+.custom-wrapper {
+  margin-top: 4rem;
+}
+
+
+/* .p-button.p-button-success {
+    color: #ffffff;
+    background: #24AFA1A8 !important;
+    border: 1px solid #24AFA1A8 !important;
+} */
+
+
+
+:host ::ng-deep {
+  .user-table-header {
+    background-color: #5bc0be;
+    color: white;
+  }
+
+  .p-datatable .p-datatable-thead>tr>th {
+    background-color: #5bc0be;
+    color: white;
+    font-weight: 500;
+    padding: 0.75rem;
+  }
+
+  .p-datatable .p-datatable-tbody>tr.selected-row {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+  }
+
+  .p-datatable .p-datatable-tbody>tr:hover {
+    background-color: #f0f8ff;
+  }
+
+  .p-inputtext {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    .action-buttons {
+      justify-content: flex-start;
+    }
+
+    .p-datatable-responsive-demo .p-datatable-tbody>tr>td .p-column-title {
+      display: inline-block;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+
+:host ::ng-deep .user-table-header th {
+  background-color: #24AFA1A8 !important;
+  color: white !important;
+}
+
+
+
+.btn.btn-success:hover {
+  background-color: #11776f;
+  border-color: #11776f;
+
+}
+
+.btn.btn-danger {
+  display: none;
+}
+
+
+
+.custom-form-grp {
+  display: flex;
+  column-gap: 1rem;
+
+}
+
+.custom-btn-grp {
+  display: flex;
+  align-items: end;
+  width: 100px !important;
+}
+
+.custom-btn {
+  /* width: 180px; */
+
+  margin-top: 15px;
+  width: 25rem;
+}
+
+
+.custom-border-popup {
+  border-radius: 10px !important;
+}
+
+.iconimg {
+  margin-right: 0.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.iconimg2 {
+  margin-right: 0.5rem;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+
+
+.org-name-column {
+  vertical-align: top;
+  text-align: center;
+
+  /* margin-top: 10px !important; */
+}
+
+
+/* -------------------------------------- */
+::ng-deep .p-dialog.register-popup {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+
+
+/* ---------------------------------- */
+.wide-input {
+  min-width: 300px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.custom-add-btn {
+  background-color: #C57C5C;
+  color: #fff;
+  border: none;
+}
+
+.custom-header th {
+  background-color: #19988B !important;
+  color: white !important;
+
+  /* background-color: #BEDAD7 !important;
+    color: #000000 !important; */
+  font-family: 'Heebo', sans-serif;
+  font-weight: 400;
+
+}
+
+
+
+.table {
+  > :not(caption)>*>* {
+    padding: 0.2rem 0.3rem;
+
+  }
+}
+
+
+
+::ng-deep .p-datatable .p-datatable-tbody>tr {
+  border-bottom: 1px dashed #ccc !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody>tr:last-child {
+  border-bottom: none !important;
+}
+
+::ng-deep .p-datatable td,
+::ng-deep .p-datatable th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.organization-form-container {
+  padding: 1rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+.form-group {
+  margin-bottom: 0.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.required {
+  color: #e53e3e;
+}
+
+.form-control, .form-select {
+  width: 100%;
+  height: 2.25rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  
+  &:focus {
+    outline: none;
+    border-color: #0d9488;
+    box-shadow: 0 0 0 1px rgba(13, 148, 136, 0.2);
+  }
+}
+
+.temp{
+  margin-top: 1px !important;
+}
+
+.custom-fn {
+  border: 0px solid #A7A7A7;
+  box-shadow: 0 0 0 0.25rem rgba(25, 152, 139, 0.25); 
+}
+
+
+
+
+
+
+
+.search-input {
+  width: 100%;
+  padding-left: 35px;
+}
+
+.wrap-text {
+  max-height: 60px;
+  overflow: auto;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.btn-secondary {
+  color: #ffffff;
+  background: #C37C5A !important;
+  border: 1px solid #C37C5A !important;
+      height: 35px;
+
+}
+
+
+ ::ng-deep .swal2-confirm-custom{
+  background-color: teal !important; 
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+ ::ng-deep.swal2-cancel-custom {
+
+  background-color:  #e0e0e0 !important; ; 
+  color: #6c757d !important;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}

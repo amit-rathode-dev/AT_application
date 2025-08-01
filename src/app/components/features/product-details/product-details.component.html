@@ -1,0 +1,244 @@
+<div class="product-details-wrapper">
+  <!-- Header and Back Button -->
+  <div class="text-center mb-2">
+    <div class="d-flex align-items-center justify-content-between mb-4 position-relative">
+      <!-- Back button using PrimeNG icon -->
+      <button class="btn btn-link p-0 back-btn" (click)="goBack()">
+        <i class="pi pi-arrow-left fs-5" style="color: #19988B;"></i>
+      </button>
+      <!-- Centered product title -->
+      <h3 class="position-absolute start-50 translate-middle-x m-0 text-center">
+        {{ productTitle }}
+      </h3>
+    </div>
+
+    <!-- Conditionally render TabView or single product -->
+    <ng-container *ngIf="tabs.length > 1; else singleProduct">
+      <p-tabView [(activeIndex)]="activeTab" (onChange)="onTabChange($event)">
+        <p-tabPanel *ngFor="let tab of tabs" [header]="tab.header">
+          <ng-container *ngTemplateOutlet="productContent; context: { $implicit: tab.data }"></ng-container>
+        </p-tabPanel>
+      </p-tabView>
+    </ng-container>
+
+    <!-- Single product view -->
+    <ng-template #singleProduct>
+      <ng-container *ngTemplateOutlet="productContent; context: { $implicit: productData }"></ng-container>
+    </ng-template>
+
+    <!-- Common product content template -->
+    <ng-template #productContent let-data>
+      <div class="row">
+        <div class="col-sm-7  text-center mb-2" style="background-color: #FAFAFA;border-radius: 20px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.103);">
+         
+          <p-carousel [value]="images" [numVisible]="1" showNavigators="false"  [circular]="images.length > 1"
+            [autoplayInterval]="images.length > 1 ? 3000 : 0"
+            [showIndicators]="images.length > 1">
+            <ng-template let-img pTemplate="item">
+              <img [src]="img" alt="Product Image" class="img-fluid rounded" />
+            </ng-template>
+          </p-carousel>
+        </div>
+        <div class="col-sm-5 mb-2 mt-1">
+          <div class="action-cards-container">
+            <div class="row g-3">
+              @for (card of actionCards; track card) {
+                <div class="col-6">
+                  <div class="p-card text-center shadow-sm hover-card" (click)="navigateTo(card.title)">
+                    <img [src]="card.image" class="img-fluid mb-2 image_card" />
+                    <div class="card-title-bar">
+                      <h6 class="mb-0 title_img">
+                        <img [src]="card.icon" class="title_icon" alt="">
+                        {{ card.title }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              }
+              
+              <div class="youtube_card p-card  col-12" (click)="navigateTo('YouTube')">
+                <div class="card-title-bar1">
+                  <h6 class="mt-0 title_img">
+                    <img src="assets/non-ad-videos.svg" class="title_icon" alt="">
+                    {{ 'Video' }}
+                  </h6>
+                </div>
+                <div class="youtube-image-wrapper">
+                  <img src="assets/youtube_icon.png" class="youtube-image" alt="YouTube">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Genset Specification -->
+      <div class="prod_details">
+
+        @if(data.specification?.genset){
+          <div class="spec-card mb-4 p-3">
+            <h5 class="spec_title">GENSET SPECIFICATION</h5>
+            <div class="row mb-2">
+              <div class="col-sm-5 spec-label fw-medium">Genset Model</div>
+              <div class="col-sm-4">: {{ data.specification?.genset[0]?.model || '-' }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-sm-5 spec-label fw-medium">Fuel Tank Capacity</div>
+              <div class="col-sm-4">
+                : {{ data.specification?.genset[0]?.fuel_tank_capacity || '-' }}
+                @if( data.specification?.genset[0]?.fuel_tank_capacity_unit){
+
+                  ({{ data.specification?.genset[0]?.fuel_tank_capacity_unit || '' }})
+                }
+              </div>
+            </div>
+           
+            <div class="row mb-2">
+              <div class="col-sm-5 spec-label fw-medium">Weight of Genset</div>
+              <div class="col-sm-4">
+                : {{ data.specification?.genset[0]?.weight || '-' }}
+                @if(data.specification?.genset[0]?.weight_unit){
+
+                  ({{ data.specification?.genset[0]?.weight_unit || '' }})
+                }
+              </div>
+            </div>
+          
+            <div class="row mb-2">
+              <div class="col-sm-5 spec-label fw-medium">Overall Dimensions</div>
+              <div class="col-sm-4">
+                : {{ data.specification?.genset[0]?.length }}/
+                {{ data.specification?.genset[0]?.width }}/
+                {{ data.specification?.genset[0]?.height }}
+                @if(data.specification?.genset[0]?.dimension_unit){
+
+
+                  ({{ data.specification?.genset[0]?.dimension_unit || '-' }})
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+       @if(data.specification?.engine){
+              <!-- Engine Specification -->
+        <div class="spec-card mb-4 p-3">
+          <h5 class="spec_title">ENGINE SPECIFICATION</h5>
+          <div class="row mb-2">
+            <div class="col-sm-5 spec-label fw-medium"> Engine Model</div>
+            <div class="col-sm-4">: {{ data.specification?.engine[0]?.model || '-' }}</div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-5 spec-label fw-medium">Number of Cylinders</div>
+            <div class="col-sm-4">
+              : {{ data.specification?.engine[0]?.no_of_cylinder || '-' }}
+              @if(data.specification?.engine[0]?.no_of_cylinder_unit){
+
+                ({{ data.specification?.engine[0]?.no_of_cylinder_unit || '' }})
+              }
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-5 spec-label fw-medium">Cubic Capacity^2</div>
+            <div class="col-sm-4">
+              : {{ data.specification?.engine[0]?.cubic_capacity || '-' }}
+              @if(data.specification?.engine[0]?.cubic_capacity_unit ){
+
+                ({{ data.specification?.engine[0]?.cubic_capacity_unit || '' }})
+              }
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-5 spec-label fw-medium">Lube Oil Change period</div>
+            <div class="col-sm-4">
+              : {{ data.specification?.engine[0]?.lube_oil_change || '-' }} 
+              @if(data.specification?.engine[0]?.lube_oil_change_unit){
+
+                ({{ data.specification?.engine[0]?.lube_oil_change_unit || '' }})
+              }
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-5 spec-label fw-medium">Adblue/DEF Capacity</div>
+            <div class="col-sm-4">
+              : @if (data.specification?.engine?.[0]?.adblue) {
+                {{ data.specification.engine[0].adblue || '-' }}
+                @if(data.specification.engine[0].adblue_unit ){
+
+                  ({{ data.specification.engine[0].adblue_unit || '' }})
+                }
+              }@else {
+              {{"-"}}
+              }
+              
+            </div>
+          </div>
+        </div>
+        }
+    
+
+        <!-- Alternator Specification -->
+        @if( data.specification?.alternator[0]?.alternator || data.specification?.alternator[0]?.insulation|| data.specification?.alternator[0]?.max_time_to_rated ){
+          <div class="spec-card mb-4 p-3">
+            <h5 class="spec_title">ALTERNATOR SPECIFICATION</h5>
+            @if(data.specification?.alternator[0]?.alternator){
+            <div class="row mb-2">
+              <div class="col-sm-5 spec-label fw-medium">Alternator Efficiency</div>
+              <div class="col-sm-4">
+                : {{ data.specification?.alternator[0]?.alternator || 'N/A' }}
+                @if(data.specification?.alternator[0]?.alternator_unit) { ({{ data.specification?.alternator[0]?.alternator_unit || 'N/A' }}) }
+              </div>
+            </div>
+          }
+            @if(data.specification?.alternator[0]?.insulation) { 
+            <div class="row mb-2">
+              <div class="col-sm-5 spec-label fw-medium">Insulation Class</div>
+              <div class="col-sm-4">
+                : 
+               {{ data.specification?.alternator[0]?.insulation || 'N/A' }} 
+              </div>
+            </div>
+          }
+            @if( data.specification?.alternator[0]?.max_time_to_rated ){
+            <div class="row mb-2">
+              <div class="col-sm-5 fw-medium spec-label">Max time to rated voltage at RPM</div>
+              <div class="col-sm-4">
+                : {{ data.specification?.alternator[0]?.max_time_to_rated || 'N/A' }}
+                @if(data.specification?.alternator[0]?.max_time_to_rated_unit ){
+
+                  ({{ data.specification?.alternator[0]?.max_time_to_rated_unit || 'N/A' }})
+                }
+              </div>
+            </div>
+          }
+          </div>
+        }
+       
+      </div>
+    </ng-template>
+    <div class="row gx-3 mt-2 gy-3">
+      <!-- First Card -->
+      <div class="col-sm-6">
+        <div class="info-card d-flex align-items-center justify-content-between p-3 shadow-sm rounded"  (click)="navigateTo('CustomerRef')">
+          <div class="d-flex align-items-center gap-2">
+            <img src="assets/customer_ref.png" alt="icon" class="icon-box" />
+            <span class="text-muted fw-semibold">Customer References</span>
+          </div>
+          <i class="pi pi-chevron-right text-muted"></i>
+        </div>
+      </div>
+    
+      <!-- Second Card -->
+      <div class="col-sm-6">
+        <div class="info-card d-flex align-items-center justify-content-between p-3 shadow-sm rounded">
+          <div class="d-flex align-items-center gap-2">
+            <img src="assets/FAQ.png" alt="icon" class="icon-box" />
+            <span class="text-muted fw-semibold">FAQ's</span>
+          </div>
+          <i class="pi pi-chevron-right text-muted"></i>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>

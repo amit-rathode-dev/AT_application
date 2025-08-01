@@ -1,0 +1,105 @@
+<div class="carousel-container">
+  <p-carousel
+    [value]="carouselImages"
+    [circular]="true"
+    [autoplayInterval]="3000"
+    [numVisible]="1"
+    [numScroll]="1"
+    [showIndicators]="true"
+    [showNavigators]="false">
+    <ng-template pTemplate="item" let-item>
+      <img [src]="item.src" [alt]="item.alt" class="carousel-image"   (click)="handleBannerClick(item)" />
+    </ng-template>
+  </p-carousel>
+</div>
+
+<div class="grid-container">
+<div class="grid-item pb-2" (click)="redirectpage('categories')">
+  <h5 class="grid_label">
+    <button class="btn-with-icon">
+      <img src="assets/non-ad-cat.svg" alt="icon" class="icon-img" />
+      Categories
+    </button>
+  </h5>
+  <div class="card-content">
+    <img src="assets/categories.png" alt="Categories" class="placeholder-img" />
+  </div>
+</div>
+
+<div class="grid-item pt-2"  (click)="redirectpage('all-range')" >
+
+  <div class="card-content">
+    <img src="assets/all_range.png" alt="All Range" class="placeholder-img" />
+  </div>
+    <h5 class="grid_label mb-0">
+    <button class="btn-with-icon">
+      <img src="assets/non-ad-ranges.svg" alt="icon" class="icon-img" />
+      All Range
+    </button>
+  </h5>
+</div>
+
+
+<div class="grid-item1 generate-lead-card">
+  <div class="lead-banner"  (click)="redirectpage('Lead-Gen')">
+    <img src="assets/generated_lead_icon.png" alt="Lead Icon" class="lead-icon" />
+    <div class="lead-text">
+      <h5>Generate Lead</h5>
+      <p>Collect data of customers</p>
+    </div>
+  </div>
+
+<div  (click)="redirectpage('videos')">
+  <h5 class="grid_label mt-0 " >
+    <button class="btn-with-icon p-2">
+      <img src="assets/non-ad-videos.svg" alt="Videos" class="icon-img" />
+      Videos
+    </button>
+  </h5>
+
+    <img src="assets/youtube_icon.png" alt="YouTube" class="youtube-icon" />
+
+</div>
+  </div>
+
+  <div class="grid-item pt-2"  (click)="redirectpage('catalogues')">
+
+  <div class="card-content">
+    <img src="assets/catalouge.png" alt="catalouge" class="placeholder-img" />
+  </div>
+    <h5 class="grid_label mb-0">
+    <button class="btn-with-icon">
+      <img src="assets/non-ad-catalogs.svg" alt="icon" class="icon-img" />
+      Catalogues
+    </button>
+  </h5>
+</div>
+
+  <div class="grid-item pt-2">
+
+  <div class="card-content">
+    <img src="assets/customer_reference.png" alt="customer_reference" class="placeholder-img" />
+  </div>
+    <h5 class="grid_label mb-0">
+    <button class="btn-with-icon">
+      <img src="assets/non-ad-cr.svg" alt="icon" class="icon-img" />
+      Customer References
+    </button>
+  </h5>
+</div>
+
+
+    <div class="grid-item pt-2"  (click)="redirectpage('presentations')">
+
+  <div class="card-content">
+      <img src="assets/presentations2.png" alt="Presentation" class="placeholder-img" />
+      <img src="assets/presentations1.png" alt="Presentation" class="placeholder-img" />
+    </div>
+    <h5 class="grid_label mb-0">
+    <button class="btn-with-icon">
+      <img src="assets/non-ad-presentations.svg" alt="icon" class="icon-img" />
+      Presentations
+    </button>
+  </h5>
+</div>
+</div>

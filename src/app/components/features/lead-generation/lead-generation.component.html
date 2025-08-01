@@ -1,0 +1,211 @@
+<div class="registration-form">
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <p-panel class="mt-2">
+      <div class="row form-row">
+   <!-- Product Category Dropdown -->
+<div class="form-group col-sm-3" [ngClass]="{'has-error': isInvalid('category_id')}">
+  <label for="product_id">Select Product Category<span class="required_icon">*</span></label>
+  <p-dropdown 
+    [options]="productCategories"
+    placeholder="Select Product Category"
+    formControlName="category_id"
+    optionLabel="label"
+    optionValue="value"
+    appendTo="body"
+    (onChange)="onCategoryChange($event)"
+    [ngClass]="{'is-invalid': isInvalid('category_id')}"
+    >
+  </p-dropdown>
+  <div *ngIf="isInvalid('category_id')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+    Product Category is required.
+  </div>
+</div>
+
+<!-- Fuel Dropdown -->
+<div class="form-group col-sm-3" [ngClass]="{'has-error': isInvalid('fuel_id')}">
+  <label for="fuel_id">Select Fuel<span class="required_icon">*</span></label>
+  <p-dropdown 
+    [options]="fuels"
+    placeholder="Select Fuel"
+    formControlName="fuel_id"
+    optionLabel="label"
+    optionValue="value"
+    appendTo="body"
+    [ngClass]="{'is-invalid': isInvalid('fuel_id')}"
+    (onChange)="onFuelChange($event)">
+  </p-dropdown>
+  <div *ngIf="isInvalid('fuel_id')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+    Fuel is required.
+  </div>
+</div>
+
+<!-- KVA Rating / Node Dropdown -->
+<div class="form-group col-sm-3" [ngClass]="{'has-error': isInvalid('product_id')}">
+  <label for="kvaRating">Select KVA Rating / Node<span class="required_icon">*</span></label>
+  <p-dropdown 
+    [options]="kvaRatings"
+    placeholder="Select KVA Rating / Node"
+    formControlName="product_id"
+    optionLabel="label"
+    appendTo="body"
+    [ngClass]="{'is-invalid': isInvalid('product_id')}"
+    optionValue="value">
+  </p-dropdown>
+  <div *ngIf="isInvalid('product_id')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+    KVA Rating / Node is required.
+  </div>
+</div>
+
+        <div class="form-group col-sm-3" [ngClass]="{'has-error': isInvalid('quantity')}">
+          <label for="quantity">Quantity</label>
+          <input pInputText type="number" formControlName="quantity"  max="10"     [ngClass]="{'is-invalid': isInvalid('quantity')}"    (input)="enforceRange($event)" 
+          />
+          <div *ngIf="isInvalid('quantity')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            Quantity must be between 1 and 10.
+          </div>
+          
+        </div>
+      </div>
+    </p-panel>
+
+    <p-panel class="mt-5">
+      <div class="row form-row">
+        @if(org_Type=='Self'){
+        <div class="form-group col-sm-3">
+          <label for="goem_id">Select GOEM</label>
+          <p-dropdown [options]="goems" (onChange)="onGOEMChange($event)" placeholder="Select GOEM" optionLabel="org_name" appendTo="body" optionValue="org_id" formControlName="goem_id" ></p-dropdown>
+        </div>
+        <div class="form-group col-sm-3">
+          <label for="Kgd_id">Select KGD</label>
+          <p-dropdown [options]="kgds" placeholder="Select KGD" appendTo="body"  formControlName="Kgd_id" optionLabel="org_name" optionValue="org_id" ></p-dropdown>
+        </div>
+      }
+        <div class="form-group col-sm-3" [ngClass]="{'has-error': isInvalid('pulse_purchase_date')}">
+          <label for="Kgd_id"> Purchase Date <span class="required_icon">*</span></label>
+          <p-calendar 
+          inputId="calendar-24h" 
+         formControlName="pulse_purchase_date"
+         placeholder="Select Purchase Date "
+          [showTime]="false" 
+         hourFormat="24"
+         appendTo="body" 
+         dateFormat="dd.mm.yy"
+         [minDate]="minDate"
+         [ngClass]="{'is-invalid': isInvalid('pulse_purchase_date')}"
+          />
+          <div *ngIf="isInvalid('pulse_purchase_date')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            Date is required.
+          </div>
+                </div>
+
+        <!-- <div class="form-group col-sm-3">
+          <label for="Kgd_id">Purchase Date</label>
+          <p-calendar 
+          inputId="calendar-24h" 
+         formControlName="purchase_date"
+          [showTime]="true" 
+         hourFormat="24"
+         appendTo="body"   />  
+        
+        </div> -->
+      </div>
+    </p-panel>
+
+    <p-panel class="mt-5">
+      <div class="row form-row">
+        <div class="form-group col-sm-6" [ngClass]="{'has-error': isInvalid('first_name')}">
+          <label for="first_name">First Name<span class="required_icon">*</span></label>
+          <input pInputText type="text" placeholder="First Name" formControlName="first_name" [ngClass]="{'is-invalid': isInvalid('first_name')}" />
+
+          <div *ngIf="isInvalid('first_name')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            First name is required.
+          </div>
+        </div>
+        <div class="form-group col-sm-6" [ngClass]="{'has-error': isInvalid('last_name')}">
+          <label for="last_name">Last Name<span class="required_icon">*</span></label>
+          <input pInputText type="text" placeholder="Last Name" formControlName="last_name" [ngClass]="{'is-invalid': isInvalid('last_name')}" />
+          <div *ngIf="isInvalid('last_name')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            Last name is required.
+          </div>
+        </div>
+      <!-- </div>
+    </p-panel> -->
+
+    <!-- <p-panel class="mt-5"> -->
+      <!-- <div class="row form-row"> -->
+        <div class="form-group col-sm-6 mt-2" [ngClass]="{'has-error': isInvalid('mobile_no')}">
+          <label for="mobile_no">Mobile Number<span class="required_icon">*</span></label>
+          <input pInputText type="tel" placeholder="Enter Mobile Number"  (keypress)="allowOnlyNumbers($event)" [ngClass]="{'is-invalid': isInvalid('mobile_no')}"  formControlName="mobile_no" minlength="10" maxlength="10"/>
+          <div *ngIf="isInvalid('mobile_no')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            10-digit mobile number is required.
+          </div>
+        </div>
+        <div class="form-group col-sm-6 mt-2" [ngClass]="{'has-error': isInvalid('email')}">
+          <label for="email">Email ID<span class="required_icon">*</span></label>
+          <input pInputText type="email" placeholder="Enter Email ID" formControlName="email" [ngClass]="{'is-invalid': isInvalid('email')}"  />
+          <div *ngIf="isInvalid('email')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            Valid email is required.
+          </div>
+        </div>
+      <!-- </div>
+    </p-panel> -->
+
+    <!-- <p-panel class="mt-5">
+      <div class="row form-row"> -->
+        <!-- <div class="form-group col-sm-6 mt-2">
+          <label for="company_name">Company Name<span class="required_icon">*</span></label>
+          <input pInputText type="text" placeholder="Enter Company Name" formControlName="company_name" />
+        </div> -->
+        <div class="form-group col-sm-12 mt-2" [ngClass]="{'has-error': isInvalid('company_address')}">
+          <label for="company_address"> Address<span class="required_icon">*</span></label>
+          <!-- <input pInputText type="text"placeholder="Enter Company Address" formControlName="company_address" /> -->
+          <textarea pInputTextarea placeholder="Enter Address" formControlName="company_address" [ngClass]="{'is-invalid': isInvalid('company_address')}"  style="height: 70px;"></textarea>
+          <div *ngIf="isInvalid('company_address')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            Address is required.
+          </div>
+        </div>
+      <!-- </div>
+    </p-panel>
+
+    <p-panel class="mt-5">
+      <div class="row form-row"> -->
+        <div class="form-group col-sm-4 mt-2" [ngClass]="{'has-error': isInvalid('state')}">
+          <label for="state">State<span class="required_icon">*</span></label>
+          <p-dropdown [options]="states" filter="true" (onChange)="onState_change($event)" appendTo="body" [ngClass]="{'is-invalid': isInvalid('state')}" optionLabel="name" optionValue="name" placeholder="Select State" formControlName="state" [required]="true"></p-dropdown>
+          <div *ngIf="isInvalid('state')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            State is required.
+          </div>
+        </div>
+        <div class="form-group col-sm-4 mt-2" [ngClass]="{'has-error': isInvalid('city')}">
+          <label for="city">City<span class="required_icon">*</span></label>
+          <!-- <input pInputText type="text" placeholder="Enter City" formControlName="city" /> -->
+           <p-dropdown [options]="Cities" filter="true"  appendTo="body" optionLabel="name" optionValue="name" [ngClass]="{'is-invalid': isInvalid('city')}" placeholder="Select City" formControlName="city" [required]="true"></p-dropdown>
+           <div *ngIf="isInvalid('city')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            City is required.
+          </div>
+        </div>
+        <div class="form-group col-sm-4 mt-2" [ngClass]="{'has-error': isInvalid('pincode')}">
+          <label for="pincode">Pincode<span class="required_icon">*</span></label>
+          <input pInputText type="text" placeholder="Enter Pincode" (keypress)="allowOnlyNumbers($event)" [ngClass]="{'is-invalid': isInvalid('pincode')}"  formControlName="pincode" minlength="6" maxlength="6" />
+          <div *ngIf="isInvalid('pincode')" class="text-danger" style="font-size: 11px; margin-top: 2px;">
+            6-digit Pincode is required.
+          </div>
+        </div>
+      <!-- </div>
+    </p-panel>
+
+    <p-panel class="mt-5">
+      <div class="row form-row"> -->
+        <div class="form-group col-sm-12 mt-2">
+          <label for="notes">Leave any note or request</label>
+          <textarea pInputTextarea placeholder="Enter Leave any note or request" formControlName="notes"style="height: 70px;"></textarea>
+        </div>
+      </div>
+    </p-panel>
+
+    <div class="mt-5">
+      <button pButton  type="submit" label="Register" [disabled]="!registrationForm.valid"></button>
+    </div>
+  </form>
+</div>
+<!-- [loading]="loading"  -->

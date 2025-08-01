@@ -1,0 +1,251 @@
+<div class="container-fluid custom-wrapper">
+    <div class="card">
+        <div class="card-body">
+            <div class="row mb-4 align-items-center">
+
+                <!-- Left: Search, Filter, Reset -->
+                <div class="col-md-8 mb-3 mb-md-0 d-flex flex-wrap align-items-center gap-2">
+
+                    <!-- Search -->
+                    <div class="search-container position-relative flex-grow-1" style="min-width: 250px;">
+                        <input type="text" class="form-control custm-search search-input" placeholder="Search Media..."
+                            [(ngModel)]="globalFilterValue" (input)="applyFilterGlobal($event, 'contains')">
+                        <i class="fas fa-search search-icon position-absolute"
+                            style="right: 10px; top: 50%; transform: translateY(-50%); color: #999;"></i>
+                    </div>
+
+                    <!-- Filter Dropdown -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fas fa-filter icon-white"></i> Media Type
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item" (click)="filterMediaType('flyer')">Flyer</button></li>
+                            <li><button class="dropdown-item" (click)="filterMediaType('banner')">Banner</button></li>
+                             <li><button class="dropdown-item" (click)="filterMediaType('BTL Activity')">BTL_Activity</button></li>
+                        </ul>
+                    </div>
+
+                    <!-- Reset Filter -->
+                    <div class="btn-group">
+                        <a class="reset-icon-wrapper" (click)="resetFilter('mediaType')">
+                            <img class="delete-icon" src="/assets/reset-button.svg" tooltipPosition="top"
+                                pTooltip="Reset">
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Right: Create New -->
+                <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                    <button class="btn btn-success btn-sm" type="button" (click)="CreateNew()">
+                        <span class="pi pi-plus p-1"></span> Create New
+                    </button>
+                </div>
+
+            </div>
+
+
+
+            <p-table #dt [value]="tableData" [paginator]="true" [rows]="8" [rowsPerPageOptions]="[7, 10, 20, 50]"
+                [globalFilterFields]="['media_type', 'file_name', 'social_platform' ,'to']"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+                dataKey="org_name" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll"
+                [scrollable]="true">
+                <ng-template pTemplate="header">
+                    <tr class="user-table-header">
+                        <th class="text-center align-items">Sr.No</th>
+                        <th class="text-center align-items">Name</th>
+                        <th class="text-center align-items">Media Type</th>
+                        <th class="text-center align-items">Social Media Type</th>
+                        <th class="text-center align-items">File</th>
+                        <th class="text-center align-items">Uploaded Date</th>
+                        <th class="text-center align-items">View</th>
+                        <th class="text-center align-items">Status</th>
+
+
+                        <!-- <th class="text-center align-items">Action </th> -->
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-itr="rowIndex">
+                    <tr>
+                        <td class="text-center align-items">{{itr+1}}</td>
+                        <td class="text-center align-items">{{ item.file_name}}
+                        </td>
+                        <td class="text-center align-items">{{ item.media_type }}
+                        </td>
+                        <td class="text-center align-items">{{ item.social_platform | noData }}</td>
+                        <td class="text-center align-items">{{ item.file_name }}</td>
+
+                        <td class="text-center align-items">
+                            {{ parseDate(item.uploaded_on) ? (parseDate(item.uploaded_on) | date: 'yyyy-MM-dd') : 'N/A'
+                            }}
+                        </td>
+
+
+
+                        <td class="text-center align-items">
+                            <a (click)="openDetailPopup(item)">
+                                <img src="/assets/eye.svg" class="iconimg2" (click)="openDetailPopup(item)">
+                            </a>
+                        </td>
+                        <td class="text-center align-items" [ngClass]="getStatusColor(item.approval_status)">
+                            {{ item.approval_status }}
+                        </td>
+
+
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="true" [resizable]="true"
+    [style]="{width: '100%', maxWidth: '650px'}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+    [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+    styleClass="custom-media">
+
+    <div class="org-popup-container px-4">
+        <div class="popup-header d-flex justify-content-between align-items-center p-2">
+            <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+            <h4 class="mb-3 pt-3 custom-color-h4">Create Media</h4>
+
+            <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">×</button>
+        </div>
+
+        <div class="popup-body p-3">
+
+
+
+            <form [formGroup]="mediaForm" (ngSubmit)="onSubmit()">
+
+                <div class="row ml-5 mr-5">
+
+                    <div class="col-md-12 mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control form-control-sm custom-input custom-placeholder"
+                            placeholder="Name" id="Name" id="name" formControlName="name" required>
+
+                        <div class="text-danger small custom-error"
+                            *ngIf="mediaForm.get('name')?.invalid && mediaForm.get('name')?.touched">
+                            Name is required
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 mb-3">
+                        <label for="media_type" class="form-label">Media Type</label>
+                        <select id="media_type" formControlName="media_type"
+                            class="form-select form-select-sm  form-control custom-input custom-placeholder"
+                            id="medi_typea" required>
+                            <option value="" disabled selected>--Select--</option>
+                            <option value="Flyer">Flyer</option>
+                            <option value="Banner">Banner</option>
+                            <option value="BTL Activity">BTL Activity Approval</option>
+                        </select>
+                        <div class="text-danger small custom-error"
+                            *ngIf="mediaForm.get('media_type')?.invalid && mediaForm.get('media_type')?.touched">
+                            Media Type is required
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-3" *ngIf="['Flyer','Banner']
+                                  .includes(mediaForm.get('media_type')?.value)">
+                        <label for="media_type" class="form-label">Social Media Platform</label>
+                        <select id="social_media_type" formControlName="socialMediatype"
+                            class="form-select form-select-sm  form-control custom-input custom-placeholder" required>
+                            <option value="" disabled selected>--Select--</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Facebook">Facebook</option>
+                        </select>
+
+                        <div class="text-danger small custom-error"
+                            *ngIf="mediaForm.get('socialMediatype')?.invalid && mediaForm.get('socialMediatype')?.touched">
+                            Social Media is required
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 mb-3" *ngIf="['Flyer','Banner']
+                                  .includes(mediaForm.get('media_type')?.value)">
+                        <label for="attachments" class="form-label">Upload Image</label>
+                        <input #fileInput type="file" id="attachments"
+                            class="form-control form-control-sm custom-input custom-placeholder"
+                            (change)="onFileChange($event)" (blur)="markFileTouched()" accept="image/*" />
+
+                        <div class="text-danger small custom-error"
+                            *ngIf="mediaForm.get('documents')?.invalid && mediaForm.get('documents')?.touched">
+                            Document is required
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12 mb-3" *ngIf="['BTL Activity']
+                                  .includes(mediaForm.get('media_type')?.value)">
+                        <label for="attachments" class="form-label">Upload File</label>
+                        <input #fileInput type="file" id="attachments"
+                            class="form-control form-control-sm custom-input custom-placeholder"
+                            (change)="onFileChange($event)" (blur)="markFileTouched()" 
+                            [attr.accept]="mediaForm.get('media_type')?.value === 'BTL Activity' ? '.xls,.xlsx' : 'image/*'" />
+
+                        <div class="text-danger small custom-error"
+                            *ngIf="mediaForm.get('documents')?.invalid && mediaForm.get('documents')?.touched">
+                            Document is required
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="col-md-12 mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control form-control-sm custom-input custom-placeholder" id="description"
+                            rows="3" formControlName="description" placeholder="Description"></textarea>
+                        <div class="text-danger small custom-error"
+                            *ngIf="mediaForm.get('description')?.invalid && mediaForm.get('description')?.touched">
+                            Description is required
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+                <div class="d-flex justify-content-center mt-5">
+                    <button type="submit" class="btn btn-success custom-btn btn-width update-button">Submit</button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog [(visible)]="isvisible" [modal]="true" [draggable]="true" [resizable]="true"
+    [style]="{ width:'100%', maxWidth:'800px', height: '81%'}" [contentStyle]="{ padding: '1rem' }" [showHeader]="false"
+    [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()" styleClass="custom-media">
+
+
+
+    <ng-container>
+
+
+
+        <app-view-medi></app-view-medi>
+
+
+    </ng-container>
+
+
+
+
+</p-dialog>

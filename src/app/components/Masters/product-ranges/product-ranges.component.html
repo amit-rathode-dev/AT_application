@@ -1,0 +1,489 @@
+<div class="container-fluid custom-wrapper">
+  <div class="card">
+    <div class="card-body">
+      <div class="row mb-4">
+
+
+
+
+
+        <div class="col-md-6  mb-3 mb-md-0">
+          <div class="search-container">
+            <input type="text" class="form-control custm-search search-input" placeholder="Search Product Ranges..."
+              (input)="applyFilterGlobal($event, 'contains')">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+        </div>
+
+
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+
+          <button class="btn btn-success btn-sm" type="button" (click)="CreateNew()">
+            <span class="pi pi-plus p-1"></span> Add New
+          </button>
+
+        </div>
+      </div>
+
+      <p-table #dt [value]="rangesData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[ 10, 20, 50]"
+        [globalFilterFields]="['categoryName','lowRange','highRange','fuelName']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id"
+        styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+
+
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th pSortableColumn="srno">Sr.No </th>
+            <th pSortableColumn="name"> Range </th>
+            <th pSortableColumn="name">Fuel </th>
+            <th pSortableColumn="name">Category </th>
+            <th pSortableColumn="name">Image </th>
+            <th>Action</th>
+          </tr>
+        </ng-template>
+
+
+        <ng-template pTemplate="body" let-item let-i="rowIndex">
+          <tr let item of rangesData let index=0>
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.lowRange }} - {{item.highRange}}</td>
+            <td>{{item.fuelName}}</td>
+            <td>{{item.categoryName}}</td>
+            <!-- <td>{{item.productRangeImage}}</td> -->
+            <td class="org-name-column">
+
+              <img [src]="environment + item.productRangeImage" class="img-fluid table-img"
+                (click)="openImageDialog(item)" />
+            </td>
+
+            <td>
+              <div class="action-buttons">
+
+                <a> <img src="/assets/edit-icon.svg" class="iconimg" (click)="editProductRange(item,i)"></a>
+
+                <a> <img src="/assets/trash-icon.svg" class="iconimg2" (click)="deleteProductRange(item)"> </a>
+
+                  <a> <img src="/assets/file-upload.svg" class="iconimg2" (click)="editProductImage(item)"> </a>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="isVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{width: '100%', maxWidth: '800px'}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  styleClass="custom-border-popup">
+  <div class="org-popup-container px-4">
+    <div class="popup-header d-flex justify-content-between align-items-center p-2">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      <h4 class="mb-3 pt-3 custom-color-h4">Add Product Ranges</h4>
+
+      <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn"><img
+          src="/assets/close.svg"></button>
+    </div>
+    <div class="popup-body p-3">
+
+      <form [formGroup]="createproductRangeForm" (ngSubmit)="submit()">
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <label for="organization" class="form-label">Category <span class="text-danger">*</span></label>
+            <select class="form-select form-select-sm custom-input form-control" id="organization"
+              formControlName="category_id">
+              <option value="" class="custom-placeholder" selected>Select Category</option>
+
+              <option *ngFor="let itr of catData" [value]="itr.id">{{ itr.name }}</option>
+            </select>
+            <div class="text-danger small custom-error"
+              *ngIf="createproductRangeForm.get('category_id')?.invalid && createproductRangeForm.get('category_id')?.touched">
+              Category is required
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="organization" class="form-label">Fuel <span class="text-danger">*</span></label>
+            <select class="form-select form-select-sm custom-input form-control" id="organization"
+              formControlName="fuel_id">
+              <option value="" class="custom-placeholder" selected>Select Fuel</option>
+              <option *ngFor="let itr of fuelData" [value]="itr.id">{{ itr.name }}</option>
+            </select>
+            <div class="text-danger small custom-error"
+              *ngIf="createproductRangeForm.get('fuel_id')?.invalid && (createproductRangeForm.get('fuel_id')?.touched )">
+              Fuel is required
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mb-4 mt-3">
+
+          <div class="row mb-2">
+            <div class="col-md-12">
+              <label class="form-label">Product Ranges <span class="text-danger">*</span></label>
+              <div class="row">
+                <div class="col-6 col-md-4">
+                  <input type="number" min="0" class="form-control form-control-sm" placeholder="From"
+                    formControlName="range_from" />
+                  <div class="text-danger small custom-error"
+                    *ngIf="createproductRangeForm.get('range_from')?.invalid && (createproductRangeForm.get('range_from')?.touched )">
+                    Fuel is required
+                  </div>
+
+
+                </div>
+                <div class="col-6 col-md-4">
+                  <input type="number" class="form-control form-control-sm" placeholder="To"
+                    formControlName="range_to" />
+                  <div
+                    *ngIf="createproductRangeForm.hasError('rangeInvalid') && createproductRangeForm.get('range_to')?.touched">
+                    <small class="text-danger small">The "To" range cannot be less than the "From" range.</small>
+                  </div>
+                  <div class="text-danger small custom-error"
+                    *ngIf="createproductRangeForm.get('range_to')?.invalid && (createproductRangeForm.get('range_to')?.touched)">
+                    To Range Should be greater than From range
+                  </div>
+                </div>
+                <div class="col-12 col-md-2 d-none d-md-block">
+                  <span class="fw-bold">KVA</span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div class="row g-2 align-items-center">
+          <label class="form-label">Product Range Image <span class="text-danger">*</span></label>
+          <input type="file" accept="image/*" class="form-control form-control-sm custom-file-input custom-input"
+            (change)="onProductImageSelect($event)" formControlName="product_image" (blur)="onProductImageTouched()" />
+
+          <div class="text-danger small custom-error"
+            *ngIf="createproductRangeForm.get('product_image')?.invalid && (createproductRangeForm.get('product_image')?.touched)">
+            Product image is required.
+          </div>
+        </div>
+
+
+        <div class="mb-4 mt-3">
+          <div class="row">
+            <div class="col-md-4">
+              <label for="FileName">File Name</label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="description"
+                formControlName="file_name" placeholder="File Name">
+
+
+            </div>
+
+            <div class="col-md-8">
+              <label for="presentation" class="form-label">Catalog</label>
+              <div class="input-group">
+                <!-- <input type="file"
+                    class="form-control form-control-sm custom-input custom-placeholder custom-file-input"
+                    (change)="onFileInput($event)" (blur)="onPresentationImageTouched()" multiple accept="image/*" /> -->
+                <input type="file"
+                  class="form-control form-control-sm custom-input custom-placeholder custom-file-input"
+                  (change)="onFileInput($event)"
+                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+              </div>
+
+              <div
+                *ngIf="createproductRangeForm.get('presentation')?.touched && createproductRangeForm.get('presentation')?.invalid"
+                class="text-danger small">
+                <div *ngIf="createproductRangeForm.get('presentation')?.errors?.['required']">
+                  Product catelog is required.
+                </div>
+                <div *ngIf="createproductRangeForm.get('presentation')?.errors?.['invalidSize']">
+                  {{ produtCatalogImageError }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="mb-3">
+          <div class="table-responsive">
+            <table class="table table-sm dotted-border align-middle text-center bg-light">
+              <thead>
+                <tr class="table-header">
+                  <th class="text-center custom-table-header">File Name</th>
+                  <th class="text-center custom-table-header">File</th>
+                  <th class="text-center custom-table-header">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of productCatalog; let i = index">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.file.name }}</td>
+                  <td>
+                    <img src="/assets/trash-icon.svg" style="width: 20px;" (click)="removePresentationFile(i)" />
+                  </td>
+                </tr>
+
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <div class="col-12 col-md-4 mb-2 mb-md-0">
+
+          <!-- <button type="submit" class="btn btn-success custom-btn btn-width">Submit</button>   -->
+
+
+
+        </div>
+
+        <div class="d-flex justify-content-center mt-5">
+          <button type="submit" class="btn btn-success custom-btn btn-width update-button">Submit</button>
+
+
+        </div>
+
+
+      </form>
+
+    </div>
+  </div>
+</p-dialog>
+
+
+<p-dialog [(visible)]="isnewProductRangeVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{width: '100%', maxWidth: '800px'}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  class="custom-border-popup">
+  <div class="org-popup-container px-4">
+    <div class="popup-header d-flex justify-content-between align-items-center p-2">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      <h4 class="mb-3 pt-3 custom-color-h4">Update Product Ranges</h4>
+
+      <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn"><img
+          src="/assets/close.svg"></button>
+    </div>
+    <div class="popup-body p-3">
+
+      <form [formGroup]="productRangeForm" (ngSubmit)="submit()">
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <label for="organization" class="form-label">Category <span class="text-danger">*</span></label>
+            <select class="form-select form-select-sm custom-input form-control" id="organization"
+              formControlName="category_id">
+              <option value="" class="custom-placeholder" selected>Select Category</option>
+
+              <option *ngFor="let itr of catData" [value]="itr.id">{{ itr.name }}</option>
+            </select>
+            <div class="text-danger small custom-error"
+              *ngIf="productRangeForm.get('category_id')?.invalid && (productRangeForm.get('category_id')?.touched)">
+              Category is required
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="organization" class="form-label">Fuel <span class="text-danger">*</span></label>
+            <select class="form-select form-select-sm custom-input form-control" id="organization"
+              formControlName="fuel_id">
+              <option value="" class="custom-placeholder" selected>Select Fuel</option>
+              <option *ngFor="let itr of fuelData" [value]="itr.id">{{ itr.name }}</option>
+            </select>
+            <div class="text-danger small custom-error"
+              *ngIf="productRangeForm.get('fuel_id')?.invalid && (productRangeForm.get('fuel_id')?.touched )">
+              Fuel is required
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="mb-4 mt-4">
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <label class="form-label">Product Ranges <span class="text-danger">*</span></label>
+              <div class="row">
+
+                <div class="col-3 col-md-4">
+                  <input type="number" class="form-control form-control-sm" placeholder="From"
+                    formControlName="range_from" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                  <div class="text-danger small custom-error"
+                    *ngIf="productRangeForm.get('range_from')?.invalid && productRangeForm.get('range_from')?.touched && !productRangeForm.hasError('rangeInvalid')">
+                    From value is required.
+                  </div>
+                </div>
+
+                <div class="col-3 col-md-4">
+                  <input type="number" class="form-control form-control-sm" placeholder="To" formControlName="range_to"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                  <div class="text-danger small custom-error"
+                    *ngIf="productRangeForm.get('range_to')?.invalid && productRangeForm.get('range_to')?.touched && !productRangeForm.hasError('rangeInvalid')">
+                    To value is required.
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-2 d-none d-md-block">
+                  <span class="fw-bold">KVA</span>
+                </div>
+
+              </div>
+
+              <div
+                *ngIf="productRangeForm.hasError('rangeInvalid') && (productRangeForm.get('range_from')?.touched || productRangeForm.get('range_to')?.touched)"
+                class="mt-1">
+                <small class="text-danger">
+                  To range value must be greater than From range value.
+                </small>
+              </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+              <label class="form-label"> Replace Product Range Image <span class="text-danger">*</span></label>
+              <div class="row">
+
+                <div class="col-12 col-md-4">
+
+                  <img *ngIf="!isProductImageReplace" [src]="environment +imagePreviewUrl" alt="Preview"
+                    style="height: 40px;" />
+                  <img *ngIf="isProductImageReplace" [src]="imagePreviewUrl" alt="Preview" style="height: 40px;" />
+                  <span *ngIf="!imagePreviewUrl" class="text-muted small">No image selected</span>
+
+                </div>
+
+                <div class="col-12 col-md-8">
+
+                  <input type="file" class="form-control form-control-sm custom-file-input custom-input"
+                    (change)="onProductImageSelecteForReplace($event)" formControlName="product_image"
+                    (blur)="onProductImageTouched()" />
+
+
+                </div>
+                <div class="text-danger small custom-error"
+                  *ngIf="productRangeForm.get('product_image')?.errors?.['invalidSize']">
+                  Image should be greater than 150(width)x135(height) and less than 330(width)x215(height).
+                </div>
+              </div>
+
+            </div>
+
+
+
+          </div>
+        </div>
+
+
+
+        <div class="d-flex justify-content-center mt-5">
+          <button *ngIf="!isEditMode" type="submit"
+            class="btn btn-success custom-btn btn-width update-button">Submit</button>
+          <button *ngIf="isEditMode" type="submit" class="btn btn-success custom-btn btn-width update-button"
+            (click)="updateProductRange()">Update</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</p-dialog>
+
+
+<p-dialog [(visible)]="imageDialogVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '95vw', maxWidth: '600px' }" [contentStyle]="{ padding: '0' }" styleClass="image-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  styleClass="register-popup">
+  <div class="card m-0">
+
+    <div class="popup-header d-flex justify-content-between align-items-center p-3">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30" />
+
+
+      <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">
+        <img src="/assets/close.svg">
+      </button>
+    </div>
+
+
+    <div class="px-3 pb-3">
+      <p-galleria [value]="selectedImageItems" thumbnailsPosition="bottom" [responsiveOptions]="[
+            { breakpoint: '1024px', numVisible: 5 },
+            { breakpoint: '768px', numVisible: 3 },
+            { breakpoint: '560px', numVisible: 1 }
+          ]" [containerStyle]="{ 'max-width': '100%' }" [numVisible]="5" [circular]="true" [showThumbnails]="false"
+        [autoPlay]="false">
+
+        <ng-template pTemplate="item" let-item>
+          <img [src]="environment + item.productRangeImage"
+            style="width: 100%; height: auto; max-height: 300px; object-fit: contain" />
+        </ng-template>
+
+
+      </p-galleria>
+    </div>
+  </div>
+</p-dialog>
+
+
+
+
+<!-- ==========/ -->
+
+<p-dialog [(visible)]="editProductImageVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '90vw', maxWidth: '800px', height: 'auto', maxHeight: '90vh' }" [contentStyle]="{ padding: '1rem' }"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  styleClass="register-popup">
+
+<form [formGroup]="addImagesForm">
+  <div class="row">
+    <div class="col-md-4">
+      <label>Product File Name</label>
+      <input type="text" class="form-control" formControlName="image_names" placeholder="Product Image Name">
+    </div>
+
+    <div class="col-md-5">
+      <label>Product Image</label>
+      <input #fileInput type="file" class="form-control" (change)="onImageSelect($event)">
+    </div>
+
+    <div class="col-md-3 d-flex align-items-end">
+      <button type="button" class="btn btn-primary" (click)="addImages()">Add</button>
+    </div>
+  </div>
+</form>
+
+<!-- Table for preview -->
+<table class="table mt-4" *ngIf="changeProdImagePairs.length > 0">
+  <thead>
+    <tr>
+      <th>Product Image Name</th>
+      <th>File Name</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of changeProdImagePairs; let i = index">
+  <td>{{ item.name }}</td>
+  <td>{{ item.file.name }}</td>
+  <td>
+    <button class="btn btn-sm btn-danger" >Remove</button>
+  </td>
+</tr>
+
+  </tbody>
+</table>
+
+<!-- Final submit -->
+<div class="text-center mt-3">
+  <button class="btn btn-success" (click)="submitImages()">Submit All</button>
+</div>
+
+
+
+
+</p-dialog>

@@ -1,0 +1,53 @@
+<div class="card-grid">
+
+  @if (catalogues_List.length === 0) {
+    <div class="no-data">
+      <img src="assets/no_data.png" alt="No Data" class="no-data-img" />
+      <p>Oops! No catalogues found.</p>
+
+    </div>
+  } @else if(catalogues_List.length > 0){
+  @for (card of catalogues_List; track card) {
+    <div class="card mt-4" (click)="openPDF(card)">
+      <div class="image-container">
+        <img src="assets/catalouge.png" alt="{{ card.file_name }}" />
+      </div>
+      <div class="card-footer" pTooltip="{{ card.file_name }}" tooltipPosition="top">
+        {{ card.file_name.length > 20 ? (card.file_name | slice:0:25) + '...' : card.file_name }}
+
+      </div>
+    </div>
+  }
+  }
+  <p-dialog
+  [(visible)]="showDialog"
+  [modal]="true"
+  [style]="{ width: '85vw', height: '90vh' }"
+  [header]="selectedFileName"
+  [closable]="true"
+  (onHide)="selectedFilePath = null"
+>
+@if(isPdfFile){
+  <!-- Loader Overlay -->
+  <div class="loader-overlay" *ngIf="isLoading">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+
+  <ng-container *ngIf="selectedFilePath">
+    <iframe
+      [src]="selectedFilePath"
+      width="100%"
+      height="100%"
+      style="border: none"
+      (load)="onIframeLoad()"
+    ></iframe>
+  </ng-container>
+}@else {
+  <div class="error-message">
+    <i class="pi pi-exclamation-triangle"></i>
+    <p>Oops! Unable to load the file. It might not be a PDF or there’s a server issue.</p>
+  </div>
+}
+</p-dialog>
+</div>

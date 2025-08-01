@@ -1,0 +1,165 @@
+
+.custom-header {
+    background-color: #ffffff; 
+    
+    /* padding: 10px 15px; */
+      padding: 2px 2px;
+    overflow: hidden;
+    z-index: 1000;
+    width: 100%;
+    position: fixed;
+
+  }
+
+
+  .logo {
+    /* height: 35px; */
+     height: 30px;
+  }
+  
+
+  .navbar-toggler {
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+  }
+  
+
+  .navbar-nav .nav-item {
+    margin: 0 10px;
+  }
+  
+  .navbar-nav .nav-item .nav-link {
+    color: white !important;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+  
+  .navbar-nav .nav-item .nav-link:hover {
+    color: #ffd700 !important; 
+  }
+  
+
+  .p-button {
+    background-color: white !important;
+    /* color: #19988B !important; */
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+  }
+  
+  .p-button:hover {
+    /* background-color: #158177 !important; */
+    color: white !important;
+  }
+  /* Wraps search input and icon buttons */
+/* Existing styles */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+  width: 100%;
+  padding: 0 1rem;
+  overflow: hidden;
+}
+
+/* Adjust search bar flexibility */
+.search-wrapper {
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-width: 0; /* critical for preventing wrapping */
+  max-width: 100%;
+  margin-left: 5rem;
+}
+
+.p-iconfield {
+  width: 100%;
+  position: relative;
+}
+
+.p-inputtext {
+  width: 100%;
+  padding-left: 2.5rem;
+  height: 30px;
+  border-radius: 6px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+}
+
+.p-inputtext::placeholder {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+:host ::ng-deep .p-iconfield .pi {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+/* Icons next to input */
+.icon-img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tweak layout for very small devices */
+@media (max-width: 576px) {
+  .search-container {
+    gap: 0.3rem;
+    padding: 0 0.5rem;
+  }
+
+  .icon-img {
+    width: 26px;
+    height: 26px;
+  }
+
+  .p-inputtext {
+    height: 28px;
+  }
+}
+
+
+:host ::ng-deep .p-iconfield .pi {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+/* Icon Button Style */
+.icon-img {
+  /* background-color: #19988B !important; */
+  /* color: white !important;
+  border: none;
+  border-radius: 50%; */
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+  @media (max-width: 992px) {
+    .navbar-nav {
+      text-align: center;
+    }
+    .nav-item {
+      margin-bottom: 10px;
+    }
+  }
+  

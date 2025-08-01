@@ -1,0 +1,79 @@
+<div class="container-fluid custom-wrapper">
+  <div class="card">
+    <div class="card-body">
+      <div class="row mb-4">
+
+        <div class="col-md-6  mb-3 mb-md-0">
+          <div class="search-container">
+            <input type="text" class="form-control custm-search search-input" placeholder="Search CategoryType..."
+              (input)="applyFilterGlobal($event, 'contains')">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+        </div>
+
+
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+
+
+          <button class="btn btn-success btn-sm" type="button" (click)="createNew()">
+            <span class="pi pi-plus p-1"></span> Create New
+          </button>
+
+        </div>
+      </div>
+
+      <p-table #dt [value]="incomingCatTypeData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[7, 10, 20, 50]"
+        [globalFilterFields]="['name', 'name', 'lowRange' ,'highRange','description']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+        dataKey="org_name" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th class="text-center vertical-alig" style="text-align: center;">Sr.No</th>
+      
+            <th class="text-center align-items">Category Type</th>
+            <th class="text-center align-items">Image</th>
+  
+     
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item let-itr="rowIndex">
+          <tr>
+           <td class="text-center align-items">{{ itr + 1 }}</td>
+            <td class="text-center align-items">{{ item.name }}</td> 
+
+    
+            <td class="text-center">
+             <img [src]="environment + item.image" class="img-fluid cat-img" /> 
+
+            </td>
+
+          
+          </tr>
+        </ng-template>
+
+      </p-table>
+    </div>
+  </div>
+</div>
+
+ <!-- [style]="{ width:'100%', maxWidth:'900px', height: '50%'}" -->
+
+<p-dialog [(visible)]="isVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '90vw', maxWidth: '600px', height: 'auto', maxHeight: '90vh' }"
+  [contentStyle]="{ padding: '1rem' }" [showHeader]="false"
+  [closeOnEscape]="true" [dismissableMask]="true" styleClass="register-popup">
+
+
+
+  <ng-container>
+
+
+
+    <app-category-form></app-category-form>
+
+
+  </ng-container>
+
+
+
+</p-dialog>

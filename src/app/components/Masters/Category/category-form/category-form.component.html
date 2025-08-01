@@ -1,0 +1,56 @@
+<div class="custom-popup">
+
+
+    <div class="org-popup-container px-3 px-md-4">
+
+        <div class="popup-header d-flex justify-content-between align-items-center p-2">
+            <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+            <h4 class="mb-0 pt-2 pt-md-3 custom-color-h4 text-center flex-grow-1">Add Category Type</h4>
+            <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">
+                <img src="/assets/close.svg">
+            </button>
+        </div>
+
+
+        <div class="popup-body p-3">
+            <div class=" d-flex justify-content-center w-100 mb-5">
+
+
+            </div>
+            <form [formGroup]="categoryTypeForm" (ngSubmit)="submitForm()">
+
+                <div class="row mb-4">
+   
+                    <div class="col-md-12">
+                        <label for="type" class="form-label">Category Type <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm custom-input" id="type" placeholder="Enter Category Type"
+                            formControlName="type" />
+                        <small class="text-danger"
+                            *ngIf="categoryTypeForm.get('type')?.invalid && categoryTypeForm.get('type')?.touched">
+                            Category type is required
+                        </small>
+                    </div>
+                    </div>
+
+                    <div class="row mb-4">
+                    <div class="col-md-12">
+                        <label for="image" class="form-label">Category Type Image <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control form-control-sm custom-input" id="image" formControlName="image"  (change)="onFileChange($event)" />
+                        <small class="text-danger"
+                            *ngIf="categoryTypeForm.get('image')?.invalid && categoryTypeForm.get('image')?.touched">
+                            Category image is required
+                        </small>
+                    </div>
+                </div>
+
+             
+                <div class="d-flex justify-content-center mt-5 mb-4">
+                    <button type="submit" class="btn btn-success custom-btn btn-width update-button">Submit</button>
+                </div>
+            </form>
+
+        </div>
+
+
+    </div>
+</div>

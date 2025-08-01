@@ -1,0 +1,16 @@
+<div class="settings-container">
+  @for (item of menuItems; track item) {
+    <div class="settings-item"  [routerLink]="item.route" tabindex="0">
+      <div class="icon-section">
+        <img [src]="item.image" alt="icon" class="icon-image" />
+      </div>
+      <div class="text-section">
+        <div class="title">{{ item.title }}</div>
+        <div class="subtitle">{{ item.subtitle }}</div>
+      </div>
+      <div class="arrow-section">
+        <i class="pi pi-angle-right"></i>
+      </div>
+    </div>
+  }
+</div>

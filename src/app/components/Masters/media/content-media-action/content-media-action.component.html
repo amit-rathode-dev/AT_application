@@ -1,0 +1,232 @@
+<div class="custom-popup">
+
+
+<div class="org-popup-container px-1 px-md-4">
+
+  <div class="popup-header d-flex justify-content-between align-items-center p-2">
+    <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30" />
+    <h4 class="mb-0 pt-2 pt-md-3 custom-color-h4 text-center flex-grow-1">Description</h4>
+    <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">
+      <img src="/assets/close.svg" />
+    </button> <!-- ✅ Fixed missing closing tag -->
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-3">
+      <p class="custom-media-text"><strong>Name:</strong></p>
+      <p class="custom-media-values mr-2">{{ mediaData?.file_name }}</p>
+    </div>
+
+    <div class="col-md-3">
+      <p class="custom-media-text"><strong>Media Type:</strong></p>
+      <p class="custom-media-values">{{ mediaData?.media_type }}</p>
+    </div>
+
+    <div class="col-md-3">
+      <p class="custom-media-text"><strong>Uploaded Date:</strong></p>
+      <p class="custom-media-values">{{ mediaData?.uploaded_on ? mediaData.uploaded_on : 'NA' }}</p>
+    </div>
+
+    <div class="col-md-3">
+      <p class="custom-media-text"><strong>Approved / Reject By:</strong></p>
+      <p class="custom-media-values">{{ mediaData?.action_taken_by  }}</p>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-7">
+      <div class="image-box-container">
+        <label class="custom-media-text">Uploaded File:</label>
+        <div class="image-box">
+          <img [src]="environment + mediaData?.file_path" class="img-fluid cat-img" />
+        </div>
+      </div>
+    </div>
+
+ 
+
+    <!-- <div class="col-md-5" *ngIf="contentManager">
+      <div class="status-section">
+        <div class="status-form">
+          <p class="custom-media-text mb-1"><strong>Status:</strong></p>
+          <p
+            class="custom-media-values"
+            [class.status-pending]="mediaData.approval_status?.toLowerCase() === 'pending'"
+            [class.status-reject]="['reject', 'rejected'].includes(mediaData.approval_status?.toLowerCase())"
+            [class.status-approved]="mediaData.approval_status?.toLowerCase() === 'approved'"
+            [class.status-uploaded]="mediaData.approval_status?.toLowerCase() === 'uploaded'"
+          >
+            {{ mediaData?.approval_status     }}
+          </p>
+
+          <p
+            *ngIf="mediaData?.approval_status?.toLowerCase() === 'rejected'"
+            class="custom-media-text mb-1"
+          >
+            <strong>Reason:</strong>
+          </p>
+          <p
+            *ngIf="mediaData?.approval_status?.toLowerCase() === 'rejected'"
+            class="custom-media-values"
+          >
+            {{ mediaData?.reason  }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="col-md-5" *ngIf="contentManager">
+      <div class="status-section">
+        <form (ngSubmit)="onSubmit()" #statusForm="ngForm">
+          <div class="status-form">
+            <label><strong>Status:</strong></label>
+            <div class="radio-group">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="status"
+                id="Approved"
+                value="Approved"
+                (click)="onStatusChange('Approved')"
+                [(ngModel)]="selectedStatus"
+                required
+              />
+              <label class="form-check-label" for="approve">Approve</label>
+
+              <input
+                class="form-check-input"
+                type="radio"
+                name="status"
+                id="Rejected"
+                value="Rejected"
+                [(ngModel)]="selectedStatus"
+                (change)="onStatusChange('Rejected')"
+                required
+              />
+              <label class="form-check-label" for="reject">Reject</label>
+            </div>
+          </div>
+
+          <div class="mt-3" *ngIf="showTextarea">
+            <label for="rejectReason" class="form-label">Reason for rejection:</label>
+            <textarea
+              id="rejectReason"
+              class="form-control"
+              rows="3"
+              [(ngModel)]="rejectionReason"
+              name="rejectionReason"
+              required
+            ></textarea>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+
+  <div
+    *ngIf="contentManager"
+    class="d-flex justify-content-center mt-5"
+  >
+    <button
+      type="submit"
+      class="btn btn-success custom-btn btn-width update-button"
+      (click)="onSubmit()"
+    >
+      Submit
+    </button>
+  </div> -->
+
+
+
+  <!-- RIGHT SIDE: Status Display + Approve/Reject Form -->
+<div class="col-md-5" *ngIf="contentManager">
+  <div class="status-section">
+    <div class="status-form mb-2">
+   
+      <p class="custom-media-text mb-1"><strong>Status:</strong></p>
+      <p
+        class="custom-media-values"
+        [class.status-pending]="mediaData.approval_status?.toLowerCase() === 'pending'"
+        [class.status-reject]="['reject', 'rejected'].includes(mediaData.approval_status?.toLowerCase())"
+        [class.status-approved]="mediaData.approval_status?.toLowerCase() === 'approved'"
+        [class.status-uploaded]="mediaData.approval_status?.toLowerCase() === 'uploaded'"
+      >
+        {{ mediaData?.approval_status }}
+      </p>
+
+      <ng-container *ngIf="mediaData?.approval_status?.toLowerCase() === 'rejected'">
+        <p class="custom-media-text mb-1"><strong>Reason:</strong></p>
+        <p class="custom-media-values">{{ mediaData?.special_user_reason }}</p>
+      </ng-container>
+    </div>
+
+  
+    <form *ngIf="mediaData?.admin_status?.toLowerCase() === 'approved' &&   ['uploaded'].includes(mediaData?.special_user_status?.toLowerCase()) " (ngSubmit)="onSubmit()" #statusForm="ngForm">
+      <div class="status-form">
+     
+        <div class="radio-group mb-3">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="status"
+            id="Approved"
+            value="Approved"
+            (change)="onStatusChange('Approved')"
+            [(ngModel)]="selectedStatus"
+            required
+          />
+          <label class="form-check-label me-3" for="Approved">Approve</label>
+
+          <input
+            class="form-check-input"
+            type="radio"
+            name="status"
+            id="Rejected"
+            value="Rejected"
+            (change)="onStatusChange('Rejected')"
+            [(ngModel)]="selectedStatus"
+            required
+          />
+          <label class="form-check-label" for="Rejected">Reject</label>
+        </div>
+
+        <!-- TEXTAREA: REASON FOR REJECTION -->
+        <div class="mt-0" *ngIf="showTextarea">
+          <label for="rejectReason" class="form-label background-color:#9E9E9E">Reason for rejection:</label>
+          <textarea
+            id="rejectReason"
+            class="form-control custom-text-area"
+            rows="2"
+            [(ngModel)]="rejectionReason"
+            name="rejectionReason"
+            required
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- SUBMIT BUTTON -->
+      <!-- <div class="d-flex justify-content-start mt-4">
+        <button
+          type="submit"
+          class="btn btn-success custom-btn btn-width update-button"
+        >
+          Submit
+        </button>
+      </div> -->
+    </form>
+  </div>
+</div>
+
+<div
+     *ngIf="mediaData?.admin_status?.toLowerCase() === 'approved' &&   ['uploaded'].includes(mediaData?.special_user_status?.toLowerCase()) "
+      class="d-flex justify-content-center mt-5">
+      <button type="submit" class="btn btn-success custom-btn btn-width update-button" (click)="onSubmit()">
+        Submit
+      </button>
+    </div>
+
+</div>
+
+</div>

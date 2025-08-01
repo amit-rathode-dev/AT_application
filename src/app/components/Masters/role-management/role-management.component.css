@@ -1,0 +1,216 @@
+.cusom-container {
+
+  width: calc(1250px + 4px);
+}
+
+.body {
+  background: #DFEEEC;
+
+}
+
+.custom-wrapper {
+  margin-top: 4rem;
+}
+
+
+.p-button.p-button-success {
+  color: #ffffff;
+  background: #24AFA1A8 !important;
+  border: 1px solid #24AFA1A8 !important;
+}
+
+
+:host ::ng-deep {
+  .user-table-header {
+    background-color: #5bc0be;
+    color: white;
+  }
+
+  .p-datatable .p-datatable-thead>tr>th {
+    background-color: #5bc0be;
+    color: white;
+    font-weight: 500;
+    padding: 0.75rem;
+  }
+
+  .p-datatable .p-datatable-tbody>tr.selected-row {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+  }
+
+  .p-datatable .p-datatable-tbody>tr:hover {
+    background-color: #f0f8ff;
+  }
+
+  .p-inputtext {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    .action-buttons {
+      justify-content: flex-start;
+    }
+
+    .p-datatable-responsive-demo .p-datatable-tbody>tr>td .p-column-title {
+      display: inline-block;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+
+:host ::ng-deep .user-table-header th {
+  background-color: #24AFA1A8 !important;
+  color: white !important;
+}
+
+
+::ng-deep .p-dialog.register-popup {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.role-popup-container {
+  background: #fff;
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+}
+
+.popup-header {
+
+  padding-bottom: 1rem;
+}
+
+.popup-body h4 {
+  color: #158b7f;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.role-input.form-control {
+  width: 400px;
+  padding: 6px;
+  border-radius: 8px;
+  background-color: #F7F7F7;
+  border: 0px solid #ccc;
+}
+
+.btn.btn-success:hover {
+  background-color: #11776f;
+  border-color: #11776f;
+}
+
+.btn.btn-danger {
+  display: none;
+}
+
+.btn-close {
+
+  border: none;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+
+
+.swal2-confirm-custom {
+  background-color: #28a745 !important;
+  color: white !important;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.swal2-cancel-custom {
+  background-color: transparent !important;
+  color: #6c757d !important;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.custom-css-search {
+  border-radius: 25px;
+}
+
+.custom-btn {
+  height: 60px;
+  background-color: #19988B;
+  ;
+}
+
+
+
+
+/* GENERAL CONTAINER */
+
+
+
+
+
+.p-button.p-button-success {
+  color: #ffffff;
+  background: #24AFA1A8 !important;
+  border: 1px solid #24AFA1A8 !important;
+}
+
+.custom-btn {
+
+  height: 40px;
+  width: 18rem;
+  margin-top: 5px;
+ background-color: #19988B;  
+}
+
+
+::ng-deep .p-datatable .p-datatable-tbody>tr {
+  border-bottom: 1px dashed #ccc !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody>tr:last-child {
+  border-bottom: none !important;
+}
+
+
+.update-button {
+  width: rem;
+}
+
+
+::ng-deep .p-datatable td,
+::ng-deep .p-datatable th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+ ::ng-deep .swal2-confirm-custom{
+  background-color: teal !important; 
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+ ::ng-deep.swal2-cancel-custom {
+
+  background-color:  #e0e0e0 !important; ; 
+  color: #6c757d !important;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+

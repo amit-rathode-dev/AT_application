@@ -1,0 +1,199 @@
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 1.5rem;
+    padding: 0.5rem;
+  }
+  
+  /* Keep same */
+  .genset-card {
+    flex: 1 1 280px;
+    max-width: 340px;
+    
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.226);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  :host ::ng-deep .p-card .p-card-content {
+    padding:0;
+}
+  :host ::ng-deep .p-card .p-card-body {
+    padding: 0;
+    min-height: 260px;
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: #19988b;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-weight: 500;
+    flex-direction: row;
+  }
+  
+  .title-left {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .main-title {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .sub-title {
+    font-size: 0.8rem;
+    font-weight: 400;
+    opacity: 0.9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .title-right {
+    font-size: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+  
+  
+  .title-left,
+  .title-right {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .genset-image {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .fuel-info {
+    max-height: 4rem;
+    overflow-y: auto;
+  }
+  .fuel-info::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .fuel-item {
+    font-size: 0.95rem;
+    color: #626262;
+    position: relative;
+  
+  }
+  
+
+  
+  .arrow-icon-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .arrow-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  
+  .fuel-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    /* background-color: #19988B; */
+  }
+  
+
+  .arrow-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  
+  /* .title-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 0.5rem;
+  } */
+  
+  .icon1 {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    margin-left: 0.25rem;
+    cursor: pointer;
+  }
+  
+  .genset-image {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    display: block;
+    /* padding: 1rem; */
+  }
+  .no-data-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85vh; /* Adjust based on screen */
+    width: 100%;
+  }
+  
+  .no-data-image {
+    width: 200px;
+    height: auto;
+    opacity: 0.6;
+  }
+  .notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* align left */
+    gap: 1rem;                   /* space between back icon and title */
+    padding: 0.5rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .back-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #19988B;
+  }
+  
+  .title {
+    font-size: 1.4rem;
+    color: #19988B;
+    margin: auto;
+  }
+  
+  @media (max-width: 576px) {
+    .title {
+      font-size: 1.2rem;
+    }
+  }
+  

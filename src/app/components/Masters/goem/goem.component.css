@@ -1,0 +1,370 @@
+.cusom-container {
+
+  width: calc(1250px + 4px);
+}
+
+.body {
+  background: #DFEEEC;
+
+}
+
+.custom-wrapper {
+  margin-top: 4rem;
+}
+
+
+.p-button.p-button-success {
+  color: #ffffff;
+  background: #24AFA1A8 !important;
+  border: 1px solid #24AFA1A8 !important;
+}
+
+
+:host ::ng-deep {
+  .user-table-header {
+    background-color: #5bc0be;
+    color: white;
+  }
+
+  .p-datatable .p-datatable-thead>tr>th {
+    background-color: #5bc0be;
+    color: white;
+    font-weight: 500;
+    padding: 0.75rem;
+  }
+
+  .p-datatable .p-datatable-tbody>tr.selected-row {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+  }
+
+  .p-datatable .p-datatable-tbody>tr:hover {
+    background-color: #f0f8ff;
+  }
+
+  .p-inputtext {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    .action-buttons {
+      justify-content: flex-start;
+    }
+
+    .p-datatable-responsive-demo .p-datatable-tbody>tr>td .p-column-title {
+      display: inline-block;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+
+:host ::ng-deep .user-table-header th {
+  background-color: #24AFA1A8 !important;
+  color: white !important;
+}
+
+
+::ng-deep .p-dialog.register-popup {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.role-popup-container {
+  background: #fff;
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+}
+
+.popup-header {
+
+  padding-bottom: 1rem;
+}
+
+.popup-body h4 {
+  color: #158b7f;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.fuel-input.form-control {
+  width: 400px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.btn.btn-success:hover {
+  background-color: #11776f;
+  border-color: #11776f;
+}
+
+.btn.btn-danger {
+  display: none;
+}
+
+.btn-close {
+
+  border: none;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+
+
+
+
+.custom-css-search {
+  border-radius: 25px;
+}
+
+.custom-btn {
+  height: 60px;
+  background-color: #19988B;
+  ;
+}
+
+
+
+
+
+.p-button.p-button-success {
+  color: #ffffff;
+  background: #24AFA1A8 !important;
+  border: 1px solid #24AFA1A8 !important;
+}
+
+.custom-btn {
+  height: 50px;
+  background-color: #19988B;
+  ;
+}
+
+
+.search-container {
+  position: relative;
+}
+
+/* .search-input {
+  height: 50px;
+  border-radius: 30px;
+  padding-left: 35px;
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+} */
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+
+.search-input {
+  width: 100%;
+  padding-left: 35px;
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: var(--bs-body-color);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 0.2;
+  color: #0e0f11;
+  background-color: var(--bs-body-bg);
+  border-radius: 25px !important;
+  background-clip: padding-box;
+  appearance: none;
+  border: var(--bs-border-width) solid var(--bs-border-color) !important;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.search-input:focus {
+
+  box-shadow: 0 0 0 0.12rem rgba(25, 152, 139, 0.25);
+  border: var(--bs-border-width) solid
+}
+
+.custm-search {
+  border-radius: 25px;
+  height: 2.3rem;
+  box-shadow: none;
+}
+
+.custm-search::placeholder {
+  padding-left: 2rem;
+}
+
+
+
+::ng-deep .p-datatable .p-datatable-tbody>tr {
+  border-bottom: 1px dashed #ccc !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody>tr:last-child {
+  border-bottom: none !important;
+}
+
+
+.update-button {
+  width: 18rem;
+}
+
+
+::ng-deep .p-datatable td,
+::ng-deep .p-datatable th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+::ng-deep .p-dialog.register-popup {
+  border-radius: 10px;
+
+}
+
+
+::ng-deep .custom-goem-dropdown .p-multiselect {
+  width: 100% !important;
+  height: 35px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  padding: 0;
+  border: none;
+}
+
+::ng-deep .custom-goem-dropdown .p-multiselect-label {
+  line-height: 35px;
+  padding: 0 10px;
+  color: white;
+}
+
+::ng-deep .custom-goem-dropdown .p-multiselect-trigger {
+  height: 35px;
+  color: white;
+  padding-right: 10px;
+}
+
+.delete-icon {
+  width: 18px;
+}
+
+::ng-deep .p-multiselect-label.p-placeholder {
+  color: #A6A6A6 !important;
+}
+
+::ng-deep .p-multiselect-label:not(.p-placeholder) {
+  color: #2C2C2C !important;
+}
+
+::ng-deep .custom-goem-dropdown .p-multiselect {
+  background-color: #F7F7F7;
+  border: 0px solid #A7A7A7;
+}
+
+
+.custom-dropdown {
+  width: 100%;
+  height: 42px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  padding: 0.2rem 0.5rem;
+}
+::ng-deep .custom-dropdown  .p-dropdown-open ol, ul {
+padding: 0rem;
+}
+
+.p-dropdown-panel {
+  border-radius: 10px;
+  padding: 0.5rem 0;
+}
+
+/* Option items */
+.p-dropdown-item {
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+}
+
+/* Highlight selected item */
+.p-dropdown-item.p-highlight {
+  background-color: #008080 !important;
+  /* Teal */
+  color: rgb(206, 17, 17);
+}
+
+.p-dropdown-label.p-placeholder {
+  color: #ad1414;
+  font-style: italic;
+}
+
+::ng-deep .p-dropdown-item {
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+}
+
+::ng-deep .p-dropdown-item.p-highlight ol,
+ul {
+  padding: aut0.5rem 1rem;
+
+}
+
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder{
+  padding: 8px;
+  color: #A6A6A6;
+  height: 36px;
+}
+
+::ng-deep .p-icon{ 
+    color: #19988B;
+}
+
+::ng-deep .p-checkbox  {
+  background-color: teal;
+  color: teal;
+}
+
+::ng-deep .p-multiselect ol, ul{
+  padding: 0px;
+}
+
+::ng-deep .p-multiselect-items-wrapper ul{
+  padding: 0rem;
+}
+
+::ng-deep .p-inputtext{
+padding: 0.2rem 0.3rem;
+}
+
+
+
+
+ ::ng-deep .swal2-confirm-custom{
+  background-color: teal !important; 
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+ ::ng-deep.swal2-cancel-custom {
+
+  background-color:  #e0e0e0 !important; ; 
+  color: #6c757d !important;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}

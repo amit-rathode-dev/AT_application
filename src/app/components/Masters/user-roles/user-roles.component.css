@@ -1,0 +1,213 @@
+.cusom-container {
+
+  width: calc(1250px + 5px);
+}
+
+.body {
+  background: #DFEEEC;
+
+}
+
+.custom-wrapper {
+  margin-top: 4rem;
+}
+
+.p-button.p-button-success {
+  color: #ffffff;
+  background: #24AFA1A8 !important;
+  border: 1px solid #24AFA1A8 !important;
+}
+
+
+
+
+/* =========== */
+
+:host ::ng-deep {
+  .user-table-header {
+    background-color: #5bc0be;
+    color: white;
+
+  }
+
+  .p-datatable .p-datatable-thead>tr>th {
+    background-color: #5bc0be;
+    color: white;
+    font-weight: 100;
+    /* padding: 0.75rem; */
+    /* changed on 12-05-25 */
+    padding: 0.2rem;
+  }
+
+  .p-datatable .p-datatable-tbody>tr.selected-row {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+  }
+
+  .p-datatable .p-datatable-tbody>tr:hover {
+    background-color: #f0f8ff;
+  }
+
+  .p-inputtext {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    .action-buttons {
+      justify-content: flex-start;
+    }
+
+    .p-datatable-responsive-demo .p-datatable-tbody>tr>td .p-column-title {
+      display: inline-block;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+
+:host ::ng-deep .user-table-header th {
+  background-color: #24AFA1A8 !important;
+  color: white !important;
+}
+
+
+.label-color {
+  color: #000000;
+
+}
+
+
+:host ::ng-deep .p-dialog {
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.p-dropdown {
+  width: 100% !important;
+  height: 5% !important;
+}
+
+
+
+
+.custom-css-search {
+  border-radius: 25px;
+}
+
+
+
+.custom-btn {
+  /* height: 50px; */
+  background-color: #19988B;
+  ;
+}
+
+
+::ng-deep .p-datatable .p-datatable-tbody>tr {
+  border-bottom: 1px dashed #ccc;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody>tr:last-child {
+  border-bottom: none;
+}
+
+
+.update-button {
+  width: 28rem;
+}
+
+
+
+::ng-deep .p-dialog.register-popup {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+
+
+
+::ng-deep .p-dialog.register-popup .p-dialog-content {
+  overflow-y: auto;
+  flex-grow: 1;
+
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
+.closeDialog {
+  cursor: pointer;
+}
+
+.close-btnnn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.active-text {
+  color: green;
+
+}
+
+.inactive-text {
+  color: red;
+
+}
+
+/* 
+::ng-deep .p-inputtext {
+  padding: 0.1rem 0.1rem;
+  color: #A6A6A6 !important;
+  font-size: .875rem;
+  padding-left: .5rem;
+} */
+ ::ng-deep .organization-dropdown-wrapper .p-dropdown .p-inputtext {
+  padding: 0.1rem 0.1rem;
+  color: #A6A6A6 !important;
+  font-size: 0.875rem;
+  padding-left: 0.5rem;
+}
+
+
+
+:host {
+
+  ::ng-deep .my-local-dd .p-placeholder {
+    margin-top: 0.1rem;
+  }
+}
+
+
+ ::ng-deep .swal2-confirm-custom{
+  background-color: teal !important; 
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+ ::ng-deep.swal2-cancel-custom {
+
+  background-color:  #e0e0e0 !important; ; 
+  color: #6c757d !important;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}

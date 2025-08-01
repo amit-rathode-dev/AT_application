@@ -1,0 +1,75 @@
+<div class="notification-header">
+    <i class="pi pi-arrow-left back-icon" (click)="goBack()"></i>
+    <h2 class="title">{{gensetList[0]?.category_name}}</h2>
+  </div>
+<div class="card-container">
+      
+      
+    @if (gensetList?.length > 0) {
+      @for (genset of gensetList; track genset.name) {
+        <p-card class="genset-card" (click)="goToAllRange(genset)">
+            <ng-template pTemplate="header">
+                <div class="card-header">
+                  <div class="title-left">
+                    <div class="main-title" [pTooltip]="genset.name" tooltipPosition="top">
+                      {{ genset.name || 'Sentinel series' }}
+                    </div>
+                    <div class="sub-title">
+                      {{ genset.description || 'Home & Small Business' }}
+                    </div>
+                  </div>
+                  <span class="title-right" [pTooltip]="genset.kvaRange" tooltipPosition="top">
+                    {{ genset.lowRange}}~{{ genset.highRange  }}kVA
+                  </span>
+                </div>
+              </ng-template>
+              
+          
+            <div class="card-body">
+              <img
+                class="genset-image"
+                [src]="environment.apiUrl + genset.image"
+                [alt]="genset.name"
+                loading="lazy"
+              />
+          
+            
+              <div class="row">
+                <div class="col-sm-10 fuel-info">
+                    <div
+                    class="fuel-item  "
+                    *ngFor="let fuel of genset.fuel"
+                  >
+                @if(fuel.name=='Petrol'){
+
+                    <img src="/assets/petrol_icon.svg" class="fuel-icon me-2" [alt]="fuel.type + ' Icon'" />
+                }@else if(fuel.name=='Diesel'){
+                    <img src="/assets/diesel_icon.svg" class="fuel-icon me-2" [alt]="fuel.type + ' Icon'" />
+                }@else if (fuel.name=='Natural Gas') {
+                    <img src="/assets/natural_gas_icon.svg" class="fuel-icon me-2" [alt]="fuel.type + ' Icon'" />
+                }@else{
+                    <img src="/assets/optiprime_solution_icon.svg" class="fuel-icon me-2" [alt]="fuel.type + ' Icon'" />
+                }
+                   
+                    <span class="fuel-label">{{ fuel.name }}: {{ fuel.lowRange }}~{{fuel.highRange}} kVA</span>
+                
+                  
+                  </div>
+                </div>
+                <!-- <div class="col-sm-2">
+                    <img src="assets/uparrow.png" alt="Go" class="arrow-icon" />
+                </div> -->
+              </div>
+            
+            </div>
+          </p-card>
+          
+      }
+     } @else {
+        <div class="no-data-container">
+          <img src="/assets/no_data.png" alt="No Data Found" class="no-data-image" />
+        </div>
+      }
+    
+    </div>
+    

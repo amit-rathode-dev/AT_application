@@ -1,0 +1,1109 @@
+<div class="container-fluid custom-wrapper">
+  <div class="card">
+    <div class="card-body">
+      <div class="row mb-4">
+
+        <div class="col-md-6  mb-3 mb-md-0">
+          <div class="search-container">
+            <input type="text" class="form-control custm-search search-input" placeholder="Search Product Ranges..."
+              (input)="applyFilterGlobal($event, 'contains')">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+        </div>
+
+
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+
+          <button class="btn btn-success btn-sm ms-2" type="button" (click)="createNew()">
+            <span class="pi pi-plus p-1"></span> Create Variant
+          </button>
+
+        </div>
+      </div>
+
+      <p-table #dt [value]="VariantData" class="product-table" [paginator]="true" [rows]="7"
+        [rowsPerPageOptions]="[7, 10, 20, 50]" [globalFilterFields]="['categoryName','lowRange','highRange','fuelName']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id"
+        styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+
+
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th pSortableColumn="srno">Sr.No </th>
+            <th pSortableColumn="name"> Variant </th>
+            <th pSortableColumn="name"> Product </th>
+            <th pSortableColumn="name"> Variant Id</th>
+            <th pSortableColumn="name">Category </th>
+            <th pSortableColumn="name">Fuel </th>
+            <th pSortableColumn="name">Description </th>
+            <th pSortableColumn="name">Product Image </th>
+            <th pSortableColumn="name"> Range </th>
+            <th pSortableColumn="name">Presenatation </th>
+            <th pSortableColumn="name">Video </th>
+            <th pSortableColumn="name">Specification </th>
+            <th>Action</th>
+          </tr>
+        </ng-template>
+
+
+        <ng-template pTemplate="body" let-item let-i="rowIndex">
+          <tr let item of productData let index=0>
+
+            <td>{{ i + 1 }}</td>
+            <td>{{item.variant_name}}</td>
+            <td>{{item.product_name}}</td>
+            <td>{{item.variant_id}}</td>
+            <td>{{item.category_name}}</td>
+            <td>{{item.fuel_name}}</td>
+            <td>{{item.description}}</td>
+
+            <td class="text-center align-middle wrap-text">
+              <!-- <a href="javascript:void(0)" (click)="openImageDialog(item.id)"><span>Image</span></a> -->
+                 <img [src]="environment + item.product_image[0]?.product_image" class="img-fluid prod-img"
+                (click)="openImageDialog(item.id)" />
+            </td>
+
+            <td>{{ item.range_from }} - {{item.range_to}}</td>
+
+              <td class="text-center align-middle">
+              <ng-container *ngIf="item.presentation?.length > 0">
+                <a href="javascript:void(0)" (click)="openPresentationDialog(item.presentation)">
+                  Presentations
+                </a>
+              </ng-container>
+              <ng-container *ngIf="!item.presentation?.length">
+                NA
+              </ng-container>
+            </td>
+
+              <td class="text-center align-middle">
+              <ng-container *ngIf="videoLinkMap[item.id] && videoLinkMap[item.id].length > 0; else noVideo">
+                <a  class="teal-clickable" href="javascript:void(0)" (click)="onProductClick(item.id)">
+                  Show Videos
+                </a>
+              </ng-container>
+              <ng-template #noVideo>NA</ng-template>
+            </td>
+
+
+       
+            <td class="text-center align-items"> <a> <img src="/assets/eye.svg"  class="iconimg2" (click)="openDetailPopup(item)"> </a></td>
+
+            <td>
+
+              <div class="action-buttons">
+
+                <a> <img src="/assets/trash-icon.svg" class="iconimg2" (click)="deleteVariant(item)"> </a>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+
+<p-dialog [(visible)]="variantVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '100%', maxWidth: '800px' }" [contentStyle]="{ padding: '0' }" styleClass="register-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  class="custom-border-popup">
+
+
+  <div class="custom-popup">
+
+
+    <div class="org-popup-container px-3 px-md-4">
+
+      <div class="popup-header d-flex justify-content-between align-items-center p-2">
+        <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+        <h4 class="mb-0 pt-2 pt-md-3 custom-color-h4 text-center flex-grow-1">Create Variant</h4>
+        <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">
+          <img src="/assets/close.svg">
+        </button>
+      </div>
+
+      <div class="d-flex justify-content-center mt-3 mb-3">
+        <div class="d-flex align-items-center position-relative" style="width: 200px; gap: 120px;">
+          <div class="step-parent">
+            <div [ngClass]="{
+              'bg-success': step >= 1,
+              'bg-secondary': step < 1
+            }" class="step-circle bg-success text-white d-flex align-items-center justify-content-center"
+              style="width: 40px; height: 40px; z-index: 1;">
+              1
+            </div>
+
+          </div>
+
+
+          <div [ngClass]="{
+            'bg-success': step === 2,
+            'bg-secondary': step < 2
+          }" class="position-absolute bg-success"
+            style="height: 2px; top: 50%; left: 50px; right: 30px; transform: translateY(-50%); z-index: 0;">
+          </div>
+
+
+          <div [ngClass]="{
+            'step-temp-outter-Border': step !== 2,
+            'step-parent': step === 2,
+            'bg-secondary': step < 1
+          }">
+
+
+            <div [ngClass]="{
+            'step-circle': step === 2,
+            'step-circle-temp': step !== 2,
+            'bg-success': step === 2,
+            'bg-secondary': step < 2,
+            'text-white': true,
+            'd-flex': true,
+            'align-items-center': true,
+            'justify-content-center': true,
+            'ms-auto': true
+          }" style="width: 40px; height: 40px; z-index: 1;">
+              2
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <form *ngIf="step == 1" [formGroup]="productFormVariantForm">
+        <div class="row mb-3">
+
+          <div class="row">
+            <div class="col-md-4">
+
+              <label for="category" class="form-label">Select Product<span class="text-danger">*</span></label>
+              <select class="form-select form-select-sm custom-input form-control" id="category"
+                formControlName="productId" (change)="onProductChange($event)">
+                <option value="" class="custom-placeholder" selected>--</option>
+                <option *ngFor="let itr of incomingDataProductData" [value]="itr.id">{{ itr.product_name }}</option>
+              </select>
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm.get('category')?.invalid && productFormVariantForm.get('category')?.touched">
+                Category is required
+              </div>
+
+
+            </div>
+
+            <div class="col-md-4">
+
+
+              <label class="form-label">Variant Name</label>
+
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder"
+                formControlName="variant_name" placeholder="Variant Name">
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm.get('variant_name')?.invalid && productFormVariantForm.get('variant_name')?.touched">
+                Variant is required
+              </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+              <label class="form-label">Category</label>
+              <div class="form-control variant-form-fields custom-placeholder">
+                {{ productFormVariantForm.get('category')?.value || 'N/A' }}
+
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+          <div class="row">
+            <div class="col-md-6">
+
+              <label class="form-label">Range</label>
+              <div class="form-control variant-form-fields custom-placeholder">
+                {{ productFormVariantForm.get('range')?.value || 'N/A' }}
+              </div>
+
+            </div>
+            <div class="col-md-6">
+
+              <label class="form-label">Fuel</label>
+              <div class="form-control custom-placeholder variant-form-fields">
+                {{ productFormVariantForm.get('fuel')?.value || 'N/A' }}
+              </div>
+
+            </div>
+          </div>
+
+
+
+
+
+
+
+        </div>
+
+        <div class="mb-3">
+
+          <label for="description" class="form-label">Product Description</label>
+          <textarea class="form-control form-control-sm custom-input custom-placeholder"
+            style="background-color: #e9ecef;" id="description" rows="4" formControlName="description"
+            placeholder="Description"></textarea>
+          <div class="text-danger small"
+            *ngIf="productFormVariantForm.get('description')?.invalid && productFormVariantForm.get('description')?.touched">
+            Product Description is required
+          </div>
+        </div>
+
+
+
+
+
+        <div class="d-flex justify-content-end mb-3">
+
+          <button type="button" class="btn btn-primary px-4" style="background-color: #c27c54; border-color: #c27c54;"
+            (click)="goToNextStepForVariant()">
+            Next <img class="nextbutton" src="/assets/next-icon.svg" alt="Edit" />
+          </button>
+        </div>
+      </form>
+
+      <form [formGroup]="productFormVariantForm2" *ngIf="step == 2">
+
+        <h5 class="text-success fw-bold mb-3">PRODUCT SPECIFICATION</h5>
+
+
+
+        <div class="container-fluid">
+
+          <div class="mb-4">
+
+            <p class="fw-bold mb-3">Genset Specification</p>
+
+            <div class="row g-3 mb-3">
+
+
+              <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+                <label for="model" class="form-label">Model <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="model"
+                  formControlName="modelName" placeholder="Model Name">
+                <div class="text-danger small"
+                  *ngIf="productFormVariantForm2.get('modelName')?.invalid && productFormVariantForm2.get('modelName')?.touched">
+                  Model is required
+                </div>
+              </div>
+
+
+              <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+                <label for="fuel_tank" class="form-label">Fuel Tank Capacity <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="number"
+                  formControlName="fuel_tank" placeholder="Capacity">
+                <div class="text-danger small"
+                  *ngIf="productFormVariantForm2.get('fuel_tank')?.invalid && productFormVariantForm2.get('fuel_tank')?.touched">
+                  Fuel tank is required
+                </div>
+              </div>
+
+
+              <div class="col-12 col-sm-6 col-lg-2 mb-3 mb-lg-0">
+                <label for="unitForFuel" class="form-label">Unit</label>
+                <select class="form-select form-select-sm custom-input" id="unitForFuel" formControlName="unitForFuel">
+                  <option value="" selected>--</option>
+                  <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+                </select>
+                <div class="text-danger small"
+                  *ngIf="productFormVariantForm2.get('unitForFuel')?.invalid && productFormVariantForm2.get('unitForFuel')?.touched">
+                  Unit is required
+                </div>
+              </div>
+
+
+              <div class="col-12 col-sm-6 col-lg-2 mb-3 mb-lg-0">
+                <label for="weight" class="form-label">Weight <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="weight"
+                  formControlName="weight" placeholder="Weight">
+                <div class="text-danger small"
+                  *ngIf="productFormVariantForm2.get('weight')?.invalid && productFormVariantForm2.get('weight')?.touched">
+                  Weight is required
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-2">
+                <label for="range" class="form-label">Unit</label>
+                <select class="form-select form-select-sm custom-input  " id="product" formControlName="gensetUnit">
+                  <option value="" selected>--</option>
+                  <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+                </select>
+                <div class="text-danger small"
+                  *ngIf="productFormVariantForm2.get('gensetUnit')?.invalid && productFormVariantForm2.get('gensetUnit')?.touched">
+                  Unit is required
+                </div>
+
+              </div>
+
+            </div>
+
+
+
+            <div class="row g-3 mb-3">
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="length" class="form-label">Length <span class="text-danger">*</span></label>
+                <div class="input-group input-group-sm">
+                  <input type="text" class="form-control  form-control-sm custom-input custom-placeholder " id="length"
+                    formControlName="length" placeholder="Length">
+                  <span class="input-group-text">mm</span>
+
+                </div>
+                <div class="text-danger small"
+                  *ngIf="productFormVariantForm2.get('length')?.invalid && productFormVariantForm2.get('length')?.touched">
+                  Length is required
+                </div>
+              </div>
+
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="width" class="form-label">Width <span class="text-danger">*</span></label>
+                <div class="input-group input-group-sm">
+                  <input type="text" class="form-control  form-control-sm custom-input custom-placeholder " id="width"
+                    formControlName="width" placeholder="Width">
+                  <span class="input-group-text">mm</span>
+
+
+
+                </div>
+                <div class="text-danger small"
+                  *ngIf="productFormVariantForm2.get('width')?.invalid && productFormVariantForm2.get('width')?.touched">
+                  Width is required
+                </div>
+              </div>
+
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="height" class="form-label">Height <span class="text-danger">*</span></label>
+                <div class="input-group input-group-sm">
+                  <input type="text" class="form-control  form-control-sm custom-input custom-placeholder " id="height"
+                    formControlName="height" placeholder="Height">
+                  <span class="input-group-text">mm</span>
+
+                </div>
+                <div class="text-danger small"
+                  *ngIf="productFormVariantForm2.get('height')?.invalid && productFormVariantForm2.get('height')?.touched">
+                  Height is required
+                </div>
+
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="range" class="form-label">Unit</label>
+                <select class="form-select form-select-sm custom-input " id="product" formControlName="dimension_unit">
+                  <option value="" selected>Select</option>
+                  <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+                </select>
+
+                <div class="text-danger small"
+                  *ngIf="productFormVariantForm2.get('dimension_unit')?.invalid && productFormVariantForm2.get('dimension_unit')?.touched">
+                  Unit is required
+                </div>
+              </div>
+
+
+            </div>
+
+
+          </div>
+        </div>
+
+
+        <!-- <hr class="text-info"> -->
+           <hr class="section-divider" />
+
+
+        <div class="mb-4 mt-5">
+
+          <p class="fw-bold mb-3">Engine Specification</p>
+
+          <div class="row g-3 mb-3">
+
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+              <label for="model" class="form-label">Engine Model <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="model"
+                formControlName="engineModel" placeholder="Engine Model">
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('engineModel')?.invalid && productFormVariantForm2.get('engineModel')?.touched">
+                Engine Model is required
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2 mb-lg-0">
+              <label for="fuel_tank" class="form-label">No. Of cylinder<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="fuel_tank"
+                formControlName="cylinders" placeholder="No of Cylinders">
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('cylinders')?.invalid && productFormVariantForm2.get('cylinders')?.touched">
+                Cylinders count is required
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-2 mb-3 mb-lg-0">
+              <label for="unitForFuel" class="form-label">Unit</label>
+              <select class="form-select form-select-sm  custom-input" id="unitForFuel"
+                formControlName="unitForClynder">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('unitForClynder')?.invalid && productFormVariantForm2.get('unitForClynder')?.touched">
+                Unit is required
+              </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+              <label for="weight" class="form-label">Cubic Capacity ^2 <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-sm custom-input  custom-placeholder" id="weight"
+                formControlName="cubeCapacity" placeholder="Capacity">
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('cubeCapacity')?.invalid && productFormVariantForm2.get('cubeCapacity')?.touched">
+                Cube Capacity is required
+              </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2">
+              <label for="range" class="form-label">Unit</label>
+              <select class="form-select form-select-sm custom-input " id="range" formControlName="cubeCapacityUnit">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('cubeCapacityUnit')?.invalid && productFormVariantForm2.get('cubeCapacityUnit')?.touched">
+                unit is required
+              </div>
+            </div>
+
+          </div>
+
+
+
+          <div class="row g-3 p-1 mb-3">
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <label for="length" class="form-label">Lube oil change period <span class="text-danger">*</span></label>
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="length"
+                  formControlName="lube" placeholder="Number">
+                <!-- <span class="input-group-text">mm</span> -->
+
+
+              </div>
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('lube')?.invalid && productFormVariantForm2.get('lube')?.touched">
+                Lube Oil change period is required
+              </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2">
+              <label for="range" class="form-label">Quantity</label>
+              <select class="form-select form-select-sm  custom-input custom-placeholder" id="range"
+                formControlName="lubeQuantity">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('lubeQuantity')?.invalid && productFormVariantForm2.get('lubeQuantity')?.touched">
+                Lube Quantity is required
+              </div>
+            </div>
+
+
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <label for="width" class="form-label">Adblue/DEF <span class="text-danger">*</span></label>
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="width"
+                  formControlName="adblue" placeholder="ltr">
+                <!-- <span class="input-group-text">mm</span> -->
+              </div>
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('adblue')?.invalid && productFormVariantForm2.get('adblue')?.touched">
+                Adblue is required
+              </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2">
+              <label for="range" class="form-label">Unit</label>
+              <select class="form-select form-select-sm custom-input  " id="range" formControlName="adblueUnit">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('adblueUnit')?.invalid && productFormVariantForm2.get('adblue')?.touched">
+                Adblue is required
+              </div>
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+        <!-- <hr class="text-info"> -->
+         <hr class="section-divider" />
+
+
+
+        <div class="mb-4 mt-5">
+          <p class="fw-bold mb-3">Alternator Specification</p>
+
+          <div class="row g-3 mb-3">
+
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+              <label for="model" class="form-label">Efficiency <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder " id="model"
+                formControlName="efficiency" placeholder="Percentage%">
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('efficiency')?.invalid && productFormVariantForm2.get('efficiency')?.touched">
+                Efficiency is required
+              </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <label for="range" class="form-label">Unit</label>
+              <select class="form-select form-select-sm custom-input custom-placeholder " id="range"
+                formControlName="alternatorUnit">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('alternatorUnit')?.invalid && productFormVariantForm2.get('alternatorUnit')?.touched">
+                Alternator Unit is required
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+              <label for="model" class="form-label">Max time to rated voltage <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="model"
+                formControlName="alternattorVoltage" placeholder="number">
+
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('alternattorVoltage')?.invalid && productFormVariantForm2.get('alternattorVoltage')?.touched">
+                Max time to rated voltage is required
+              </div>
+            </div>
+
+
+
+
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <label for="range" class="form-label">Unit</label>
+              <select class="form-select form-select-sm  custom-input" id="range"
+                formControlName="max_time_to_rated_unit">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+              <div class="text-danger small"
+                *ngIf="productFormVariantForm2.get('max_time_to_rated_unit')?.invalid && productFormVariantForm2.get('max_time_to_rated_unit')?.touched">
+                Unit is required
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="d-flex justify-content-between mt-4">
+          <button type="button" class="btn btn-outline-info" (click)="goToPreviousStep()">
+            <i class="bi bi-chevron-left"></i> Previous
+          </button>
+          <button *ngIf="step!=2" type="button" class="btn btn-primary px-4"
+            style="background-color: #c27c54; border-color: #c27c54;">
+            Next <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="d-flex justify-content-center mt-5">
+          <button type="submit" class="btn btn-success custom-btn btn-width update-button"
+            (click)="addVariantData()">Submit</button>
+
+        </div>
+      </form>
+
+
+    </div>
+  </div>
+</p-dialog>
+
+
+
+
+<p-dialog [(visible)]="imageDialogVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '95vw', maxWidth: '600px' }" [contentStyle]="{ padding: '0' }" styleClass="image-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeImageDialog()"
+  styleClass="register-popup">
+  <div class="card m-0">
+
+    <div class="popup-header d-flex justify-content-between align-items-center p-3">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30" />
+
+
+      <button type="button" aria-label="Close" (click)="closeImageDialog()" class="close-btn">
+        <img src="/assets/close.svg">
+      </button>
+    </div>
+
+
+    <div class="px-3 pb-3">
+<p-galleria [value]="selectedImages" [numVisible]="5" [showThumbnails]="true" [circular]="true" [autoPlay]="false"
+        [containerStyle]="{ 'max-width': '100%' }">
+        
+
+        <ng-template pTemplate="item" let-item>
+          <img [src]="environment + item.product_image"  style="width: 100%; height: auto; max-height: 300px; object-fit: contain"   />
+        </ng-template>
+
+        <ng-template pTemplate="thumbnail" let-item>
+
+          <img [src]="environment + item.product_image" style="width: 30px; height: auto;" />
+
+        </ng-template>
+  
+        </p-galleria>
+    </div>
+  </div>
+</p-dialog>
+
+
+
+<p-dialog [(visible)]="presentationDialogVisible" [modal]="true" [draggable]="false"
+  [resizable]="false" [style]="{ width: '95vw', maxWidth: '600px' }"
+  [contentStyle]="{ padding: '0' }" styleClass="presentation-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true"
+  (onHide)="closePresentationDialog()">
+
+  <div class="card">
+    <div class="popup-header d-flex justify-content-between align-items-center p-2">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      <!-- <button type="button" aria-label="Close" (click)="closePresentationDialog()" class="custom-close-btn">
+        <img src="/assets/close.svg" alt="Close" class="custom-close-img" />
+      </button> -->
+      <button type="button" aria-label="Close" (click)="closePresentationDialog()" class="close-btn">×</button>
+    </div>
+    
+       <div class="m-5">
+          <div class="custom-table-responsive">
+            <table class="table table-sm dotted-border align-middle text-center bg-light">
+              <thead>
+                <tr class="custom-table-header">
+                  <th class="text-center custom-table-header">Presenatation</th>
+                  <th class="text-center custom-table-header">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of selectedPresentations; let i = index">
+                  <td>{{ item.file_name }}</td>
+               
+                  <td>
+                    <img src="/assets/file_download.svg" style="width: 20px;" (click)="downloadFile(item)" />
+                  </td>
+                </tr>
+
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+  </div>
+</p-dialog>
+
+
+
+<!-- <p-dialog header="Product Specifications" [(visible)]="showDetailDialog" [modal]="true"
+
+  [style]="{ width: '70vw', height: '300px' }" [closable]="true" class="spec-dialog">
+
+  <p-tabView class="custom-tab-header" [(activeIndex)]="activeTabIndex">
+
+
+<p-tabPanel header="Genset">
+  <ng-template pTemplate="header">
+    <div style="display: flex; align-items: center;">
+      <img src="/assets/kgenset.svg" alt="Genset Icon" class="specification-icons" />
+      <span>Genset</span>
+    </div>
+  </ng-template>
+
+  <p-table class="spec-table" [value]="gensetData" *ngIf="gensetData.length > 0">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Model</th>
+        <th>Fuel Tank Capacity</th>
+        <th>Unit</th>
+        <th>Weight</th>
+        <th>Unit</th>
+        <th>Length</th>
+        <th>Width</th>
+        <th>Height</th>
+        <th>Dimension Unit</th>
+        <th>Product Name</th>
+        <th>Variant Name</th>
+        <th>Category Name</th>
+        <th>Fuel Name</th>
+        <th>Description</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-gs>
+      <tr>
+        <td>{{ gs.model || 'NA' }}</td>
+        <td>{{ gs.fuel_tank_capacity || 'NA' }}</td>
+        <td>{{ gs.fuel_tank_capacity_unit || 'NA' }}</td>
+        <td>{{ gs.weight || 'NA' }}</td>
+        <td>{{ gs.weight_unit || 'NA' }}</td>
+        <td>{{ gs.length || 'NA' }}</td>
+        <td>{{ gs.width || 'NA' }}</td>
+        <td>{{ gs.height || 'NA' }}</td>
+        <td>{{ gs.dimension_unit || 'NA' }}</td>
+        <td>{{ gs.product_name || 'NA' }}</td>
+        <td>{{ gs.variant_name || 'NA' }}</td>
+        <td>{{ gs.category_name || 'NA' }}</td>
+        <td>{{ gs.fuel_name || 'NA' }}</td>
+        <td>{{ gs.description || 'NA' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-tabPanel>
+
+
+<p-tabPanel header="Engine">
+  <ng-template pTemplate="header">
+    <div style="display: flex; align-items: center;">
+      <img src="/assets/kengine-icon.svg" alt="Engine Icon" class="specification-icons" />
+      <span>Engine</span>
+    </div>
+  </ng-template>
+
+  <p-table class="spec-table" [value]="engineData" *ngIf="engineData.length > 0">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Engine Model</th>
+        <th>No. of Cylinders</th>
+        <th>Cubic Capacity</th>
+        <th>Lube Oil</th>
+        <th>Quantity</th>
+        <th>Adblue</th>
+        <th>Cubic Unit</th>
+        <th>Lube Oil Unit</th>
+        <th>Cylinders Unit</th>
+        <th>Product Name</th>
+        <th>Variant Name</th>
+        <th>Category Name</th>
+        <th>Fuel Name</th>
+        <th>Description</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-eng>
+      <tr>
+        <td>{{ eng.model || 'NA' }}</td>
+        <td>{{ eng.no_of_cylinder || 'NA' }}</td>
+        <td>{{ eng.cubic_capacity || 'NA' }}</td>
+        <td>{{ eng.lube_oil_change || 'NA' }}</td>
+        <td>{{ eng.quantity || 'NA' }}</td>
+        <td>{{ eng.adblue || 'NA' }}</td>
+        <td>{{ eng.cubic_capacity_unit || 'NA' }}</td>
+        <td>{{ eng.lube_oil_change_unit || 'NA' }}</td>
+        <td>{{ eng.no_of_cylinder_unit || 'NA' }}</td>
+        <td>{{ eng.product_name || 'NA' }}</td>
+        <td>{{ eng.variant_name || 'NA' }}</td>
+        <td>{{ eng.category_name || 'NA' }}</td>
+        <td>{{ eng.fuel_name || 'NA' }}</td>
+        <td>{{ eng.description || 'NA' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-tabPanel>
+
+<p-tabPanel header="Alternator">
+  <ng-template pTemplate="header">
+    <div style="display: flex; align-items: center;">
+      <img src="/assets/kalternator-icon.svg" alt="Alternator Icon" class="specification-icons" />
+      <span>Alternator</span>
+    </div>
+  </ng-template>
+
+  <p-table class="spec-table" [value]="alternatorData" *ngIf="alternatorData.length > 0">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Alternator</th>
+        <th>Alternator Unit</th>
+        <th>Max Time to Rated Unit</th>
+        <th>Max Time to Rated</th>
+        <th>Product Name</th>
+        <th>Variant Name</th>
+        <th>Category Name</th>
+        <th>Fuel Name</th>
+        <th>Description</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-alt>
+      <tr>
+        <td>{{ alt.alternator || 'NA' }}</td>
+        <td>{{ alt.alternator_unit || 'NA' }}</td>
+        <td>{{ alt.max_time_to_rated_unit || 'NA' }}</td>
+        <td>{{ alt.max_time_to_rated || 'NA' }}</td>
+        <td>{{ alt.product_name || 'NA' }}</td>
+        <td>{{ alt.variant_name || 'NA' }}</td>
+        <td>{{ alt.category_name || 'NA' }}</td>
+        <td>{{ alt.fuel_name || 'NA' }}</td>
+        <td>{{ alt.description || 'NA' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-tabPanel>
+
+
+  </p-tabView>
+</p-dialog> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p-dialog [(visible)]="showDetailDialog" [modal]="true"
+  [style]="{ width: '95vw', maxWidth: '800px', height: 'auto', maxHeight: '95vh' }" [closable]="false"
+  class="spec-dialog" styleClass="register-popup">
+
+  <div class="org-popup-container px-1">
+
+    <div class="popup-header d-flex justify-content-between align-items-center p-1">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      <h4 class="mb-3 pt-1 custom-color-h4">Product Specification</h4>
+
+      <button type="button" aria-label="Close" (click)="closeSpecificationDialog()" class="close-btn">
+        <img src="/assets/close.svg">
+      </button>
+    </div>
+
+
+    <h5 class="var-custom-style" style="color: turquoise;">
+      {{ gensetData[0]?.product_name || 'NA' }}
+    </h5>
+
+    <label class="form-label var-custom-style mt-3">Product Description:</label>
+    <p class="var-custom-style" style="color: #6E6E6E;">
+      {{ gensetData[0]?.description || 'NA' }}
+    </p>
+
+
+    <div class="row mt-3 " *ngIf="gensetData.length && engineData.length && alternatorData.length">
+      <p-tabView class="custom-tab-header " [(activeIndex)]="activeTabIndex">
+
+     
+        <p-tabPanel class="mb-3 temp-cls var-custom-style">
+          <ng-template pTemplate="header">
+            <div class="tab-header">
+              <img src="/assets/kgenset.svg" class="specification-icons" />
+              <span>Genset</span>
+            </div>
+          </ng-template>
+
+          <ul class="list-unstyled spec-content var-content-custom-style">
+           
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Model</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editModel">
+                <span>{{ gensetData[0]?.model || 'NA' }}</span>
+              </ng-container>
+              <ng-template #editModel>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="gensetData[0].model" />
+              </ng-template>
+            </li>
+
+            <!-- Fuel Tank Capacity -->
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Fuel Tank Capacity</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editFuel">
+                <span>{{ gensetData[0]?.fuel_tank_capacity || 'NA' }} {{ gensetData[0]?.fuel_tank_capacity_unit || 'NA' }}</span>
+              </ng-container>
+              <ng-template #editFuel>
+                <input type="text" class="form-control form-control-sm w-auto me-2 d-inline"
+                  [(ngModel)]="gensetData[0].fuel_tank_capacity" />
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="gensetData[0].fuel_tank_capacity_unit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">{{ unit.name }}</option>
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+
+            <!-- Weight -->
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Weight</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editWeight">
+                <span>{{ gensetData[0]?.weight || 'NA' }} {{ gensetData[0]?.weight_unit || 'NA' }}</span>
+              </ng-container>
+              <ng-template #editWeight>
+                <input type="text" class="form-control form-control-sm w-auto me-2 d-inline"
+                  [(ngModel)]="gensetData[0].weight" />
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="gensetData[0].weight_unit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">{{ unit.name }}</option>
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+
+            <!-- Dimensions -->
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Overall Dimensions</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editDimensions">
+                <span>
+                  {{ gensetData[0]?.length || 'NA' }} / {{ gensetData[0]?.width || 'NA' }} / {{ gensetData[0]?.height || 'NA' }}
+                  [{{ gensetData[0]?.dimension_unit || 'NA' }}]
+                </span>
+              </ng-container>
+              <ng-template #editDimensions>
+                <input type="number" class="form-control form-control-sm w-50px me-2 d-inline"
+                  [(ngModel)]="gensetData[0].length" placeholder="L" />
+                <input type="number" class="form-control form-control-sm w-50px me-2 d-inline"
+                  [(ngModel)]="gensetData[0].width" placeholder="W" />
+                <input type="number" class="form-control form-control-sm w-50px me-2 d-inline"
+                  [(ngModel)]="gensetData[0].height" placeholder="H" />
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="gensetData[0].dimension_unit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">{{ unit.name }}</option>
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+          </ul>
+        </p-tabPanel>
+
+        <!-- Engine Tab -->
+        <p-tabPanel class="mb-3">
+          <ng-template pTemplate="header">
+            <div class="tab-header">
+              <img src="/assets/kengine-icon.svg" class="specification-icons" />
+              <span>Engine</span>
+            </div>
+          </ng-template>
+
+          <ul class="list-unstyled spec-content var-content-custom-style">
+            <!-- Engine Model -->
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Engine Model</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editEngineModel">
+                <span>{{ engineData[0]?.model || 'NA' }}</span>
+              </ng-container>
+              <ng-template #editEngineModel>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="engineData[0].model" />
+              </ng-template>
+            </li>
+
+            <!-- Cylinders -->
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">No Of Cylinders</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editCylinders">
+                <span>{{ engineData[0]?.no_of_cylinder || 'NA' }} {{ engineData[0]?.no_of_cylinder_unit || 'NA' }}</span>
+              </ng-container>
+              <ng-template #editCylinders>
+                <input type="text" class="form-control form-control-sm w-auto me-2"
+                  [(ngModel)]="engineData[0].no_of_cylinder" />
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="engineData[0].no_of_cylinder_unit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">{{ unit.name }}</option>
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+
+            <!-- Cubic Capacity -->
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Cubic Capacity</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editCubic">
+                <span>{{ engineData[0]?.cubic_capacity || 'NA' }} {{ engineData[0]?.cubic_capacity_unit || 'NA' }}</span>
+              </ng-container>
+              <ng-template #editCubic>
+                <input type="text" class="form-control form-control-sm w-auto me-2"
+                  [(ngModel)]="engineData[0].cubic_capacity" />
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="engineData[0].cubic_capacity_unit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">{{ unit.name }}</option>
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+          </ul>
+        </p-tabPanel>
+
+        <!-- Alternator Tab -->
+        <p-tabPanel class="mb-3">
+          <ng-template pTemplate="header">
+            <div class="tab-header">
+              <img src="/assets/kalternator-icon.svg" class="specification-icons" />
+              <span>Alternator</span>
+            </div>
+          </ng-template>
+
+          <ul class="list-unstyled spec-content mb-4 var-content-custom-style">
+            <!-- Efficiency -->
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Efficiency</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editEff">
+                <span>{{ alternatorData[0]?.alternator || 'NA' }} {{ alternatorData[0]?.alternator_unit || 'NA' }}</span>
+              </ng-container>
+              <ng-template #editEff>
+                <input type="text" class="form-control form-control-sm w-auto me-2"
+                  [(ngModel)]="alternatorData[0].alternator" />
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="alternatorData[0].alternator_unit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">{{ unit.name }}</option>
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+          </ul>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</p-dialog>

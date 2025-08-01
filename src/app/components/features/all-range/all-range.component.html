@@ -1,0 +1,85 @@
+<div class="filter-bar">
+
+  <!-- First Dropdown: Category (Fuel) -->
+  <p-dropdown 
+    [options]="categoryOptions" 
+    [(ngModel)]="selectedCategory"
+    optionLabel="label"
+    optionValue="value"
+    (onChange)="onCategoryChange($event)"
+    placeholder="Select Category (Range)">
+  </p-dropdown>
+
+  <!-- Second Dropdown: Node -->
+  <p-dropdown 
+  [options]="nodeOptions" 
+  optionLabel="label" 
+  optionValue="value" 
+  [(ngModel)]="selectedNode" 
+  (onChange)="onNodeChange($event)"
+  placeholder="Select Node">
+</p-dropdown>
+
+
+</div>
+
+
+
+  <div class="fuel-filters mt-3">
+    @for (fuel of fuelFilters; track fuel) {
+      <span
+        class="fuel-chip"
+        [class.active]="selectedFuels.includes(fuel.name)"
+        (click)="
+          selectedFuels.includes(fuel.name)
+            ? selectedFuels.splice(selectedFuels.indexOf(fuel.name), 1)
+            : selectedFuels.push(fuel.name)
+        ">
+        <i class="pi pi-check check_icon"></i>
+        {{ fuel.name }}
+      </span>
+    }
+  </div>
+<!-- Genset Cards -->
+<!-- Genset Cards -->
+<div class="card-container">
+  @if (filterGensets().length === 0) {
+    <div class="no-data">
+      <img src="assets/no_data.png" alt="No Data" class="no-data-img" />
+      <p>No data available for selected filters.</p>
+    </div>
+  } @else if(filterGensets().length > 0){
+    @for (genset of filterGensets(); track $index) {
+      <p-card class="genset-card">
+        <div class="card-header">
+          <div class="category">{{ genset.category }}</div>
+          <img [src]="environment+genset.image" alt="genset" class="genset-image" />
+          <div class="title-row">
+            <span class="title">{{ genset.title }}</span>
+            <span class="fuel-type" [ngClass]="genset.fuel.toLowerCase()">
+              <img src="/assets/gas_pump.png" class="icon_title" alt="" />
+              {{ genset.fuel }}
+            </span>
+          </div>
+          <ul class="kva-list">
+            @for (kva of genset.kvaList; track $index) {
+              <li class="kva-item" (click)="goToProductDetails(kva.id)">
+                <span class="kva-pill">
+             <!-- {{kva.id }} -->
+                  {{ kva.value.length > 15 ? (kva.value | slice: 0:15) + '...' : kva.value }}
+                  <i class="pi pi-angle-right kva-icon"></i>
+                </span>
+              </li>
+            }
+            
+            
+            
+            
+          </ul>
+      
+        </div>
+      </p-card>
+    }
+    
+  }
+</div>

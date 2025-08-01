@@ -1,0 +1,183 @@
+<div class="leads-dashboard">
+  <div class="left-panel">
+
+    <div class="header">
+      <div class="header-nav">
+        <i class="pi pi-arrow-left back-arrow" (click)="goBack()"></i>
+        <span class="leads-title" (click)="goBack()">Leads</span>
+      </div>
+
+     <!-- <div class="header-nav">
+        <i class="pi pi-arrow-left back-arrow" (click)="goBack()"></i>
+        <span class="leads-title">Leads</span>
+      </div> -->
+    <!-- <div class="user-info">
+        <div class="user-avatar">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="user-details">
+          <div class="user-label">Name:</div>
+          <div class="user-name">{{filteredLeadsData?.first_name }}</div>
+        </div>
+        <div class="asm-badge">
+          <span>{{filteredLeadsData?.role_name}}</span>
+        </div>
+      </div> -->
+  </div>
+
+  <div class="kgd-card" (click)="showKGDData()" style="width: 506px;">
+    <div class="kgd-content">
+      <img src="/assets/kgd_logo.svg" alt="KGD Icon" class="kgd-icon" />
+      <!-- src="/assets/remove-icon.svg" -->
+      <div class="kgd-text">
+        <h3 class="section-title">KGDs</h3>
+       
+      </div>
+    </div>
+    <span class="arrow-icon">›</span>
+  </div>
+
+
+
+
+
+  <div class="leads-list">
+    <div class="lead-card" *ngFor="let lead of leadsData; let i = index"
+      [ngClass]="{'selected': selectedLead?.id == lead.id}" (click)="selectLead(lead)">
+
+      <div class="lead-header">
+        <span class="lead-id">Lead ID: <span class="lead-id-value" style="color: #C37C5A;">{{ lead?.leadid  | noData }}</span></span>
+        <span class="status-badge status-open">{{ lead.status | noData  }}</span>
+      </div>
+
+      <div class="lead-content">
+        <div class="lead-info">
+          <div class="info-group">
+            <div class="info-label">Name</div>
+            <div class="info-value">{{ lead?.title | noData  }}</div>
+          </div>
+          <div class="info-group">
+            <div class="info-label">Mobile Number</div>
+            <div class="info-value">{{ lead?.mobile_no | noData  }}</div>
+          </div>
+        </div>
+        <div class="details-btn" (click)="viewDetails(lead)">
+          <span>Details</span>
+          <i class="pi pi-chevron-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="details-container">
+    <div class="details-header">
+      <div class="header-grid">
+        <div class="header-item">
+          <div class="header-label">Lead ID</div>
+          <div class="header-value">{{ filteredLeadsData?.[0]?.leadid | noData}}</div>
+        </div>
+        <div class="header-item">
+          <div class="header-label">Name</div>
+          <div class="header-value">{{ filteredLeadsData?.[0]?.title | noData }}</div>
+        </div>
+        <div class="header-item">
+          <div class="header-label">Mobile Number</div>
+          <div class="header-value">{{ filteredLeadsData?.[0]?.mobile_no | noData }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-content">
+      <div class="field-row single-field">
+        <div class="field-group">
+          <div class="field-label">Expected Purchase Date</div>
+          <div class="field-value expected-date">{{ filteredLeadsData?.[0]?.purchase_date | date: 'dd-MM-yyyy' }}
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Product</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.product_name | noData }}</div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">KVA Rating</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.kvaRating | noData }}</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Fuel</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.fuel_name | noData }}</div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Quantity</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.quantity | noData }}</div>
+        </div>
+      </div>
+
+      <div class="temp-border"></div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">First Name</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.title | noData }}</div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Last Name</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.lastName | noData}}</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group full-width">
+          <div class="field-label">Email</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.email | noData }}</div>
+        </div>
+      </div>
+
+      <div class="temp-border"></div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Company Name</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.company_name | noData }}</div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Company Address</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.company_address | noData}}</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">State</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.state | noData}}</div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">City</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.city | noData }}</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Pincode</div>
+          <div class="field-value">{{ filteredLeadsData?.[0]?.pincode | noData }}</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group full-width">
+          <div class="field-label">Leave any note or request</div>
+          <div class="field-value notes">{{ filteredLeadsData?.[0]?.notes | noData }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

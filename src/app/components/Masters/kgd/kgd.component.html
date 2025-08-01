@@ -1,0 +1,143 @@
+<div class="container-fluid custom-wrapper">
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row mb-4">
+
+
+                <div class="col-md-6  mb-3 mb-md-0">
+                    <div class="search-container">
+                        <input type="text" class="form-control custm-search search-input" placeholder="Search Kgd..."
+                            (input)="applyFilterGlobal($event, 'contains')">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 d-flex justify-content-end align-items-center">
+                    <button class="btn btn-success btn-sm" type="button" (click)="assignnASM()"><span
+                            class="pi pi-plus p-1"></span> Assign</button>
+                </div>
+
+            </div>
+            <p-table #dt [value]="kgdData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[7, 10, 20, 50]"
+                [globalFilterFields]="['org_name', 'parent_goem.name', 'assigned_status', 'org_type_name','last_assigned_goem', 'isactive']"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+                dataKey="id" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+
+
+                <ng-template pTemplate="header">
+                    <tr class="user-table-header">
+                        <th text-center align-item>Sr.No </th>
+                        <th text-center align-item>KGD Name </th>
+                        <th text-center align-item>Assigned Goem </th>
+                        <th text-center align-item>assigned status</th>
+                        <th text-center align-item>Status</th>
+
+
+                        <th text-center align-item>Action</th>
+
+                    </tr>
+                </ng-template>
+
+
+                <ng-template pTemplate="body" let-item let-i="rowIndex">
+                    <tr>
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ item.org_name }}</td>
+                        <!-- <td>{{item.org_type_name}}</td> -->
+                        <td>{{ item.parent_goem?.name || 'N/A' }}</td>
+                        <td [ngClass]="{
+                            'text-danger': item.assigned_status === 'Not Assigned',
+                            'text-success': item.assigned_status !== 'Not Assigned'
+                            }">{{item.assigned_status}}</td>
+
+                        <td>{{ item.isactive ? 'Active' : 'Inactive' }}</td>
+                        <td>
+                            <!-- *ngIf="item.assigned_status === 'Assigned'" -->
+                            <a >
+                                <img class="delete-icon" src="/assets/trash-icon.svg" (click)="deleteKgd(item)">
+                            </a>
+                        </td>
+
+                    </tr>
+                </ng-template>
+
+            </p-table>
+
+        </div>
+    </div>
+</div>
+
+
+<p-dialog [(visible)]="isVisible" [modal]="true" [draggable]="true" [resizable]="true"
+
+    [style]="{width: '100%', maxWidth: '800px'}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+    [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+    styleClass="custom-media">
+
+    <div class="org-popup-container px-4">
+        <div class="popup-header d-flex justify-content-between align-items-center p-2">
+            <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+            <h4 class="mb-3 pt-3 custom-color-h4">Assign GOEM</h4>
+
+            <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">×</button>
+        </div>
+
+        <!-- <select class="form-select form-select-sm custom-input form-control" id="organization"
+            formControlName="org_id">
+
+            <option value="" class="custom-placeholder" selected>Select KGD</option>
+            <option *ngFor="let itr of kgdNonAssignedData" [value]="itr.org_id">{{ itr.org_name }}
+            </option>
+        </select> -->
+        <div class="popup-body p-3">
+
+            <form [formGroup]="assignkgdForm" (ngSubmit)="onSubmit()">
+
+                <div class="row">
+
+                    <div class="col-md-12 mb-3">
+                        <label for="asm_type" class="form-label">Kgd</label>
+
+                        <p-multiSelect [options]="kgdNonAssignedData" formControlName="org_id" optionLabel="org_name"
+                            optionValue="org_id" placeholder="Select KGD" class="w-100 custom-kgd-dropdown"
+                            class="custom-goem-dropdown w-100" styleClass="custom-input">
+
+                            <ng-template let-itr pTemplate="item">
+                                <div class="custom-item">{{ itr.org_name }}</div>
+                            </ng-template>
+
+                        </p-multiSelect>
+                        <div class="text-danger small"
+                            *ngIf="assignkgdForm.get('org_id')?.invalid && assignkgdForm.get('org_id')?.touched">
+                            Kgd is required
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 mb-3">
+                        <label for="asm_type" class="form-label">Goem</label>
+                        <select class="form-select form-select-sm custom-input form-control" id="organization"
+                            formControlName="assigned_org_id">
+
+                            <option value="" class="custom-placeholder" selected>Select Goem</option>
+                            <option *ngFor="let itr of goemData" [value]="itr.org_id">{{ itr.org_name }}</option>
+                        </select>
+                        <div class="text-danger small"
+                            *ngIf="assignkgdForm.get('assigned_org_id')?.invalid && assignkgdForm.get('assigned_org_id')?.touched">
+                            Goem is required
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-center mt-5">
+                    <button type="submit" class="btn btn-success custom-btn btn-width update-button">Submit</button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</p-dialog>

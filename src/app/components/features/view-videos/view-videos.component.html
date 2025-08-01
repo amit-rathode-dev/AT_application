@@ -1,0 +1,51 @@
+<div class="card-grid">
+
+  @if (video_List.length === 0) {
+    <div class="no-data">
+      <img src="assets/no_data.png" alt="No Data" class="no-data-img" />
+      <p>Oops! No videos found.</p>
+
+    </div>
+  } @else if(video_List.length > 0){
+  @for (card of video_List; track card) {
+    <div class="card mt-4" (click)="openDialog(card.link)">
+      <div class="image-container">
+        <img src="/assets/youtube_icon.png" alt="YouTube Icon" />
+      </div>
+      <div class="card-footer" pTooltip="{{ card.file_name }}" tooltipPosition="top">
+        {{ card.file_name.length > 20 ? (card.file_name | slice:0:25) + '...' : card.file_name }}
+
+      </div>
+    </div>
+  }
+}
+</div>
+
+<p-dialog
+  [(visible)]="showDialog"
+  [modal]="true"
+  [style]="{ width: '80vw', maxWidth: '600px' }"
+  header="Watch Video"
+  [closable]="true"
+  [dismissableMask]="true"
+  [breakpoints]="{ '960px': '90vw', '640px': '100vw' }"
+>
+  <ng-container *ngIf="selectedVideoUrl">
+    <div class="video-wrapper">
+      <!-- Spinner Loader -->
+      <div *ngIf="loading" class="spinner-overlay">
+        <p-progressSpinner styleClass="custom-spinner"></p-progressSpinner>
+      </div>
+
+      <!-- YouTube Video -->
+      <iframe
+        width="100%"
+        height="315"
+        [src]="selectedVideoUrl"
+        frameborder="0"
+        allowfullscreen
+        (load)="onVideoLoad()"
+      ></iframe>
+    </div>
+  </ng-container>
+</p-dialog>

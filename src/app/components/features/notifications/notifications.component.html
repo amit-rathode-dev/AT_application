@@ -1,0 +1,28 @@
+<div class="notification-wrapper">
+  <div class="notification-header">
+    <i class="pi pi-arrow-left back-icon" (click)="goBack()"></i>
+    <h2 class="title">Notifications</h2>
+  </div>
+
+  <div class="notification-list">
+    @for (item of notifications; track item) {
+      <div class="notification-item">
+        <div class="notification-text">
+          @if (item.name) {
+
+            <div class="notification-title">{{ item.name }}</div>
+          }
+          <div class="notification-desc">{{ item.activity_description }}</div>
+          @if (item.activity_link) {
+            <a [href]="item.activity_link" target="_blank" class="notification-link">
+              {{ item.activity_link }}
+            </a>
+          }
+        </div>
+        <div class="notification-date">
+          {{ formatToDayMonth(item.created) }}
+        </div>
+      </div>
+    }
+  </div>
+</div>

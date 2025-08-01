@@ -1,0 +1,100 @@
+.custom-media-text {
+  color: #9E9E9E;
+  margin-bottom: 2px;
+}
+
+.custom-media-values {
+  color: #202020;
+    max-width: 250px;
+  display: inline-block;
+  word-break: break-all;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+
+.image-box-container {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  /* margin: 1rem 0; */
+  width: 200px;
+}
+
+.image-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.image-box {
+
+
+  background-color: #FFFFFF;
+  border: 1px solid #C37C5A;
+  padding: 8px;
+  border-radius: 4px;
+  width: 350px;
+  height: 180px;
+   overflow: hidden;
+   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.uploaded-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* or use 'cover' if you want it to fill without padding */
+  border-radius: 4px;
+}
+
+.status-form {
+  padding: 0px;
+
+  width: fit-content;
+}
+
+.radio-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.submit-btn {
+  text-align: center;
+}
+
+
+  .update-button{
+    width: 25rem;
+  }
+
+
+  input.form-check-input:checked {
+  background-color: teal !important;
+  border-color: green !important;
+}
+
+
+.status-pending {
+  color: #E19B31;
+}
+
+.status-reject {
+  color: #E12020;
+}
+
+.status-approved {
+  color: #7FBA61;
+}
+
+.status-uploaded {
+  color: #4B9CD3;
+}
+
+
+.custom-text-area{
+  width: 260px;
+  background-color: #F4F4F4;
+}

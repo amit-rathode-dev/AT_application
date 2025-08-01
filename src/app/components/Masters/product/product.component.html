@@ -1,0 +1,1466 @@
+<div class="container-fluid custom-wrapper">
+  <div class="card">
+    <div class="card-body">
+      <div class="row mb-4">
+
+        <div class="col-md-6  mb-3 mb-md-0">
+          <div class="search-container">
+            <input type="text" class="form-control custm-search search-input" placeholder="Search Products..."
+              (input)="applyFilterGlobal($event, 'contains')">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+        </div>
+
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+
+          <button class="btn btn-success btn-sm ms-2" type="button" (click)="createNew()">
+            <span class="pi pi-plus p-1"></span> Create Product
+          </button>
+
+        </div>
+      </div>
+
+
+
+      <p-table #dt [value]="incomingDataProductData" class="product-table" [paginator]="true" [rows]="10"
+        [rowsPerPageOptions]="[ 10, 20, 50]"
+        [globalFilterFields]="['categoryName','product_name','category_name','range_from','range_to','fuel_name','lowRange','highRange','fuelName']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id"
+        styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+
+
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th class="t"> Sr.No </th>
+            <th> Product </th>
+            <th>Category </th>
+            <!-- <th>Fuel </th> -->
+
+            <th>Product Image </th>
+            <th> Range </th>
+            <th>Presenatation </th>
+            <th>Video </th>
+            <th>Specification </th>
+            <th>Action</th>
+          </tr>
+        </ng-template>
+
+
+        <ng-template pTemplate="body" let-item let-i="rowIndex">
+          <tr let item of productData let index=0>
+            <td class="text-center align-middle wrap-text">{{ i + 1 }}</td>
+            <td class="text-center align-middle wrap-text">{{item.product_name}}</td>
+            <td class="text-center align-middle wrap-text">{{item.category_name}}</td>
+            <!-- <td class="text-center align-middle ">{{item.fuel_name}}</td> -->
+
+            <td class="text-center align-middle wrap-text">
+
+              <!-- <a (click)="openImageDialog(item.id)"><span>Image</span></a> -->
+
+              <img [src]="environment + item.product_image[0]?.product_image" class="img-fluid prod-img"
+                (click)="openImageDialog(item.id)" />
+
+            </td>
+            <td class="text-center align-middle">
+              {{ item.range_from }} - {{item.range_to}}
+            </td>
+            <td class="text-center align-middle">
+              <ng-container *ngIf="item.presentation?.length > 0">
+                <a class="teal-clickable" (click)="openPresentationDialog(item.presentation)">
+                  Presentations
+                </a>
+              </ng-container>
+              <ng-container *ngIf="!item.presentation?.length">
+                NA
+              </ng-container>
+            </td>
+            <td class="text-center align-middle">
+              <ng-container *ngIf="videoLinkMap[item.id] && videoLinkMap[item.id].length > 0; else noVideo">
+                <a class="teal-clickable" (click)="onProductClick(item.id)">
+                  Show Videos
+                </a>
+              </ng-container>
+              <ng-template #noVideo>NA</ng-template>
+            </td>
+
+            <td class="text-center align-middle"> <a (click)="openDetailPopup(item)"> <img src="/assets/eye.svg"
+                  class="iconimg2"> </a></td>
+            <td>
+
+              <div class="action-buttons">
+
+
+                <a> <img src="/assets/edit-icon.svg" (click)="editProductImage(item)"></a>
+
+                <a> <img src="/assets/trash-icon.svg" class="iconimg2" (click)="deleteProduct(item)"> </a>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+
+    </div>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '100%', maxWidth: '800px' }" [contentStyle]="{ padding: '0' }" styleClass="register-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  class="custom-border-popup">
+
+
+  <div class="custom-popup">
+
+
+    <div class="org-popup-container px-3 px-md-4">
+
+      <div class="popup-header d-flex justify-content-between align-items-center p-2">
+        <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+        <h4 class="mb-0 pt-2 pt-md-3 custom-color-h4 text-center flex-grow-1">Create Product</h4>
+        <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">
+          <img src="/assets/close.svg">
+        </button>
+      </div>
+
+      <div class="d-flex justify-content-center mt-3 mb-3">
+        <div class="d-flex align-items-center position-relative" style="width: 200px; gap: 120px;">
+          <div class="step-parent">
+            <div [ngClass]="{
+                'bg-success': step >= 1,
+                'bg-secondary': step < 1
+              }" class="step-circle bg-success text-white d-flex align-items-center justify-content-center"
+              style="width: 40px; height: 40px; z-index: 1;">
+              1
+            </div>
+
+          </div>
+
+
+          <div [ngClass]="{
+              'bg-success': step === 2,
+              'bg-secondary': step < 2
+            }" class="position-absolute bg-success"
+            style="height: 2px; top: 50%; left: 50px; right: 30px; transform: translateY(-50%); z-index: 0;">
+          </div>
+
+
+          <div [ngClass]="{
+              'step-temp-outter-Border': step !== 2,
+              'step-parent': step === 2,
+              'bg-secondary': step < 1
+            }">
+
+
+            <div [ngClass]="{
+              'step-circle': step === 2,
+              'step-circle-temp': step !== 2,
+              'bg-success': step === 2,
+              'bg-secondary': step < 2,
+              'text-white': true,
+              'd-flex': true,
+              'align-items-center': true,
+              'justify-content-center': true,
+              'ms-auto': true
+            }" style="width: 40px; height: 40px; z-index: 1;">
+              2
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <form *ngIf="step == 1" [formGroup]="productForm">
+        <div class="row mb-3">
+          <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
+            <label for="productName" class="form-label">Product Name<span class="text-danger">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="productName"
+              formControlName="productName" placeholder="Product Name">
+
+            <div class="text-danger small custom-error"
+              *ngIf="productForm.get('productName')?.invalid && productForm.get('productName')?.touched">
+              Product Name is required
+            </div>
+
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
+            <label for="category" class="form-label">Select Category</label>
+            <select #categorySelect class="form-select form-select-sm form-control custom-input custom-placeholder"
+              id="category" formControlName="category" (change)="filterRangeData(categorySelect.value)">
+              <option value="" class="custom-placeholder-dropdown custom-input custom-placeholder" selected>--</option>
+              <option *ngFor="let itr of allcatData" [value]="itr.id">{{ itr.name }} - {{ itr.fuel_name }}</option>
+            </select>
+
+            <div class="text-danger small"
+              *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched">
+              Category is required
+            </div>
+
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
+            <label for="range" class="form-label">Select Range</label>
+            <select class="form-select form-select-sm custom-input custom-placeholder form-control" id="range"
+              formControlName="range">
+              <option value="" class="custom-placeholder" style="color: #A6A6A6 " selected>--
+              </option>
+              <option *ngFor="let itr of newFilteredRangeData" [value]="itr.productRangeId">{{ itr.lowRange }} -
+                {{itr.highRange}}
+              </option>
+            </select>
+            <div class="text-danger small"
+              *ngIf="productForm.get('range')?.invalid && productForm.get('range')?.touched">
+              Category is required
+            </div>
+          </div>
+          <!-- <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
+            <label for="fuel" class="form-label">Select Fuel</label>
+            <select class="form-select form-select-sm   form-control custom-input " id="fuel" formControlName="fuel">
+              <option value="" class="custom-placeholder" selected>--</option>
+              <option *ngFor="let itr of fuelData" [value]="itr.id">{{ itr.name }}</option>
+
+            </select>
+
+            <div class="text-danger small" *ngIf="productForm.get('fuel')?.invalid && productForm.get('fuel')?.touched">
+              Fuel is required
+            </div>
+          </div> -->
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Product Description<span class="text-danger">*</span></label>
+          <textarea class="form-control form-control-sm custom-input custom-placeholder" id="description" rows="4"
+            formControlName="description" placeholder="Description"></textarea>
+          <div class="text-danger small"
+            *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+            Product Description is required
+          </div>
+        </div>
+
+        <!-- <div class="mb-3">
+            <label for="productImage" class="form-label">Product Image</label>
+            <div class="input-group">
+
+              <input type="file" class="form-control custom-placeholder custom-file-input" formControlName="product_image"
+                (change)="onFileChange($event)" accept="image/*" multiple />
+
+            </div>
+
+
+            <div *ngIf="productForm.get('product_image')?.touched && productForm.get('product_image')?.invalid"
+              class="text-danger">
+              <div *ngIf="productForm.get('product_image')?.errors?.['required']">
+                Product image is required.
+              </div>
+              <div *ngIf="productForm.get('product_image')?.errors?.['invalidSize']">
+                {{ productImageError }}
+              </div>
+            </div>
+          </div> -->
+
+
+        <div class="mb-4">
+          <div class="row">
+            <div class="col-md-4">
+              <label for="FileName">Product File Name</label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="description"
+                formControlName="product_file_name" placeholder="Product Image Name" (blur)="checkFileNameEmpty()">
+
+              <div class="text-danger small" *ngIf="productImageError === 'Product Image Name is required.'">
+                {{ productImageError }}
+              </div>
+            </div>
+
+            <div class="col-md-8">
+              <label for="presentation" class="form-label">Product Image</label>
+              <div class="input-group">
+
+                <input type="file"
+                  class="form-control form-control-sm custom-input custom-placeholder custom-file-input"
+                  (change)="onFileChange($event)" />
+
+              </div>
+              <div class="text-danger small"
+                *ngIf="productImageError && productImageError.includes('Name is required')">
+                {{ productImageError }}
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="mb-3">
+          <div class="table-responsive">
+            <table class="table table-sm dotted-border align-middle text-center bg-light">
+              <thead>
+                <tr class="table-header">
+                  <th class="text-center custom-table-header">Product Image Name</th>
+                  <th class="text-center custom-table-header">Image</th>
+                  <th class="text-center custom-table-header">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of productImagePairs; let i = index">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.file.name }}</td>
+                  <td>
+                    <img src="/assets/trash-icon.svg" style="width: 20px;" (click)="removeProductImage(i)" />
+                  </td>
+                </tr>
+
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+
+        <div class="mb-3">
+
+          <div class="row">
+
+            <!-- checkppptFileName -->
+            <div class="col-md-4">
+              <label for="FileName">File Name</label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="description"
+                formControlName="video_name" placeholder="File Name">
+              <!-- <div class="text-danger small" *ngIf="videoLinkFileName">
+                {{ videoLinkFileName }}
+              </div> -->
+
+
+            </div>
+
+            <div class="col-md-8">
+
+              <label for="videoLink" class="form-label">Video Link</label><span style="color: red; font-size: 12px;">
+                (after
+                pasting link in the field press Enter )</span>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="videoLink"
+                formControlName="videoLink" placeholder="Video Link" (keyup.enter)="addVideoLink()">
+            </div>
+
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="table-responsive">
+            <table class="table table-sm dotted-border align-middle text-center bg-light">
+              <thead>
+                <tr class="table-header">
+                  <th class="text-center custom-table-header">Videos</th>
+                  <th class="text-center custom-table-header">Link</th>
+                  <th class="text-center custom-table-header">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let video of videoLinks; let i = index">
+                  <td>{{ video.file_name }}</td>
+                  <td>{{ video.link }}</td>
+                  <td class="text-center">
+                    <i class="bi bi-trash"></i>
+
+                    <a> <img src="/assets/trash-icon.svg" style="width: 20px;" (click)="removeVideoLink(i)"> </a>
+
+
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+
+
+
+        <div class="mb-4">
+          <div class="row">
+            <div class="col-md-4">
+              <label for="FileName">File Name</label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="description"
+                formControlName="file_name" placeholder="File Name" (blur)="checkppptFileName()">
+              <div class="text-danger small" *ngIf="pptFileName">
+                {{ pptFileName }}
+              </div>
+
+
+            </div>
+
+            <div class="col-md-8">
+              <label for="presentation" class="form-label">Product Presentation </label>
+              <div class="input-group">
+
+                <input type="file"
+                  class="form-control form-control-sm custom-input custom-placeholder custom-file-input"
+                  (change)="onFileInput($event)"
+                  accept=".ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+
+              </div>
+
+              <div *ngIf="productForm.get('presentation')?.touched && productForm.get('presentation')?.invalid"
+                class="text-danger small">
+                <div *ngIf="productForm.get('presentation')?.errors?.['required']">
+                  Product presentation is required.
+                </div>
+                <div *ngIf="productForm.get('presentation')?.errors?.['invalidType']">
+                  {{ presentationImageError }}
+                </div>
+                <div *ngIf="productForm.get('presentation')?.errors?.['noName']">
+                  {{ presentationImageError }}
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="mb-3">
+          <div class="table-responsive">
+            <table class="table table-sm dotted-border align-middle text-center bg-light">
+              <thead>
+                <tr class="table-header">
+                  <th class="text-center custom-table-header">File Name</th>
+                  <th class="text-center custom-table-header">File</th>
+                  <th class="text-center custom-table-header">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of presentationFilePairs; let i = index">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.file.name }}</td>
+                  <td>
+                    <img src="/assets/trash-icon.svg" style="width: 20px;" (click)="removePresentationFile(i)" />
+                  </td>
+                </tr>
+
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <div class="d-flex justify-content-end mb-3">
+
+          <button type="button" class="btn btn-primary px-4" style="background-color: #c27c54; border-color: #c27c54;"
+            (click)="goToNextStep()">
+            Next <img class="nextbutton" src="/assets/next-icon.svg" alt="Edit" />
+          </button>
+        </div>
+      </form>
+
+      <form [formGroup]="productForm2" *ngIf="step == 2">
+
+        <h5 class="text-success fw-bold mb-3">PRODUCT SPECIFICATION</h5>
+
+
+
+        <div class="container-fluid">
+
+          <div class="mb-4">
+
+            <p class="fw-bold mb-2">Genset Specification</p>
+
+            <div class="row g-3">
+
+
+              <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+                <label for="model" class="form-label">Model <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="model"
+                  formControlName="modelName" placeholder="Model Name">
+                <div class="text-danger small"
+                  *ngIf="productForm2.get('modelName')?.invalid && productForm2.get('modelName')?.touched">
+                  Model is required
+                </div>
+              </div>
+
+
+              <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+                <label for="fuel_tank" class="form-label">Fuel Tank Capacity <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="fuel_tank"
+                  formControlName="fuel_tank" placeholder="Capacity">
+                <div class="text-danger small"
+                  *ngIf="productForm2.get('fuel_tank')?.invalid && productForm2.get('fuel_tank')?.touched">
+                  Fuel tank is required
+                </div>
+              </div>
+
+
+              <div class="col-12 col-sm-6 col-lg-2 mb-3 mb-lg-0">
+                <label for="unitForFuel" class="form-label">Unit</label>
+                <select class="form-select form-select-sm custom-input" id="unitForFuel" formControlName="unitForFuel">
+                  <option value="" selected>--</option>
+                  <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+                </select>
+                <div class="text-danger small"
+                  *ngIf="productForm2.get('unitForFuel')?.invalid && productForm2.get('unitForFuel')?.touched">
+                  Unit is required
+                </div>
+              </div>
+
+
+              <div class="col-12 col-sm-6 col-lg-2 mb-3 mb-lg-0">
+                <label for="weight" class="form-label">Weight </label>
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="weight"
+                  formControlName="weight" placeholder="Weight">
+
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-2">
+                <label for="range" class="form-label">Unit</label>
+                <select class="form-select form-select-sm custom-input" id="product" formControlName="gensetUnit">
+                  <option value="" selected>--</option>
+                  <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+                </select>
+
+
+              </div>
+
+            </div>
+
+
+
+            <div class="row g-3">
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="length" class="form-label">Length </label>
+                <div class="input-group input-group-sm">
+                  <input type="text" class="form-control  form-control-sm custom-input  custom-placeholder" id="length"
+                    formControlName="length" placeholder="Length">
+                  <span class="input-group-text">mm</span>
+
+                </div>
+
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="width" class="form-label">Width </label>
+                <div class="input-group input-group-sm">
+                  <input type="text" class="form-control  form-control-sm custom-input  custom-placeholder " id="width"
+                    formControlName="width" placeholder="Width">
+                  <span class="input-group-text">mm</span>
+
+
+
+                </div>
+
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="height" class="form-label">Height </label>
+                <div class="input-group input-group-sm">
+                  <input type="text" class="form-control  form-control-sm custom-input custom-placeholder " id="height"
+                    formControlName="height" placeholder="Height">
+                  <span class="input-group-text">mm</span>
+                </div>
+              </div>
+
+
+
+
+
+
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="range" class="form-label">Unit</label>
+                <select class="form-select form-select-sm custom-input " id="product" formControlName="dimension_unit">
+                  <option value="" selected>Select</option>
+                  <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+                </select>
+
+              </div>
+
+
+            </div>
+
+
+          </div>
+        </div>
+
+
+        <!-- <hr class="text-info"> -->
+                 <hr class="section-divider" />
+
+
+        <div class="mb-4 mt-5">
+
+          <p class="fw-bold mb-1">Engine Specification</p>
+
+          <div class="row g-3">
+
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+              <label for="model" class="form-label">Engine Model <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="model"
+                formControlName="engineModel" placeholder="Engine Model">
+
+              <div class="text-danger small"
+                *ngIf="productForm2.get('engineModel')?.invalid && productForm2.get('engineModel')?.touched">
+                Engine Model is required
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2 mb-lg-0">
+              <label for="fuel_tank" class="form-label">No. Of cylinder<span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="fuel_tank"
+                formControlName="cylinders" placeholder="No of Cylinders">
+
+              <div class="text-danger small"
+                *ngIf="productForm2.get('cylinders')?.invalid && productForm2.get('cylinders')?.touched">
+                Cylinders count is required
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-2 mb-3 mb-lg-0">
+              <label for="unitForFuel" class="form-label">Unit</label>
+              <select class="form-select form-select-sm  custom-input" id="unitForFuel"
+                formControlName="unitForClynder">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+
+              <div class="text-danger small"
+                *ngIf="productForm2.get('unitForClynder')?.invalid && productForm2.get('unitForClynder')?.touched">
+                Unit is required
+              </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+              <label for="weight" class="form-label">Cubic Capacity ^2 </label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="weight"
+                formControlName="cubeCapacity" placeholder="Capacity">
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2">
+              <label for="range" class="form-label">Unit</label>
+              <select class="form-select form-select-sm custom-input" id="range" formControlName="cubeCapacityUnit">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+            </div>
+
+          </div>
+
+
+
+          <div class="row g-3 p-1">
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <label for="length" class="form-label">Lube oil change period <span class="text-danger">*</span></label>
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="length"
+                  formControlName="lube" placeholder="Number">
+                <!-- <span class="input-group-text">mm</span> -->
+
+
+              </div>
+
+              <div class="text-danger small"
+                *ngIf="productForm2.get('lube')?.invalid && productForm2.get('lube')?.touched">
+                Lube Oil change period is required
+              </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2">
+              <label for="range" class="form-label">Unit</label>
+              <select class="form-select form-select-sm  custom-input custom-placeholder" id="range"
+                formControlName="lubeQuantity">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+
+            </div>
+
+
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <label for="width" class="form-label">Adblue/DEF </label>
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control form-control-sm custom-input custom-placeholder " id="width"
+                  formControlName="adblue" placeholder="ltr">
+                <!-- <span class="input-group-text">mm</span> -->
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2">
+              <label for="range" class="form-label">Unit</label>
+              <select class="form-select form-select-sm custom-input  " id="range" formControlName="adblueUnit">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+        <!-- <hr class="text-info"> -->
+                 <hr class="section-divider" />
+
+
+        <div class="mb-4 mt-5">
+          <p class="fw-bold mb-2">Alternator Specification</p>
+
+          <div class="row g-3">
+
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+              <label for="model" class="form-label">Efficiency </label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder " id="model"
+                formControlName="efficiency" placeholder="Percentage%">
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2">
+              <label for="range" class="form-label">Unit</label>
+              <select class="form-select form-select-sm custom-input  " id="range" formControlName="alternatorUnit">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-2 mb-3 mb-lg-0">
+              <label for="model" class="form-label">Insulation </label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder " id="model"
+                formControlName="insulation" placeholder="Class H">
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0">
+              <label for="model" class="form-label">Max time to rated voltage </label>
+              <input type="text" class="form-control form-control-sm custom-input" id="model"
+                formControlName="alternattorVoltage" placeholder="number">
+
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-2">
+              <label for="range" class="form-label">Unit</label>
+              <select class="form-select form-select-sm  custom-input" id="range"
+                formControlName="max_time_to_rated_unit">
+                <option value="" selected>--</option>
+                <option *ngFor="let itr of unitData" [value]="itr.id">{{ itr.name }}</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="d-flex justify-content-between mt-4">
+          <button type="button" class="btn btn-outline-info" (click)="goToPreviousStep()">
+            <i class="bi bi-chevron-left"></i> Previous
+          </button>
+          <button *ngIf="step!=2" type="button" class="btn btn-primary px-4"
+            style="background-color: #c27c54; border-color: #c27c54;">
+            Next <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="d-flex justify-content-center mt-5">
+          <button type="submit" class="btn btn-success custom-btn btn-width update-button"
+            (click)="submit()">Submit</button>
+
+        </div>
+      </form>
+
+
+    </div>
+  </div>
+</p-dialog>
+
+
+<!-- [style]="{ width: '70vw', height: '700px' }" -->
+
+<!-- <p-dialog [(visible)]="showDetailDialog" [modal]="true"
+  [style]="{ width: '90vw', maxWidth: '800px', height: 'auto', maxHeight: '90vh' }" [closable]="false"
+  class="spec-dialog" styleClass="register-popup">
+
+
+  <div class="org-popup-container px-4">
+    <div class="popup-header d-flex justify-content-between align-items-center p-2">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      <h4 class="mb-3 pt-3 custom-color-h4">Product Specification</h4>
+
+      <button type="button" aria-label="Close" (click)="closeSpecificationDialog()" class="close-btn"><img
+          src="/assets/close.svg"></button>
+    </div>
+
+
+
+
+
+    <h5 class="spec-head " style="color: turquoise;">{{tempGensetData[0]?.product_name}}</h5>
+
+    <label for="description" class="form-label spec-head mt-3">Product Description:</label>
+    <p class="spec-head" style="color: #6E6E6E;">{{tempGensetData[0]?.description}}</p>
+
+
+
+    <div class="row">
+
+
+      <p-tabView class="custom-tab-header" [(activeIndex)]="activeTabIndex">
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <div class="tab-header tab-header-left-adjust" style="transform: translateX(-2px);">
+              <img src="/assets/kgenset.svg" class=" m-1 specification-icons" />
+              <span class="ml-2"> &nbsp;Genset</span>
+            </div>
+          </ng-template>
+
+          <ul class="list-unstyled spec-content">
+            <li class="mb-2 ml-4 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Model</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[0]?.model}}</span>
+            </li>
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Fuel Tank Capacity</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[0]?.fuel_tank_capacity}} <span class="text-muted"></span>
+                {{tempGensetData[0]?.fuel_tank_capacity_unit}}</span>
+            </li>
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Weight of Genset</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[0]?.weight}} <span
+                  class="text-muted">{{tempGensetData[0]?.weight_unit}}</span></span>
+            </li>
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Overall Dimensions</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[0]?.length}} / {{tempGensetData[0]?.width}} / {{tempGensetData[0]?.height}} mm
+                <span
+                  class="text-muted">[{{tempGensetData[0]?.length}}x{{tempGensetData[0]?.width}}x{{tempGensetData[0]?.height}}]</span></span>
+            </li>
+          </ul>
+
+
+
+
+        </p-tabPanel>
+
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <div class="tab-header">
+              <img src="/assets/kengine-icon.svg" class=" m-1 specification-icons" />
+              <span class="ml-2">&nbsp; Engine</span>
+            </div>
+          </ng-template>
+          <ul class="list-unstyled">
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Engine Model</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[1]?.model}}</span>
+            </li>
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">No Of Cylinders.</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[1]?.no_of_cylinder}} <span class="text-muted"></span>
+                {{tempGensetData[1]?.no_of_cylinder_unit}}</span>
+            </li>
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Cubic Capacity</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[1]?.cubic_capacity }}<span
+                  class="text-muted">{{tempGensetData[1]?.cubic_capacity_unit}}</span></span>
+            </li>
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Lube Oil change Period</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[1]?.lube_oil_change }}<span
+                  class="text-muted">{{tempGensetData[1]?.lube_oil_change_unit}}</span></span>
+            </li>
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Adblue?DEF</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[1]?.adblue }}<span
+                  class="text-muted">{{tempGensetData[1]?.adblue_unit}}</span></span>
+            </li>
+
+          </ul>
+        </p-tabPanel>
+
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <div class="tab-header">
+              <img src="/assets/kalternator-icon.svg" class=" m-1 specification-icons" />
+              <span class="ml-2"> &nbsp;Alternator</span>
+            </div>
+          </ng-template>
+          <ul class="list-unstyled">
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Alternator</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[2]?.alternator}}</span>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Efficiency</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[2]?.alternator}}</span>
+            </li>
+
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Insulation</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[2]?.insulation}}</span>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Max time to rated voltage</span>
+              <span class="me-2">:</span>
+              <span>{{tempGensetData[2]?.max_time_to_rated}} <span class="text-muted"></span>
+                {{tempGensetData[2]?.max_time_to_rated_unit}}</span>
+            </li>
+
+
+          </ul>
+        </p-tabPanel>
+      </p-tabView>
+
+
+    </div>
+
+  </div>
+</p-dialog> -->
+
+<p-dialog [(visible)]="showDetailDialog" [modal]="true"
+  [style]="{ width: '95vw', maxWidth: '800px', height: 'auto', maxHeight: '9vh5' }" [closable]="false"
+  class="spec-dialog" styleClass="register-popup">
+
+  <div class="org-popup-container px-4">
+    <div class="popup-header d-flex justify-content-between align-items-center p-2">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      <h4 class="mb-3 pt-3 custom-color-h4">Product Specification</h4>
+
+      <button type="button" aria-label="Close" (click)="closeSpecificationDialog()" class="close-btn">
+        <img src="/assets/close.svg">
+      </button>
+    </div>
+    <div class="d-flex justify-content-end mt-3">
+      <button *ngIf="!isEditMode" class="btn btn-success" (click)="enableEdit()">Edit</button>
+      <div *ngIf="isEditMode" class="d-flex gap-2">
+        <button class="btn btn-success" (click)="saveChanges()">Submit</button>
+        <button class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+
+    <h5 class="spec-head" style="color: turquoise;">
+      {{ tempGensetData[0]?.product_name | noData }}
+    </h5>
+
+    <label class="form-label spec-head mt-3">Product Description:</label>
+    <p class="spec-head" style="color: #6E6E6E;">
+      {{ tempGensetData[0]?.description | noData }}
+    </p>
+
+
+
+    <div class="row mt-3">
+      <p-tabView class="custom-tab-header" [(activeIndex)]="activeTabIndex">
+
+        <p-tabPanel class="mb-3">
+          <ng-template pTemplate="header">
+            <div class="tab-header">
+              <img src="/assets/kgenset.svg" class="specification-icons" />
+              <span>Genset</span>
+            </div>
+          </ng-template>
+
+          <ul class="list-unstyled spec-content">
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Model</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editModel">
+                <span>{{ tempGensetData[0]?.model | noData }}</span>
+              </ng-container>
+              <ng-template #editModel>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="tempGensetData[0].model" />
+              </ng-template>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Fuel Tank Capacity</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editFuel">
+                <span>{{ tempGensetData[0]?.fuel_tank_capacity | noData }} {{ tempGensetData[0]?.fuel_tank_capacity_unit
+                  }}</span>
+              </ng-container>
+              <ng-template #editFuel>
+                <input type="text" class="form-control form-control-sm w-auto me-2 d-inline"
+                  [(ngModel)]="tempGensetData[0].fuel_tank_capacity" />
+
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="selectedFueltUnit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">
+                    {{ unit.name }}
+                  </option>
+               
+                  <option value="NA">NA</option>
+                </select>
+
+              </ng-template>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Weight of Genset</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editWeight">
+                <span>{{ tempGensetData[0]?.weight | noData }}
+                  <span class="text-muted">{{ tempGensetData[0]?.weight_unit }}</span>
+                </span>
+              </ng-container>
+              <ng-template #editWeight>
+                <input type="text" class="form-control form-control-sm w-auto me-2 d-inline"
+                  [(ngModel)]="tempGensetData[0].weight" />
+              
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="selectedWeightUnit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">
+                    {{ unit.name }}
+                  </option>
+          
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Overall Dimensions</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editDimensions">
+                <span>
+                  {{ tempGensetData[0]?.length }} / {{ tempGensetData[0]?.width }} / {{ tempGensetData[0]?.height }}
+                  <span class="text-muted">[{{ tempGensetData[0]?.length }}x{{ tempGensetData[0]?.width }}x{{
+                    tempGensetData[0]?.height | noData }}] {{tempGensetData[0]?.dimension_unit}} </span>
+                </span>
+              </ng-container>
+              <ng-template #editDimensions>
+                <input type="number" class="form-control form-control-sm w-50px me-2 d-inline"
+                  [(ngModel)]="tempGensetData[0].length" placeholder="Length" />
+                <input type="number" class="form-control form-control-sm w-50px me-2 d-inline"
+                  [(ngModel)]="tempGensetData[0].width" placeholder="Width" />
+                <input type="number" class="form-control form-control-sm w-50px me-2 d-inline"
+                  [(ngModel)]="tempGensetData[0].height" placeholder="Height" />
+
+                <div>
+
+                  <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="selectedDimesionUnit  ">
+                    <option *ngFor="let unit of unitData" [value]="unit.id">
+                      {{ unit.name }}
+                    </option>
+
+                    <option value="NA">NA</option>
+                  </select>
+                </div>
+
+              </ng-template>
+            </li>
+          </ul>
+        </p-tabPanel>
+
+    
+        <p-tabPanel class="mb-3">
+          <ng-template pTemplate="header">
+            <div class="tab-header">
+              <img src="/assets/kengine-icon.svg" class="specification-icons" />
+              <span>Engine</span>
+            </div>
+          </ng-template>
+
+          <ul class="list-unstyled spec-content">
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Engine Model</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editEngineModel">
+                <span>{{ tempGensetData[1]?.model | noData }}</span>
+              </ng-container>
+              <ng-template #editEngineModel>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="tempGensetData[1].model" />
+              </ng-template>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">No Of Cylinders</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editCylinders">
+                <span>{{ tempGensetData[1]?.no_of_cylinder | noData }} {{ tempGensetData[1]?.no_of_cylinder_unit
+                  }}</span>
+              </ng-container>
+              <ng-template #editCylinders>
+                <input type="text" class="form-control form-control-sm w-auto me-2"
+                  [(ngModel)]="tempGensetData[1].no_of_cylinder" />
+             
+
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="selectedClyndersUnit  ">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">
+                    {{ unit.name }}
+                  </option>
+
+                  <option value="NA">NA</option>
+                </select>
+
+              </ng-template>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Cubic Capacity</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editCubic">
+                <span>{{ tempGensetData[1]?.cubic_capacity | noData }} {{ tempGensetData[1]?.cubic_capacity_unit
+                  }}</span>
+              </ng-container>
+              <ng-template #editCubic>
+                <input type="text" class="form-control form-control-sm w-auto me-2"
+                  [(ngModel)]="tempGensetData[1].cubic_capacity" />
+              
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="selectedCubicCapacityUnit  ">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">
+                    {{ unit.name }}
+                  </option>
+
+                  <option value="NA">NA</option>
+                </select>
+
+              </ng-template>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Lube Oil Change Period</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editLube">
+                <span>{{ tempGensetData[1]?.lube_oil_change | noData }} {{ tempGensetData[1]?.lube_oil_change_unit
+                  }}</span>
+              </ng-container>
+              <ng-template #editLube>
+                <input type="text" class="form-control form-control-sm w-auto me-2"
+                  [(ngModel)]="tempGensetData[1].lube_oil_change" />
+
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="selectedLubeOilUnit  ">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">
+                    {{ unit.name }}
+                  </option>
+
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Adblue / DEF</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editAdblue">
+                <span>{{ tempGensetData[1]?.adblue | noData }} {{ tempGensetData[1]?.adblue_unit }}</span>
+              </ng-container>
+              <ng-template #editAdblue>
+                <input type="text" class="form-control form-control-sm w-auto me-2"
+                  [(ngModel)]="tempGensetData[1].adblue" />
+              
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="selctedAdblueUnit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">
+                    {{ unit.name }}
+                  </option>
+
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+          </ul>
+        </p-tabPanel>
+
+
+        <p-tabPanel class="mb-3">
+          <ng-template pTemplate="header">
+            <div class="tab-header">
+              <img src="/assets/kalternator-icon.svg" class="specification-icons" />
+              <span>Alternator</span>
+            </div>
+          </ng-template>
+
+          <ul class="list-unstyled spec-content mb-4">
+
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Efficiency</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editEff">
+                <span>{{ tempGensetData[2]?.alternator | noData }} {{tempGensetData[2]?.alternator_unit }}</span>
+              </ng-container>
+              <ng-template #editEff>
+                <input type="text" class="form-control form-control-sm w-auto me-2"
+                  [(ngModel)]="tempGensetData[2].alternator" />
+
+                <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="SelectedEfficiencyUnit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">
+                    {{ unit.name }}
+                  </option>
+
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Insulation</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editIns">
+               <span>{{ tempGensetData[2]?.insulation | noData }} </span>
+              </ng-container>
+              <ng-template #editIns>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="tempGensetData[2].insulation" />
+              </ng-template>
+            </li>
+
+            <li class="mb-2 d-flex">
+              <span class="fw-medium" style="min-width: 180px;">Max time to rated voltage</span>
+              <span class="me-2">:</span>
+              <ng-container *ngIf="!isEditMode; else editTime">
+                <span>
+                  {{ tempGensetData[2]?.max_time_to_rated | noData }}
+                  {{ tempGensetData[2]?.max_time_to_rated_unit }}
+                </span>
+              </ng-container>
+              <ng-template #editTime>
+                <input type="text" class="form-control form-control-sm w-auto me-2"
+                  [(ngModel)]="tempGensetData[2].max_time_to_rated" />
+
+                  <select class="form-select form-select-sm w-auto d-inline" [(ngModel)]="selectedMaxtimeRatageUnit">
+                  <option *ngFor="let unit of unitData" [value]="unit.id">
+                    {{ unit.name }}
+                  </option>
+
+                  <option value="NA">NA</option>
+                </select>
+              </ng-template>
+            </li>
+          </ul>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</p-dialog>
+
+
+
+
+<p-dialog [(visible)]="imageDialogVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '95vw', maxWidth: '600px' }" [contentStyle]="{ padding: '0' }" styleClass="image-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeImageDialog()"
+  styleClass="register-popup">
+  <div class="card m-0">
+
+    <div class="popup-header d-flex justify-content-between align-items-center p-3">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30" />
+
+
+      <button type="button" aria-label="Close" (click)="closeImageDialog()" class="close-btn">
+        <img src="/assets/close.svg">
+      </button>
+    </div>
+
+
+    <div class="px-3 pb-3">
+      <p-galleria [value]="selectedImages" thumbnailsPosition="bottom" [responsiveOptions]="[
+            { breakpoint: '1024px', numVisible: 5 },
+            { breakpoint: '768px', numVisible: 3 },
+            { breakpoint: '560px', numVisible: 1 }
+          ]" [containerStyle]="{ 'max-width': '100%' }" [numVisible]="5" [circular]="true" [showThumbnails]="true"
+        [autoPlay]="false">
+
+        <ng-template pTemplate="item" let-item>
+          <img [src]="environment + item.product_image"
+            style="width: 100%; height: auto; max-height: 300px; object-fit: contain" />
+        </ng-template>
+
+
+        <ng-template pTemplate="thumbnail" let-item>
+          <div class="grid gap-2 justify-center" style="background-color: white; padding: 6px; border-radius: 6px">
+            <img [src]="environment + item.product_image" style="width: 40px; height: 40px; object-fit: cover" />
+          </div>
+        </ng-template>
+      </p-galleria>
+    </div>
+  </div>
+</p-dialog>
+
+
+
+
+
+
+
+<p-dialog [(visible)]="presentationDialogVisible" [modal]="true" [draggable]="false" [resizable]="false"
+  [style]="{ width: '95vw', maxWidth: '600px' }" [contentStyle]="{ padding: '0' }" styleClass="presentation-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closePresentationDialog()"
+  styleClass="presentation-popup">
+
+  <div class="card">
+    <div class="popup-header d-flex justify-content-between align-items-center p-2">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+
+      <button type="button" aria-label="Close" (click)="closePresentationDialog()" class="close-btn">×</button>
+    </div>
+
+    <div class="m-5 ml-5">
+      <div class="custom-table-responsive">
+        <table class="table table-sm dotted-border align-middle text-center bg-light">
+          <thead>
+            <tr class="custom-table-header">
+              <th class="text-center custom-table-header">Presenatation</th>
+              <th class="text-center custom-table-header">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of selectedPresentations; let i = index">
+              <td>{{ item.file_name }}</td>
+
+              <td>
+                <img src="/assets/file_download.svg" style="width: 20px;" (click)="downloadFile(item)" />
+              </td>
+            </tr>
+
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+
+
+  </div>
+
+
+
+</p-dialog>
+
+
+<p-dialog [(visible)]="showVideoPopup" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '110vw', maxWidth: '1000px', height: 'auto', maxHeight: '90vh' }" [contentStyle]="{ padding: '1rem' }"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeImageDialog()"
+  styleClass="register-popup">
+
+
+
+  <ng-container *ngIf="showVideoPopup">
+
+
+
+    <app-videoplayer></app-videoplayer>
+
+
+  </ng-container>
+
+
+
+
+</p-dialog>
+
+
+
+
+<p-dialog [(visible)]="editProductImageVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '90vw', maxWidth: '800px', height: 'auto', maxHeight: '90vh' }" [contentStyle]="{ padding: '1rem' }"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeImageDialog()"
+  styleClass="register-popup">
+
+  <form [formGroup]="addImagesForm">
+    <div class="row">
+      <div class="col-md-4">
+        <label>Product File Name</label>
+        <input type="text" class="form-control" formControlName="image_names" placeholder="Product Image Name">
+      </div>
+
+      <div class="col-md-5">
+        <label>Product Image</label>
+        <input #fileInput type="file" class="form-control" (change)="onImageSelect($event)">
+      </div>
+
+      <div class="col-md-3 d-flex align-items-end">
+        <button type="button" class="btn btn-primary" (click)="addImages()">Add</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Table for preview -->
+  <table class="table mt-4" *ngIf="changeProdImagePairs.length > 0">
+    <thead>
+      <tr>
+        <th>Product Image Name</th>
+        <th>File Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of changeProdImagePairs; let i = index">
+        <td>{{ item.name }}</td>
+        <td>{{ item.file.name }}</td>
+        <td>
+          <button class="btn btn-sm btn-danger">Remove</button>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <!-- Final submit -->
+  <div class="text-center mt-3">
+    <button class="btn btn-success" (click)="submitImages()">Submit All</button>
+  </div>
+
+
+
+
+</p-dialog>
+
+
+<!-- <app-video-player></app-video-player> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <p-galleria [value]="selectedImages" [numVisible]="5" [showThumbnails]="true" [circular]="true" [autoPlay]="false"
+        [containerStyle]="{ 'max-width': '100%' }">
+        
+
+        <ng-template pTemplate="item" let-item>
+          <img [src]="item.product_image" style="width: 90%; height: 300px;" />
+        </ng-template>
+
+        <ng-template pTemplate="thumbnail" let-item>
+
+          <img [src]="item.product_image" style="width: 30px; height: auto; " />
+
+        </ng-template>
+  
+        </p-galleria> -->

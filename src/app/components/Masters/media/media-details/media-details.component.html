@@ -1,0 +1,161 @@
+<div class="container-fluid custom-wrapper">
+    <div class="card">
+        <div class="card-body">
+
+
+            <div class="row mb-4 align-items-center">
+
+                <div class="col-md-8 mb-3 mb-md-0 d-flex flex-wrap align-items-center gap-2">
+
+
+                    <div class="search-container position-relative flex-grow-1" style="min-width: 250px;">
+                        <input type="text" class="form-control custm-search search-input" placeholder="Search Media..."
+                          [(ngModel)]="globalFilterValue"
+                            (input)="applyFilterGlobal($event, 'contains')">
+                        <i class="fas fa-search search-icon position-absolute"
+                            style="right: 10px; top: 50%; transform: translateY(-50%); color: #999;"></i>
+                    </div>
+
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fas fa-filter icon-white"></i> Media Type
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item"
+                                    (click)="filterMediaType('flyer')">Flyer</button></li>
+                            <li><button class="dropdown-item"
+                                    (click)="filterMediaType('banner')">Banner</button>
+                            </li>
+                             <li><button class="dropdown-item"
+                                    (click)="filterMediaType('BTL Activity')">BTL Activity</button>
+                            </li>
+
+                        </ul>
+                    </div>
+
+
+                    <div class="btn-group">
+
+
+                        <a (click)="resetFilter('mediaType')" >
+                            <img class="custom-reset-img" src="/assets/reset-button.svg" alt="Reset Filter">
+                        </a>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- <div class="row mb-4"> -->
+
+
+            <!-- <div class="search-container">
+                        <input type="text" class="form-control custm-search search-input" placeholder="Searcch Media.."
+                            (input)="applyFilterGlobal($event, 'contains')">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+
+
+                     <div class="btn-group">
+                        <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fas fa-filter icon-white"></i> Media Type
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item"
+                                    (click)="filterMediaType('presentation')">Presentation</button></li>
+                            <li><button class="dropdown-item"
+                                    (click)="filterMediaType('catalogues')">Catalogues</button>
+                            </li>
+                        
+                            <li>
+                                <button class="dropdown-item text-danger"
+                                    (click)="resetMediaTypeFilter()">Reset</button>
+                            </li>
+                        </ul>
+                    </div> 
+                </div>  -->
+
+
+
+
+
+            <p-table #dt [value]="tableData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[7, 10, 20, 50]"
+                [globalFilterFields]="['type','file_name', 'name', 'media_type','from_Date' ,'to','approval_status','file_name',]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+                dataKey="org_name" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll"
+                [scrollable]="true">
+                <ng-template pTemplate="header">
+                    <tr class="user-table-header">
+                        <th class="text-center align-items">Sr.No</th>
+
+                        <th class="text-center align-items">Name</th>
+                        <th class="text-center align-items">Media Type</th>
+                        <th class="text-center align-items">Social Media Type</th>
+                        <th class="text-center align-items">File</th>
+                        <th class="text-center align-items">Uploaded On</th>
+                        <th class="text-center align-items">Status</th>
+                        <th class="text-center align-items">Action</th>
+
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-itr="rowIndex">
+                    <tr>
+                        <td class="text-center align-items">{{itr+1}}</td>
+                        <td class="text-center align-items">{{ item.file_name }} </td>
+                        <td class="text-center align-items">{{ item.media_type}}</td>
+                        <td class="text-center align-items">{{ item.social_platform | noData}}</td>
+
+                        <td class="text-center align-items  teal-clickable" (click)="openFile(item)"> {{ item.file_name
+                            ? item.file_name : 'NA' }}</td>
+
+                        <td class="text-center align-items "> {{item.uploaded_on}}</td>
+                        <td class="text-center align-items">
+                            <span [ngStyle]="{
+                        color: getTextColor(item.approval_status),
+                        }">{{ item.approval_status }}</span>
+                        </td>
+
+                        <td class="text-center align-items">
+                            <a (click)="openDetailPopup(item)">
+                                <img [src]="item?.approval_status?.toLowerCase() === 'uploaded' 
+                            ? '/assets/action-icon.svg' 
+                            : '/assets/new-eye-icon.svg'" class="til-eye" />
+                            </a>
+                        </td>
+
+
+
+
+                    </tr>
+                </ng-template>isvisible
+            </p-table>
+        </div>
+    </div>
+</div>
+
+
+<p-dialog [(visible)]="isvisible" [modal]="true" [draggable]="true" [resizable]="true"
+    [style]="{ width:'100%', maxWidth:'900px', height: '95%'}" [contentStyle]="{ padding: '1rem' }" [showHeader]="false"
+    [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()" styleClass="custom-media">
+
+
+
+    <ng-container>
+
+
+
+        <app-view-medi></app-view-medi>
+
+
+    </ng-container>
+
+
+
+
+</p-dialog>

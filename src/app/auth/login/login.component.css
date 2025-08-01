@@ -1,0 +1,213 @@
+
+  .login-container {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+
+  .image-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .wave-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    padding: 1.2rem;
+    border-radius: 35px;
+  }
+
+
+  .form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .p-inputtext,
+  .p-password {
+    padding: 0.75rem 0.75rem !important;
+  }
+
+  .login-form {
+    width: 90%;
+
+    padding: 20px;
+    margin-top: -3rem;
+
+  }
+
+
+  .logo-container {
+    margin-bottom: 30px;
+  }
+
+  .logo {
+
+    height: 60px;
+    margin-top: 1rem;
+  }
+
+  .custom-btn-css {
+
+    color: #19988B;
+  }
+
+
+  .welcome-text {
+/* 
+    font-family: Lato;
+    font-weight: 700;
+    font-size: 51px;
+    line-height: 21px;
+    letter-spacing: 0%;
+    margin-bottom: 1rem; */
+
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+
+
+  }
+
+  @media (max-width: 786px) {
+    .welcome-text {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+
+    .info-text {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .forgot-password {
+    color: #19988B;
+    font-size: 14px;
+    text-decoration: none;
+  
+    }
+  }
+
+
+  .info-text {
+/* 
+    font-family: Lato;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 21px;
+    letter-spacing: 0%;
+    vertical-align: middle; */
+
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+
+  }
+
+  .form-label {
+    /* font-size: 24px;
+    font-weight: 400px;
+    line-height: 21px;
+    letter-spacing: 0%;
+
+    font-weight: 500;
+    color: #333; */
+
+
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+
+
+  :host ::ng-deep .p-password-input-full {
+    width: 100%;
+  }
+
+  :host ::ng-deep .login-button {
+    width: 100% !important;
+    background-color: #00a79d !important;
+    border-color: #00a79d !important;
+
+  }
+
+  :host ::ng-deep .login-button:hover {
+    background-color: #008f86 !important;
+    border-color: #008f86 !important;
+  }
+
+  /* Override PrimeNG primary button styles */
+  :host ::ng-deep .p-button-primary {
+    background-color: #19988B !important;
+    border-color: #19988B !important;
+  }
+
+  /* Change color on hover */
+  :host ::ng-deep .p-button-primary:hover {
+    background-color: #158177 !important;
+    border-color: #158177 !important;
+  }
+
+
+  .forgot-password {
+ 
+
+    color: #19988B;
+    width: 664;
+    height: 156;
+    top: 153px;
+
+  }
+
+  .forgot-password:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 767.98px) {
+    .login-form {
+      padding: 15px;
+    }
+
+
+
+  }
+
+  @media (max-width: 575.98px) {
+    .login-form {
+      padding: 10px;
+    }
+
+    .welcome-text {
+      font-size: 22px;
+    }
+  }
+
+
+
+  @media (max-width: 786px) {
+  
+    .welcome-text {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    } 
+  }

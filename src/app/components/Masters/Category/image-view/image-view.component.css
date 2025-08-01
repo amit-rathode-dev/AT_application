@@ -1,0 +1,21 @@
+.custom-image-card {
+  background-color: #E8E8E8;
+  /* margin-left: 20px; */
+  height: 900px;
+  width: 100%;
+}
+
+::ng-deep .p-datatable td,
+::ng-deep .p-datatable th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+
+.img-fix {
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  /* margin-left: 0px; */
+  /* margin: 1rem; */
+}

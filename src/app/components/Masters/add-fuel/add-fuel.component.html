@@ -1,0 +1,118 @@
+<div class="container-fluid custom-wrapper">
+    <div class="card">
+      <div class="card-body">
+     
+        <div class="row mb-4">
+    
+ 
+          <div class="col-md-6  mb-3 mb-md-0">
+            <div class="search-container">
+              <input type="text" class="form-control custm-search search-input" placeholder="Search Fuel..."   (input)="applyFilterGlobal($event, 'contains')">
+              <i class="fas fa-search search-icon"></i>
+            </div>
+          </div>
+
+
+          <div class="col-md-6 d-flex justify-content-end align-items-center">
+            <button class="btn btn-success btn-sm" type="button" (click)="createNewUser()"><span class="pi pi-plus p-1"></span> Create New</button>
+        </div>
+
+        </div>
+        <p-table #dt [value]="FuelData" [paginator]="true"  [rows]="7" [rowsPerPageOptions]="[7, 10, 20, 50]"
+        [globalFilterFields]="['name']" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowHover]="true" dataKey="id" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+      
+  
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th pSortableColumn="srno">Sr.No </th>
+            <th pSortableColumn="name">Role </th>
+            <!-- <th>Action</th> -->
+          </tr>
+        </ng-template>
+      
+
+        <ng-template pTemplate="body" let-item let-i="rowIndex">
+          <tr>
+            <td>{{ i + 1 }}</td> 
+            <td>{{ item.name }}</td>
+            <!--<td>
+               <div class="action-buttons">
+                  
+
+                   
+                  
+              </div> -
+            </td>-->
+          </tr>
+        </ng-template>
+      
+      </p-table>
+      
+      </div>
+    </div>
+  </div>
+
+
+
+
+    <p-dialog [(visible)]="visible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{width: '100%', maxWidth: '600px'}" [contentStyle]="{padding: '0'}"
+  styleClass="register-popup" [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true"
+  (onHide)="closeDialog()" class="custom-border-popup">
+
+  <div class="role-popup-container">
+   
+
+    <div class="popup-header d-flex justify-content-between align-items-center">
+      <div class="logo-container">
+        <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      </div>
+      <h4 class="mb-3 custom-color-h4">Fuel Creation</h4>
+  
+      <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">×</button>
+
+    </div>
+    
+
+    <div class="popup-body p-3">
+      <div class=" d-flex justify-content-center w-100 mb-5">
+
+     
+      </div>
+
+      <form [formGroup]="fuelForm" (ngSubmit)="submitForm()">
+        
+         <div class="d-flex justify-content-center mb-4">
+          <div>
+            <label for="department" class="form-label">Fuel  <span class="error">*</span></label>
+            <input 
+              type="text" 
+              class="form-control fuel-input" 
+              placeholder="Enter Fuel" 
+              formControlName="name" />
+            <small class="text-danger" *ngIf="fuelForm.get('name')?.invalid && fuelForm.get('name')?.touched">
+              Fuel is required
+            </small>
+          </div>
+        </div>
+        
+
+            <!-- <div class="d-flex column-gap-2 justify-content-center"> -->
+                  <div class="d-flex justify-content-center mt-5 mb-4">
+
+                       <button  type="submit"  class="btn btn-success custom-btn btn-width update-button">Submit</button>
+
+
+                  </div>
+              <!-- <button type="submit" class="btn btn-success custom-btn">Submit</button>
+              <button type="button" class="btn btn-danger" (click)="closeDialog()">Close</button> -->
+            <!-- </div> -->
+          
+
+      </form>
+    </div>
+  </div>
+
+</p-dialog> 
+

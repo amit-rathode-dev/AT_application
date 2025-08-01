@@ -1,0 +1,79 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start; /* center cards when they wrap */
+  gap: 1.5rem;
+  padding: 0.2rem;
+}
+
+.genset-card {
+  flex: 1 1 100%;                /* full width by default */
+  min-width: 280px;             /* doesn't shrink too much */
+  max-width: 340px;             /* limit to avoid oversized layout */
+  width: 100%;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.226);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+:host ::ng-deep .p-card .p-card-body {
+  padding: 0rem;
+}
+
+.genset-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #19988B;
+  color: rgb(250, 250, 250);
+  padding: 0.75rem;
+  font-weight: normal;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 0.5rem;
+}
+
+.icon1 {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  margin-left: 0.25rem;
+  cursor: pointer;
+}
+
+.genset-image {
+  width: 100%;
+  /* height: 180px; */
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  padding: 1rem;
+}
+.no-data-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 85vh; /* Adjust based on screen */
+  width: 100%;
+}
+
+.no-data-image {
+  width: 200px;
+  height: auto;
+  opacity: 0.6;
+}

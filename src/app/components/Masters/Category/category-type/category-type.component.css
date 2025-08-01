@@ -1,0 +1,228 @@
+.cusom-container{
+
+    width: calc(1250px + 4px); 
+}
+
+
+.body{
+    background: #DFEEEC;
+
+}
+
+.custom-wrapper{
+    margin-top: 4rem;
+ }
+
+
+ 
+:host ::ng-deep {
+    .user-table-header {
+      background-color: #24AFA1A8;
+   
+      color: white;
+    }
+  
+    .p-datatable .p-datatable-thead > tr > th {
+      background-color: #24AFA1A8;
+      color: white;
+      font-weight: 500;
+      padding: 0.75rem;
+    }
+  
+    .p-datatable .p-datatable-tbody > tr.selected-row {
+      background-color: #e6f7ff;
+      border: 1px solid #91d5ff;
+    }
+  
+    .p-datatable .p-datatable-tbody > tr:hover {
+      background-color: #f0f8ff;
+    }
+  
+    .p-inputtext {
+      width: 100%;
+      padding: 0.5rem;
+    }
+  
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+    }
+  
+    @media screen and (max-width: 768px) {
+      .action-buttons {
+        justify-content: flex-start;
+      }
+  
+      .p-datatable-responsive-demo .p-datatable-tbody > tr > td .p-column-title {
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  
+  :host ::ng-deep .user-table-header th {
+    background-color: #24AFA1A8 !important;
+    color: white !important;
+  }
+
+
+  .custom-header th {
+    background-color: #BEDAD7 !important;
+    color: #000000 !important;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 400;
+    padding-top: 0.30rem;  
+    padding-bottom: 0.25rem;
+    font-size: 0.875rem;    
+    line-height: 1; 
+
+  }
+
+
+  .custom-margin-bottom{
+    margin-bottom: 0.2rem !important;
+  }
+
+  .btn-width{
+    /* width: 100rem; */
+    width: 30rem;
+    color: white !important;
+    background-color: #d8084a;
+  }
+
+
+  .custom-label{
+    margin-top: 1rem !important;
+  }
+
+  .input-filled {
+    border: 1px solid #A7A7A7;
+    box-shadow: 0 0 0 0.2rem rgba(167, 167, 167, 0.25);
+  }
+  
+
+  .form-control:focus {
+    border: 1px solid #A7A7A7;
+    box-shadow: 0 0 0 0.25rem rgba(25, 152, 139, 0.25); 
+  }
+
+  form-select:focus{
+    border: 1px solid #A7A7A7;
+    box-shadow: 0 0 0 0.25rem rgba(25, 152, 139, 0.25); 
+  }
+
+
+  .custom-error {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+  }
+
+
+
+
+  .search-container {
+    position: relative;
+}
+
+/* .search-input {
+    height: 50px;
+    border-radius: 30px;
+    padding-left: 35px;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+} */
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+
+.search-input {
+  width: 100%;
+  padding-left: 35px;
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: var(--bs-body-color);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 0.2;
+  color: #0e0f11;
+  background-color: var(--bs-body-bg);
+  border-radius: 25px !important;
+  background-clip: padding-box;
+  appearance: none;
+  border: var(--bs-border-width) solid var(--bs-border-color) !important;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.search-input:focus {
+
+  box-shadow: 0 0 0 0.12rem rgba(25, 152, 139, 0.25);
+  border: var(--bs-border-width) solid
+  
+}
+.custm-search{
+  border-radius: 25px;
+  height: 2.3rem;
+  box-shadow: none;
+}
+.custm-search::placeholder{
+  padding-left: 2rem;
+}
+
+.pencil-style{
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+/* Custom CSS to reduce the size of input fields */
+.custom-inpusst {
+  width: 80px;        /* You can adjust the width as needed */
+  height: 30px;       /* Adjust the height */
+  font-size: 12px;    /* Smaller font size */
+}
+.cat-img{
+  width: 35px;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr {
+  border-bottom: 1px dashed #ccc !important; 
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:last-child {
+  border-bottom: none !important;
+}
+
+
+
+  
+::ng-deep .p-dialog.register-popup{
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+  
+
+
+::ng-deep .p-dialog.register-popup .p-dialog-content {
+  overflow-y: auto;
+  flex-grow: 1;
+
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+

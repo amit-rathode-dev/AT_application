@@ -1,0 +1,32 @@
+<!-- profile.component.html -->
+<div class="profile-wrapper">
+  <div class="profile-header mb-5">
+    <img src="assets/profile_img_my_acc.png" alt="Profile Image" class="profile-image" />
+    <div class="user-name">{{this.userData.user_name}}</div>
+    <!-- <a class="edit-link">✎ Edit Image</a> -->
+  </div>
+
+  <div class="profile-info-grid mt-5">
+    <div class="info-card">
+      <img src="/assets/phone_icon.svg" alt="phone_icon" />
+      <div>
+        <div class="label">Mobile Number</div>
+        <div class="value">{{this.userData.phone_number}}</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <img src="/assets/sms_icon.svg" alt="sms_icon" />
+      <div>
+        <div class="label">Email</div>
+        <div class="value">{{this.userData.email}}</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <img src="/assets/role_icon.svg" alt="role_icon" />
+      <div>
+        <div class="label">Role Details</div>
+        <div class="value">{{this.userData.role_name }}-{{this.userData.org_name}}</div>
+      </div>
+    </div>
+  </div>
+</div>

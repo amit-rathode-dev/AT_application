@@ -1,0 +1,28 @@
+<div class="card-container">
+@if (gensetList?.length > 0) {
+  @for (genset of gensetList; track genset.name) {
+    <p-card class="genset-card" (click)="goToGenset(genset.id)">
+<ng-template pTemplate="header">
+  <div class="card-header" [pTooltip]="genset.name" tooltipPosition="top">
+    <span class="title-text">
+      {{ genset.name.length > 25 ? (genset.name | slice: 0:25) + '...' : genset.name }}
+    </span>
+    <!-- <img src="/assets/uparrow.png" class="icon1" alt="arrow"> -->
+  </div>
+</ng-template>
+
+      <img
+        [src]="environment.apiUrl+genset.image"
+        [alt]="genset.name"
+        loading="lazy"
+        class="genset-image"
+      />
+    </p-card>
+  }
+ } @else {
+    <div class="no-data-container">
+      <img src="/assets/no_data.png" alt="No Data Found" class="no-data-image" />
+    </div>
+  }
+
+</div>

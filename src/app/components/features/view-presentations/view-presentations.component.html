@@ -1,0 +1,23 @@
+<div class="card-grid">
+
+  @if (presentation_List.length === 0) {
+    <div class="no-data">
+      <img src="assets/no_data.png" alt="No Data" class="no-data-img" />
+      <p>Oops! No presentations found.</p>
+
+    </div>
+  } @else if(presentation_List.length > 0){
+
+  @for (card of presentation_List; track card) {
+    <div class="card mt-4" (click)="openPresentation(card.file_path)">
+      <div class="image-container">
+        <img src="/assets/presentation_cards.png" alt="{{ card.file_name }}" />
+      </div>
+      <div class="card-footer" pTooltip="{{ card.file_name }}" tooltipPosition="top">
+        {{ card.file_name.length > 20 ? (card.file_name | slice:0:25) + '...' : card.file_name }}
+
+      </div>
+    </div>
+  }
+}
+</div>

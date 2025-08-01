@@ -1,0 +1,41 @@
+<div class="custom-popup">
+
+
+    <div class="org-popup-container px-3 px-md-4">
+
+
+        <div class="popup-header d-flex justify-content-between align-items-center p-2">
+            <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+            <h4 class="mb-0 pt-2 pt-md-3 custom-color-h4 text-center flex-grow-1"
+                *ngIf="isCatTypeImage; else categoryImageHeading">
+                Category Type Image
+            </h4>
+
+            <ng-template #categoryImageHeading>
+                <h4 class="mb-0 pt-2 pt-md-3 custom-color-h4 text-center flex-grow-1">
+                    Category Image
+                </h4>
+            </ng-template>
+
+            <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">
+                <img src="/assets/close.svg">
+            </button>
+        </div>
+
+
+
+        <div class="col-md-12 mt-5 ml-3 mr-3">
+
+            <img *ngIf="isCatTypeImage; else defaultImage" [src]="environment + categoryImages.category_type_image"
+                alt="Category Type Image" class="img-fluid img-fix" />
+
+            <ng-template #defaultImage>
+                <img [src]="environment + categoryImages.image" alt="Category Image" class="img-fluid img-fix" />
+            </ng-template>
+
+        </div>
+
+
+
+    </div>
+</div>

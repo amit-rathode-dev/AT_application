@@ -1,0 +1,271 @@
+<div class="container-fluid custom-wrapper">
+  <div class="card">
+    <div class="card-body">
+
+      <div class="row mb-4">
+
+
+        <div class="col-md-6  mb-3 mb-md-0">
+          <div class="search-container">
+            <input type="text" class="form-control custm-search search-input" placeholder="Search Users..."
+              (input)="applyFilterGlobal($event, 'contains')">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+        </div>
+
+        <div class="col-md-6 text-end">
+          <button class="btn btn-success btn-sm" type="button" (click)="createNewUser()"><span
+              class="pi pi-plus p-1"></span> Create New</button>
+
+        </div>
+      </div>
+
+
+      <p-table #dt [value]="users" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[ 10, 20, 50,100]"
+        [globalFilterFields]="['name','first_name','user_name','last_name','email','role_name','org_name', 'zoneId', 'emailId', 'department', 'designation','phone_number']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id"
+        styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" class="product-table">
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th>Sr.No</th>
+            <th>User Name</th>
+            <th>First Name</th>
+            <th>Last Name </th>
+            <th>Email ID</th>
+            <th>Phone No</th>
+            <th>Organization</th>
+
+            <th>Role</th>
+            <th>Reporting Person</th>
+
+            <th>Status</th>
+
+            <th>Action</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-user let-i="rowIndex">
+          <tr [ngClass]="{'selected-row': isSelected(user)}">
+            <td><span class="p-column-title">#</span>{{i + 1}}</td>
+            <td><span class="p-column-title">User Name</span>{{ user.user_name }}</td>
+            <td><span class="p-column-title">First Name</span>{{ user.first_name }}</td>
+            <td><span class="p-column-title">Last Name</span>{{ user.last_name }}</td>
+            <td><span class="p-column-title">Email</span>{{ user.email }}</td>
+            <td><span class="p-column-title">Phone</span>{{ user.phone_number }}</td>
+            <td><span class="p-column-title">Organization</span>{{ user.org_name }}</td>
+            <td><span class="p-column-title">Role</span>{{ user.role_name }}</td>
+                    <td><span class="p-column-title">Role</span>{{ user.reporting_to_name | noData }}</td>
+
+            <td> <span [ngClass]="user.isactive ? 'text-success' : 'text-danger'">
+                {{ user.isactive ? 'Active' : 'Inactive' }}
+              </span></td>
+
+            <td>
+              <span class="p-column-title">Action</span>
+              <div class="action-buttons">
+
+                <a> <img src="/assets/edit-icon.svg" (click)="editUser(user)"></a>
+
+                <a> <img src="/assets/trash-icon.svg" (click)="deleteUser(user)"> </a>
+
+              </div>
+            </td>
+
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="false" [resizable]="false"
+  [style]="{width: '100%', maxWidth: '700px',}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()">
+
+  <div class="register-popup-container">
+
+    <div class="popup-header d-flex justify-content-between align-items-center p-3 pb-5 ">
+      <div class="logo-container px-3">
+        <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      </div>
+      <h5 class="mb-3 custom-color-h4">Create User</h5>
+
+      <!-- <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">×</button> -->
+      <div class="closeDialog">
+        <button type="button" class="close-btnnn" (click)="closeDialog()" aria-label="Close">
+          <img src="assets/close-btn.svg" alt="Close" height="30">
+        </button>
+      </div>
+    </div>
+
+    <div class="popup-body px-3">
+
+
+      <form [formGroup]="registerForm" (ngSubmit)="submitForm()">
+
+        <div class="row mb-3 px-3">
+
+          <div class="col-md-3">
+            <label for="title" class="label-color">Title <span class="error">*</span></label>
+            <select class="form-select form-select-sm custom-input form-control" id="title" formControlName="title_id">
+              <option value="" selected hidden>Select Title</option>
+              <option *ngFor="let title of titles" [value]="title.id">
+                {{ title.name }}
+              </option>
+            </select>
+            <div class="text-danger small"
+              *ngIf="registerForm.get('title_id')?.invalid && registerForm.get('title_id')?.touched">
+              Title is required
+            </div>
+          </div>
+
+
+          <div class="col-md-3">
+            <label for="username" class="label-color">User Name <span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="User Name" formControlName="user_name">
+            <small class="text-danger"
+              *ngIf="registerForm.get('user_name')?.invalid && registerForm.get('user_name')?.touched">
+              User Name is required
+            </small>
+          </div>
+          <div class="col-md-3">
+            <label for="middleName" class="label-color">First Name <span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="First Name" formControlName="first_name">
+            <small class="text-danger"
+              *ngIf="registerForm.get('first_name')?.invalid && registerForm.get('first_name')?.touched">
+              First Name is required
+            </small>
+          </div>
+          <div class="col-md-3">
+            <label for="lastName" class="label-color">Last Name <span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="Last Name" formControlName="last_name">
+            <!-- <small class="text-danger"
+              *ngIf="registerForm.get('last_name')?.invalid && registerForm.get('last_name')?.touched">
+              Last Name is required
+            </small> -->
+          </div>
+        </div>
+
+        <div class="row mb-3 px-3">
+          <div class="col-md-4">
+            <label for="phone_number" class="label-color">Phone Number <span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="Phone Number" formControlName="phone_number"
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)">
+            <small class="text-danger"
+              *ngIf="registerForm.get('phone_number')?.invalid && registerForm.get('phone_number')?.touched">
+              Phone Number is required
+            </small>
+          </div>
+          <div class="col-md-8">
+            <label for="emailId" class="label-color">Email ID <span class="error">*</span></label>
+            <input type="email" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="Email ID" formControlName="email">
+            <small class="text-danger" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+              Email is required
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3 px-3">
+
+          <div class="col-md-12">
+            <label for="emailId" class="label-color">Password <span class="error">*</span></label>
+            <input type="password" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="Password" formControlName="password">
+            <small class="text-danger"
+              *ngIf="!isEditing && registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched">
+              Password is required
+            </small>
+
+          </div>
+        </div>
+
+        <div class="mb-3 px-3 organization-dropdown-wrapper">
+          <label for="organization" class="label-color">organization <span class="error">*</span></label>
+          <p-dropdown [options]="organizations" formControlName="org_id" optionLabel="name" optionValue="id"
+            [filter]="true" (onChange)="onOrganizationChange($event.value)" placeholder=" Select Organization"  [style]="{'width':'100%',
+            'height':'30px'
+          }" styleClass="w-100 my-local-dd custom-input">
+          </p-dropdown>
+
+          <div class="text-danger small"
+            *ngIf="registerForm.get('org_id')?.invalid && registerForm.get('org_id')?.touched">
+            Organization is required
+          </div>
+
+        </div>
+
+
+
+        <!-- <div class="mb-3 px-3">
+          <label for="department" class="label-color">Department</label>
+          <input type="text" class="form-control form-control-sm custom-placeholder" placeholder="Department"
+            formControlName="department">
+
+        </div> -->
+
+
+
+
+
+        <div class="mb-3 px-3">
+          <label for="designation" class="label-color">Role <span class="error">*</span></label>
+          <select class="form-select form-select-sm custom-input form-control" id="designation"
+            formControlName="role_id" (change)="onRoleChange($event)">
+            <option value="" disabled hidden>Select Designation</option>
+            <option *ngFor="let designation of designations" [value]="designation.user_role_id">
+              {{ designation.name }}
+            </option>
+          </select>
+          <div class="text-danger small"
+            *ngIf="registerForm.get('role_id')?.invalid && registerForm.get('role_id')?.touched">
+            Role is required
+          </div>
+        </div>
+
+
+
+        <div class="mb-3 px-3">
+
+
+          <label for="designation" class="label-color">Reporting Manager</label>
+          <select class="form-select form-select-sm custom-input form-control" id="designation"
+            formControlName="reporting_id">
+            <option value="" disabled hidden>Select Reporting Person</option>
+            <option *ngFor="let itr of reportingPersons" [value]="itr.user_id">
+              {{ itr.username }}
+            </option>
+          </select>
+
+        </div>
+
+         <div class="mb-0 px-3 pb-4">
+
+
+          <label for="designation" class="label-color">Mobile Type<span class="error">*</span></label>
+          <select class="form-select form-select-sm custom-input form-control" id="designation"
+            formControlName="software_type">
+             <option value="" disabled hidden>Select Software Type</option>
+            <option value="iOS"  >iOS</option>
+            <option value="Android"  >Android</option>
+          </select>
+
+        </div>
+
+
+
+        <div class="d-flex justify-content-center mt-5 mb-4">
+          <button *ngIf="!isEditing" type="submit"
+            class="btn btn-success custom-btn btn-width update-button">Submit</button>
+          <button *ngIf="isEditing" type="submit"
+            class="btn btn-success custom-btn btn-width update-button">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</p-dialog>

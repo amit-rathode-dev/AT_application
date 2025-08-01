@@ -1,0 +1,56 @@
+.settings-container {
+  max-width: 100%;
+  margin: auto;
+  padding: 0.1rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  min-height: 85vh;
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #FAFAFA;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.settings-item:hover {
+  background-color: #f0f0f0;
+}
+
+.icon-section {
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+  color: #009688;
+  font-size: 1.5rem;
+}
+
+.text-section {
+  flex-grow: 1;
+  padding-left: 1rem;
+}
+
+.title {
+  font-weight: 500;
+  color: #333;
+}
+
+.icon-image {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.arrow-section {
+  color: #009688;
+}

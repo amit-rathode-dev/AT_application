@@ -1,0 +1,10 @@
+.reusable-table-container {
+  width: 100%;
+  padding: 1rem;
+
+  @media (max-width: 768px) {
+    .p-datatable {
+      font-size: 0.85rem;
+    }
+  }
+}

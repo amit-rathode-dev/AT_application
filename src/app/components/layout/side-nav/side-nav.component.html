@@ -1,0 +1,266 @@
+<div class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <i class="pi pi-bars"></i>
+    </button>
+  </div>
+
+
+  <div class="sidebar-menu-wrapper">
+    <!-- non admin -->
+    <li class="sidebar-section-title" *ngIf="showNonadminMenu">MAINS
+      <img src="./../../../../assets/line.svg" alt="divider" class="mains-title-img" />
+    </li>
+
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home">
+
+          <img src="./../../../../assets/user-home.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Home</span> }
+        </a>
+      </li>
+    </ul>
+
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home/Lead-Gen">
+          <img src="./../../../../assets/lead-registration.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Lead Registration</span> }
+        </a>
+      </li>
+    </ul>
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home/all-range">
+          <img src="./../../../../assets/non-ad-ranges.svg" class="iconimg">
+          @if (!isCollapsed) { <span>All Ranges</span> }
+        </a>
+      </li>
+    </ul>
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home/customer-ref">
+          <img src="./../../../../assets/non-ad-cr.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Customer References</span> }
+        </a>
+      </li>
+    </ul>
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home/catalogues">
+          <img src="./../../../../assets/non-ad-cat.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Catalogues</span> }
+        </a>
+      </li>
+    </ul>
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home/videos">
+          <img src="./../../../../assets/non-ad-videos.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Videos</span> }
+        </a>
+      </li>
+    </ul>
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home/presentations">
+          <img src="./../../../../assets/non-ad-presentations.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Presentations</span> }
+        </a>
+      </li>
+    </ul>
+
+    <ul class="nonadmin-sidebar-menu">
+
+      <li *ngIf="showNonAdminZsmMenu">
+        <a routerLink="/partner-Media">
+          <img src="./../../../../assets/multimedia.png" class="iconimg" />
+          <span *ngIf="!isCollapsed">Media</span>
+        </a>
+      </li>
+    </ul>
+
+
+    <li class="sidebar-section-title" *ngIf="showNonadminMenu">Profile
+      <img src="./../../../../assets/line.svg" alt="divider" class="mains-title-img" />
+    </li>
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home/profile">
+          <img src="./../../../../assets/lead-registration.svg" class="iconimg">
+          @if (!isCollapsed) { <span>My Leads</span> }
+        </a>
+      </li>
+    </ul>
+
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home/my-Account">
+          <img src="./../../../../assets/non-ad-accounts.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Accounts</span> }
+        </a>
+      </li>
+    </ul>
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home/notifications">
+          <img src="./../../../../assets/non-ad-notifications.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Notifications</span> }
+        </a>
+      </li>
+    </ul>
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/home">
+          <img src="./../../../../assets/non-ad-privacy.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Privacy Policy</span> }
+        </a>
+      </li>
+    </ul>
+
+
+
+
+    <ul class="nonadmin-sidebar-menu">
+      <li *ngIf="showNonadminMenu" [class.active]="activeRoute === '/home'" class="non-admin-menu">
+        <a routerLink="/logout">
+          <img src="./../../../../assets/logout.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Log Out</span> }
+        </a>
+      </li>
+    </ul>
+
+
+
+    <!-- admin -->
+    <ul class="sidebar-menu">
+      <li *ngIf="showSuperAdminMenu" [class.active]="activeRoute === '/dashboard'">
+        <a routerLink="/dashboard">
+          <img src="./../../../../assets/Dashboard-Icon.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Home</span> }
+        </a>
+      </li>
+
+
+      <li *ngIf="showContentData" [class.active]="activeRoute === '/manager-approval'">
+        <a routerLink="/manager-approval">
+          <img src="./../../../../assets/Dashboard-Icon.svg" class="iconimg" />
+          <span *ngIf="!isCollapsed">Content Manager</span>
+        </a>
+      </li>
+
+        <li *ngIf="showContentData" [class.active]="activeRoute === '/logout'">
+        <a routerLink="/logout">
+          <img src="./../../../../assets/logout.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Logout</span> }
+        </a>
+      </li>
+
+
+
+      <!-- <li *ngIf="showMediaMenu">
+        <a routerLink="/partner-Media">
+          <img src="./../../../../assets/multimedia.png" class="iconimg" />
+          <span *ngIf="!isCollapsed">Media</span>
+        </a>
+      </li> -->
+
+        <!-- <li *ngIf="showMediaMenu" [class.active]="activeRoute === '/logout'">
+        <a routerLink="/logout">
+          <img src="./../../../../assets/logout.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Logout</span> }
+        </a>
+      </li> -->
+
+
+
+
+      <div class="sidebar-menu-wrapper">
+
+        <li *ngIf="showSuperAdminMenu">
+          <a (click)="toggleMasterMenu()" style="cursor: pointer;">
+            <img src="./../../../../assets/master-icon.svg" class="iconimg" />
+            @if (!isCollapsed) {
+            <span>Master</span>
+            }
+
+            <img src="./../../../../assets/master-arrow.svg" class="iconimg" style="margin-left: 5rem;" />
+          </a>
+
+          <ul class="master-sidebar" *ngIf="isMasterMenuOpen">
+
+            <li class="sub-menu"><a routerLink="/role-management"> <img src="./../../../../assets/role-management.svg"
+                  class="iconimg">Role
+                Management</a></li>
+
+            <li class="sub-menu"><a routerLink="/org"> <img src="./../../../../assets/org-icon.svg"
+                  class="iconimg">Organization</a>
+            </li>
+
+
+            <li class="sub-menu"><a routerLink="/goem"> <img src="./../../../../assets/sub-org.png"
+                  class="iconimg">Goem</a></li>
+
+            <li class="sub-menu"><a routerLink="/kgd"> <img src="./../../../../assets/multimedia.png"
+                  class="iconimg">KGD</a></li>
+
+            <li class="sub-menu"><a routerLink="/user-roles"> <img src="./../../../../assets/user-icon.svg"
+                  class="iconimg" class="iconimg">User</a>
+
+            <li class="sub-menu"><a routerLink="/banner"> <img src="./../../../../assets/banner-icon.svg"
+                  class="iconimg">Banner</a></li>
+
+            <li class="sub-menu"><a routerLink="/category-type"> <img src="./../../../../assets/tag.png"
+                  class="iconimg">Category Type</a></li>
+
+            <li class="sub-menu"><a routerLink="/category"> <img src="./../../../../assets/cat-icon.svg"
+                  class="sub-menu" class="iconimg">Category</a></li>
+            <li class="sub-menu"><a routerLink="/fuel"> <img src="./../../../../assets/fossil-fuel.png"
+                  class="iconimg">Fuel</a></li>
+            <li class="sub-menu"><a routerLink="/product-ranges"> <img src="./../../../../assets/ranges-icon.svg"
+                  class="sub-menu" class="iconimg">Ranges</a></li>
+
+
+            <li class="sub-menu"><a routerLink="/products"> <img src="./../../../../assets/supply-chain.png"
+                  class="iconimg">Products</a>
+            </li>
+            <!-- <li class="sub-menu"><a routerLink="/variant"> <img src="./../../../../assets/fossil-fuel.png"
+                  class="iconimg">Variant</a>
+            </li> -->
+            <li class="sub-menu"><a routerLink="/media"> <img src="./../../../../assets/multimedia.png"
+                  class="iconimg">Media</a></li>
+            <!-- <li class="sub-menu"><a routerLink="/approval"> <img src="./../../../../assets/approval.svg"
+                  class="iconimg">Approval</a></li> -->
+
+
+
+          </ul>
+
+
+        </li>
+
+      </div>
+
+      <li *ngIf="showSuperAdminMenu" [class.active]="activeRoute === '/logout'">
+        <a routerLink="/logout">
+          <img src="./../../../../assets/logout.svg" class="iconimg">
+          @if (!isCollapsed) { <span>Logout</span> }
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+</div>

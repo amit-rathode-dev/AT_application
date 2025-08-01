@@ -1,0 +1,11 @@
+<svg width="21" height="26" viewBox="0 0 21 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_1510_5747" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="21" height="26">
+<path d="M20 21.4002V2.20001C20 1.88175 19.857 1.57652 19.6025 1.35148C19.348 1.12643 19.0028 1 18.6429 1H2.35714C1.99721 1 1.65201 1.12643 1.3975 1.35148C1.14298 1.57652 1 1.88175 1 2.20001V21.4002" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15.9286 17.7998H5.07143C2.82284 17.7998 1 19.4116 1 21.3998C1 23.3881 2.82284 24.9999 5.07143 24.9999H15.9286C18.1772 24.9999 20 23.3881 20 21.3998C20 19.4116 18.1772 17.7998 15.9286 17.7998Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M7.78548 8.2008L10.4998 5.80078L13.2141 8.2008L15.9283 5.80078L13.8926 12.4008H7.10691L5.0712 5.80078L7.78548 8.2008Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+<path d="M15.9283 22.5992C16.6779 22.5992 17.2855 22.062 17.2855 21.3992C17.2855 20.7365 16.6779 20.1992 15.9283 20.1992C15.1788 20.1992 14.5712 20.7365 14.5712 21.3992C14.5712 22.062 15.1788 22.5992 15.9283 22.5992Z" fill="black"/>
+</mask>
+<g mask="url(#mask0_1510_5747)">
+<path d="M-5.78482 -1.40039H26.7866V27.3999H-5.78482V-1.40039Z" fill="#19988B"/>
+</g>
+</svg>
