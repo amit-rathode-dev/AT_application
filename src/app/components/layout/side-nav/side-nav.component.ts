@@ -24,6 +24,7 @@ export class SideNavComponent {
   showContentData: boolean = false;
   organizationId: any;
   roleId: any;
+  org_type:any;
 
 
   @Output() sidebarStateChange = new EventEmitter<boolean>();
@@ -41,21 +42,28 @@ export class SideNavComponent {
     this.checkWindowWidth();
 
     this.orgName = localStorage.getItem('org_name');
+    this.org_type = localStorage.getItem('org_type');
     this.organizationId = localStorage.getItem('org_id');
     this.roleName = localStorage.getItem('role_name');
     this.roleId = localStorage.getItem('user_role_id')
 
 
-    this.showSuperAdminMenu = this.orgName === 'KOEL' && this.roleName === 'Super Admin';
-    this.showMediaMenu = this.roleName !== 'super Admin' && this.orgName !== 'KOEL';
+    // this.showSuperAdminMenu = this.orgName === 'KOEL' && this.roleName === 'Super Admin';
+      this.showSuperAdminMenu = this.org_type === 'Self' && this.roleName === 'Super Admin';
+    //  this.showMediaMenu = this.roleName !== 'super Admin' && this.orgName !== 'KOEL';
+    this.showMediaMenu = this.roleName !== 'super Admin' && this.org_type !== 'Self';
     // this.showNonadminMenu = this.roleName != 'Super Admin' && this.orgName == 'KOEL';
-    this.showNonadminMenu =
+    // this.showNonadminMenu =
+    //   ['asm','zsm', 'rsm', 'sales'].includes((this.roleName || '').toLowerCase()) &&
+    //   this.orgName === 'KOEL';
+        this.showNonadminMenu =
       ['asm','zsm', 'rsm', 'sales'].includes((this.roleName || '').toLowerCase()) &&
-      this.orgName === 'KOEL';
-      this.showNonAdminZsmMenu=['zsm'].includes((this.roleName || '').toLocaleLowerCase()) && this.orgName ==='KOEL';
+      this.org_type === 'Self';
+      // this.showNonAdminZsmMenu=['zsm'].includes((this.roleName || '').toLocaleLowerCase()) && this.orgName ==='KOEL';
+    this.showNonAdminZsmMenu=['zsm'].includes((this.roleName || '').toLocaleLowerCase()) && this.org_type ==='Self';
 
-this.showContentData = this.roleName === 'Content Manager' && this.orgName === 'KOEL';
-
+  // this.showContentData = this.roleName === 'Content Manager' && this.orgName === 'KOEL';
+this.showContentData = this.roleName === 'Content Manager' && this.org_type === 'Self';
 
   }
 

@@ -11,7 +11,8 @@ export const environment = {
     // apiUrl: 'http://172.16.16.66:5089/',
     
     //UAT
-       apiUrl :'https://koel.augtrans.com:5088/' 
+    //    apiUrl :'https://koel.augtrans.com:5088/' 
   
+        apiUrl :'https://itsm.augtrans.com:7055/'
   
   }; 
