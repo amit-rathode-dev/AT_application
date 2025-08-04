@@ -52,25 +52,25 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'user-roles',
         component: UserRolesComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'add-user',
         component: AddUserComponent,
         canActivate: [roleGuard,],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'org',
         component: OrgManagementComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
 
       },
 
@@ -78,89 +78,89 @@ export const routes: Routes = [
         path: 'role-management',
         component: RoleManagementComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' },
+        data: { role_name: ['Super Admin'], org_type: 'Self' },
       },
       {
         path: 'banner',
         component: BannerComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'category',
         component: AddCategoryComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'fuel',
         component: AddFuelComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'product-ranges',
         component: ProductRangesComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'products',
         component: ProductComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'variant',
         component: VariantComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'video',
         component: VideoplayerComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'media',
         component: MediaComponentComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'partner-Media',
         component: PartnerMediaComponent,
         canActivate: [roleGuard],
-          // data: { role_name: ['!Super Admin'], org_name: 'KOEL' }
+          // data: { role_name: ['!Super Admin'], org_type: 'Self' }
 
-        data: { role_name: ['ZSM'], org_name: 'KOEL' }
+        data: { role_name: ['ZSM'], org_type: 'Self' }
       },
 
       {
         path: 'approval',
         component: MediaDetailsComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
-        //  data: { role_name: ['Super Admin','Owner'], org_name: 'C.S.S. Vennal Naidu & Sons Pvt. Ltd' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
+        //  data: { role_name: ['Super Admin','Owner'], org_type: 'C.S.S. Vennal Naidu & Sons Pvt. Ltd' }
       },
       {
         path: 'category-type',
         component: CategoryTypeComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'goem',
         component: GoemComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'kgd',
         component: KgdComponent,
         canActivate: [roleGuard],
-        data: { role_name: ['Super Admin'], org_name: 'KOEL' }
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
       {
         path: 'home',
@@ -289,7 +289,7 @@ export const routes: Routes = [
       {
         path: 'manager-approval',
         component: ContentManagerApprovalComponent,
-        data: { role_name: ['Content Manager'], org_name: 'KOEL' }
+        data: { role_name: ['Content Manager'], org_type: 'Self' }
       }
 
 

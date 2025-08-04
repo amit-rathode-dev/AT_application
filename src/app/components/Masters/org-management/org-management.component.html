@@ -21,7 +21,7 @@
               <li><button class="dropdown-item" (click)="filterOrg('KGD')">KGD</button>
               </li>
 
-              <li><button class="dropdown-item" (click)="filterOrg('Self')">KOEL</button>
+              <li><button class="dropdown-item" (click)="filterOrg('Self')">AT</button>
               </li>
 
 
@@ -151,7 +151,7 @@
 
 
             <div class="col-12 col-lg-4 col-md-8" *ngIf="!isEditOrg">
-              <label class="form-label">Zone <span class="error">*</span></label>
+              <label class="form-label">Zone <span class="error"></span></label>
               <select class="form-select form-select-sm" formControlName="selectedZone" (change)="onRoleChange($event)">
                 <option value="" disabled selected>--Select--</option>
                 <option *ngFor="let zone of zoneData" [value]="zone.id">

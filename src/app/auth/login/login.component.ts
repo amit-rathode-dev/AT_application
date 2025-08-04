@@ -40,30 +40,37 @@ export class LoginComponent {
   showContentData: boolean = false;
   organizationId: any;
   roleId: any;
+  orgType:any;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private modalHandler: ModealHandlerService) { }
 
   ngOnInit(): void {
 
     this.orgName = localStorage.getItem('org_name');
+    this.orgType =localStorage.getItem('org_type');
     this.organizationId = localStorage.getItem('org_id');
     this.roleName = localStorage.getItem('role_name');
     this.roleId = localStorage.getItem('user_role_id')
 
 
-    this.showSuperAdminMenu = this.orgName === 'KOEL' && this.roleName === 'Super Admin';
+    // this.showSuperAdminMenu = this.orgName === 'KOEL' && this.roleName === 'Super Admin';
+        this.showSuperAdminMenu = this.orgType === 'Self' && this.roleName === 'Super Admin';
 
-    this.showMediaMenu = this.roleName !== 'super Admin' && this.orgName !== 'KOEL';
-    // this.showNonadminMenu = this.roleName != 'Super Admin' && this.orgName == 'KOEL';
+    // this.showMediaMenu = this.roleName !== 'super Admin' && this.orgName !== 'KOEL'; working
+    
+    // this.showMediaMenu = this.roleName !== 'super Admin' && this.orgType !== 'KOEL';
+      this.showMediaMenu = this.roleName !== 'super Admin' && this.orgType !== 'Self';
+    // this.showNonadminMenu =
+    //   ['asm', 'rsm', 'sales'].includes((this.roleName || '').toLowerCase()) &&
+    //   this.orgName === 'KOEL';
+
     this.showNonadminMenu =
       ['asm', 'rsm', 'sales'].includes((this.roleName || '').toLowerCase()) &&
-      this.orgName === 'KOEL';
+      this.orgType === 'Self';
 
-    // this.showContentData =
-    //   (this.roleName || '').toLowerCase().trim() === 'content manager' &&
-    //   (this.orgName || '').toLowerCase().trim() === 'koel';
-  
-        this.showContentData =  this.orgName === 'KOEL' && this.roleName === 'Content Manager';
+    
+        // this.showContentData =  this.orgName === 'KOEL' && this.roleName === 'Content Manager';
+        this.showContentData =  this.orgType === 'Self' && this.roleName === 'Content Manager';
 
       console.log(this.showContentData, 'showContentData value' );
       
@@ -93,25 +100,28 @@ export class LoginComponent {
             this.router.navigate(['/dashboard'])
             const user = res.userDetails;
 
-            const orgName = user?.org_name?.toLowerCase();
+            // const orgName = user?.org_name?.toLowerCase();
+                const orgType = user?.org_type?.toLowerCase();
             const roleName = user?.role_name?.toLowerCase();
 
-         this.showContentData = orgName === 'KOEL' && roleName === 'Content Manager';
+        //  this.showContentData = orgName === 'KOEL' && roleName === 'Content Manager';
+
+             this.showContentData = orgType === 'Self' && roleName === 'Content Manager';
 
          console.log(this.showContentData, 'showContentData value' );
       
 
-            if ((orgName === 'koel' || orgName === 'KOEL') && roleName === 'super admin') {
+            if ((orgType === 'self' || orgType === 'Self') && roleName === 'super admin') {
               this.router.navigate(['/dashboard']);
             } else if (
-              orgName === 'koel' &&
+              orgType === 'self' &&
               ['asm','ASM','zsm', 'rsm','sales'].includes(roleName)
             ) {
               this.router.navigate(['/home']);
             }
-            if ((orgName !== 'koel' && orgName !== 'KOEL') || (roleName === 'Owner' || roleName === 'SR1' || roleName === 'SR2' || roleName === 'Sales')) {
+            if ((orgType !== 'self' && orgType !== 'self') || (roleName === 'Owner' || roleName === 'SR1' || roleName === 'SR2' || roleName === 'Sales')) {
               this.router.navigate(['/partner-Media']);
-            } else if ((orgName === 'KOEL' || orgName ==='koel') && roleName === 'content manager') {
+            } else if ((orgType === 'Self' || orgType ==='self') && roleName === 'content manager') {
 
               this.router.navigate(['/manager-approval']);
             }
