@@ -56,8 +56,10 @@ export class ProductComponent {
   rangesData: any[] = [];
   unitData: any = [] = [];
   fuelData: any[] = [];
+  filteredFueldData:any[]=[];
   categoryData: any = [] = [];
   catData: any = [] = [];
+  doubleFiltered:any[]=[];
   videoLinks: any[] = [];
   incomingData: any[] = [];
   newFilteredRange: any[] = []
@@ -80,6 +82,8 @@ export class ProductComponent {
   changeProdImagePairs: { file: File, name: string }[] = [];
   videoLinkMap: { [key: number]: string[] } = {};
   editProductImageVisible: boolean = false;
+
+  filteredFuelData:any[]=[]
 
   // productImageFile: File | null = null;
   // presentationFile: File | null = null;
@@ -925,7 +929,7 @@ export class ProductComponent {
     formData.append('product_name', this.productForm.get('productName')?.value);
     formData.append('description', this.productForm.get('description')?.value);
     formData.append('category_id', this.productForm.get('category')?.value);
-    // formData.append('fuel_id', this.productForm.get('fuel')?.value);
+    formData.append('fuel_id', this.productForm.get('fuel')?.value);
     formData.append('product_range_id', this.productForm.get('range')?.value);
 
 
@@ -1513,6 +1517,47 @@ export class ProductComponent {
   }
 
 
+ filterfuel(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const cat_type_id = selectElement.value;
+  console.log('Selected Category Type ID:', cat_type_id);
+
+
+  this.filteredFuelData=[]
+   this.commonService.getAllDataWithParams('api/categories/getProducts', { id:cat_type_id, fuel_id:0 }).subscribe({
+      next: (res: any) => {
+        if (res.status == 200 || res.status == 201) {
+
+        const firstItem = res.data[0];
+        console.log('here filtered firstItem',firstItem);
+        
+
+        // Extract fuels
+        this.filteredFuelData = (firstItem.fuel || []).map((fuelItem: any) => ({
+          id: fuelItem.id,
+          name: fuelItem.name
+        }));
+
+          console.log(this.filteredFuelData, '---here filtered---- term---->');
+
+   // Optional: extract with ranges etc.
+        this.filteredFueldData = (firstItem.fuel || []).flatMap((fuelItem: any) =>
+          (fuelItem.ranges || []).map((range: any) => ({
+            fuelId: fuelItem.id,
+            fuelName: fuelItem.name,
+            rangeId: range.id,
+            lowRange: range.lowRange,
+            highRange: range.highRange,
+            image: range.productRangeImage
+          }))
+        );
+
+        }
+      }
+    })
+
+  // You can now use `cat_type_id` as needed
+}
 
 
 } 

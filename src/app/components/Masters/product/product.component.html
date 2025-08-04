@@ -174,7 +174,7 @@
 
       <form *ngIf="step == 1" [formGroup]="productForm">
         <div class="row mb-3">
-          <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
+          <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
             <label for="productName" class="form-label">Product Name<span class="text-danger">*</span></label>
             <input type="text" class="form-control form-control-sm custom-input custom-placeholder" id="productName"
               formControlName="productName" placeholder="Product Name">
@@ -185,10 +185,10 @@
             </div>
 
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
+          <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
             <label for="category" class="form-label">Select Category</label>
             <select #categorySelect class="form-select form-select-sm form-control custom-input custom-placeholder"
-              id="category" formControlName="category" (change)="filterRangeData(categorySelect.value)">
+              id="category" formControlName="category" (change)="filterRangeData(categorySelect.value)" (change)="filterfuel($event)">
               <option value="" class="custom-placeholder-dropdown custom-input custom-placeholder" selected>--</option>
               <option *ngFor="let itr of allcatData" [value]="itr.id">{{ itr.name }} - {{ itr.fuel_name }}</option>
             </select>
@@ -199,7 +199,7 @@
             </div>
 
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
+          <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
             <label for="range" class="form-label">Select Range</label>
             <select class="form-select form-select-sm custom-input custom-placeholder form-control" id="range"
               formControlName="range">
@@ -214,18 +214,18 @@
               Category is required
             </div>
           </div>
-          <!-- <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
+          <div class="col-12 col-md-6 col-lg-3 mb-3 mb-lg-0">
             <label for="fuel" class="form-label">Select Fuel</label>
             <select class="form-select form-select-sm   form-control custom-input " id="fuel" formControlName="fuel">
               <option value="" class="custom-placeholder" selected>--</option>
-              <option *ngFor="let itr of fuelData" [value]="itr.id">{{ itr.name }}</option>
+              <option *ngFor="let itr of filteredFuelData" [value]="itr.id">{{ itr.name }}</option>
 
             </select>
 
             <div class="text-danger small" *ngIf="productForm.get('fuel')?.invalid && productForm.get('fuel')?.touched">
               Fuel is required
             </div>
-          </div> -->
+          </div>
         </div>
 
         <div class="mb-3">
