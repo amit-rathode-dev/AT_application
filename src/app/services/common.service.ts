@@ -26,28 +26,32 @@ getAllDataIdwise(url: string, ids: any[]) {
   return this.http.get<any>(`${environment.apiUrl + url}`, { params });
 }
 
+//post data with body
 postDataWithBody(url: string, payload: any): Observable<any> {
   return this.http.post<any>(`${environment.apiUrl + url}`, payload);
 }
 
-
+//get data with path variable
 getAllDatawithpathVariable(url: string, params : any): Observable<any> {
 
     return this.http.get<any>(`${environment.apiUrl + url}`, { params });
 }
 
-
+//create data 
 createData(url: string, payload: any): Observable<any> {
   return this.http.post<any>(`${environment.apiUrl + url}`, payload);
 }
 
+//update data
 updateData(url: string, data: any): Observable<any> {
   return this.http.put<any>(`${environment.apiUrl + url}`, data);
 }
 
+//delete data by id
 deleteData(url: string, id: number): Observable<any> {
   return this.http.delete<any>(`${environment.apiUrl}${url}${id}`);
 }
+//get data by path variable
 getDataByPathVariable(url: string, id: number){
   return this.http.get<any>(`${environment.apiUrl}${url}${id}`);
 }

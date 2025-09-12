@@ -13,6 +13,7 @@ import { TimeoutError } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ModealHandlerService } from '../../shared/services/modeal-handler.service';
 
+
 interface updatedRoleData {
   id: string
   name: string
@@ -33,16 +34,17 @@ export class OrgManagementComponent {
   orgData: any[] = [];
   refinedData: any[] = [];
   tempData: any[] = [];
-  tempOrgData:any[] = [];
+  tempOrgData: any[] = [];
   rolesData: any[] = [];
   selectedOrg: any[] = [];
   orgTypeData: any[] = []
+  departmentData: any[] = [];
   updatedRoleData: any[] = []
   zoneData: any[] = [{
     id: 'South', name: 'South'
   }, { id: 'North', name: 'North' },
   { id: 'West', name: 'West' },
-{ id: 'East', name: 'East' }];
+  { id: 'East', name: 'East' }];
 
   orgForm!: FormGroup;
   visible: boolean = false;
@@ -55,6 +57,7 @@ export class OrgManagementComponent {
   selectedRole: { id: number, name: string } | null = null
   selectedOrgRole: { id: number, name: string } | null = null
   selectedOrgId: any;
+  isSelfTypeFlag: boolean = false;
 
 
 
@@ -70,15 +73,17 @@ export class OrgManagementComponent {
     this.getOrgData();
     this.getRoleData();
     this.getOrgType();
+    this.getDepartmentData();
   }
 
   initForm(): void {
     this.orgForm = this.fb.group({
       name: ['', Validators.required],
       id: ['',],
-      selectedRoleId: ['', Validators.required],
-      selectedOrgtype: ['', Validators.required],
-      selectedZone: ['']
+      selectedRoleId: [null, Validators.required],
+      selectedOrgtype: [null, Validators.required],
+      selectedZone: [null],
+      selectedDepartmentId: [null]
     })
   }
 
@@ -90,7 +95,8 @@ export class OrgManagementComponent {
   }
 
   createOrganization() {
-    this.visible = true;
+    // this.visible = true;
+    this.newFormVisible = true;
   }
 
   closeDialog() {
@@ -101,6 +107,8 @@ export class OrgManagementComponent {
     this.visible = false;
     this.isEditable = false;
     this.isEditOrg = false;
+    this.newFormVisible = false
+    this.addedDepartments = []
 
   }
 
@@ -148,25 +156,22 @@ export class OrgManagementComponent {
 
   addOrg() {
 
-    this.orgForm.markAllAsTouched();
+      this.orgForm.markAllAsTouched();
 
-    const roleControl = this.orgForm.get('selectedRoleId');
-    roleControl?.clearValidators();
-    roleControl?.updateValueAndValidity();
+      const roleControl = this.orgForm.get('selectedRoleId');
+      roleControl?.clearValidators();
+      roleControl?.updateValueAndValidity();
 
-    if (this.orgForm.invalid) {
-      return;
-    }
+      if (this.orgForm.invalid) {
+        return;
+      }
 
     if (this.orgForm.valid) {
       const formattedData = {
-        name: this.orgForm.value?.name,
-        zone: this.orgForm.value?.selectedZone,
-        org_type_id: Number(this.orgForm.value?.selectedOrgtype),
-        data: this.addedRoles.map((role, index) => ({
-          occurance: (index + 1).toString(),
-          role_id: role.id
-        }))
+        name: this.orgForm.value.name,
+        org_type_id:Number(this.orgForm.value.selectedOrgtype) ,
+        zone: this.orgForm.value.selectedZone,
+        department: this.addedDepartments.map(department => department.id)
       };
 
       this.commonService.createData('api/user/createOrg', formattedData).subscribe({
@@ -246,6 +251,27 @@ export class OrgManagementComponent {
 
 
 
+  getDepartmentData() {
+    this.commonService.getAllData('api/user/getAllDepartment').subscribe({
+      next: (res: any) => {
+        if (res.status == 200) {
+          const incomingDepartments = res.data || [];
+          this.departmentList = incomingDepartments
+          console.log('here are org', this.departmentList);
+
+        } else {
+
+          console.log('Invalid ', res);
+        }
+
+      },
+      error: (err) => {
+        console.error('Login failed', err);
+      }
+    });
+  }
+
+
 
   getOrgData() {
     console.log('here org function called');
@@ -258,35 +284,41 @@ export class OrgManagementComponent {
           this.orgData = res.data
             .filter((org: any) => org.isactive === true)
             .map((org: {
-              id: any, name: any; org_type_name: any, org_type_id: any, data: any[];
+              id: any, name: any; zone:string,org_type_id: any, org_type_name: any,  department: any[];
             }) => ({
               id: org.id,
-              org_name: org.name,
+              org_name:org.name,
+              zone: org.zone,
               org_type_name: org.org_type_name,
               org_type_id: org.org_type_id,
-              orgr_id: org.data.map((itr: { orgr_id: any; }) => itr.orgr_id),
-              roles: org.data.map(role => role.role_name),
-              temproles: org.data.map(role => ({
-                orgr_id: role.orgr_id,
-                role_name: role.role_name,
-                occurrence: role.occurance,
-                user_role_id: role.user_role_id,
-
-              })),
-              occurrences: org.data.map(role => role.occurance)
+                // orgr_id: org.department?.map((itr: { orgr_id: any; }) => itr.orgr_id) ?? [],
+                incominRoles: Array.isArray(org.department) ? org.department.map(itr => itr.department_name) : [],
+                temproles: Array.isArray(org.department) ? org.department.map(role => ({
+                department_id: role.department_id,
+                department_name: role.department_name,
+                odr_id: role.odr_id,
+                })) : [],
+              // occurrences: org.department.map(role => role.occurance)
             }));
 
-            this.tempOrgData = [...this.orgData];
-          this.refinedData = res.data.map((org: { id: any; name: any; data: any[] }) => ({
-            id: org.id,
-            org_name: org.name,
-            roles: org.data.map(role => ({
-              orgr_id: role.orgr_id,
-              role_name: role.role_name,
-              occurrence: role.occurance,
-              user_role_id: role.user_role_id
-            }))
-          }));
+          this.tempOrgData = [...this.orgData];
+          // if (res.data && res.data.length > 0) {
+          //   this.refinedData = res.data.map((org: { id: any; name: any; zone: string; org_type_name: string; data: any[] }) => ({
+          //     id: org.id,
+          //     org_name: org.name,
+          //     zone: org.zone,
+          //     org_type_name: org.org_type_name,
+          //     roles: Array.isArray(org.data)
+          //       ? org.data.map(role => ({
+          //           department_id: role.department_id,
+          //           department_name: role.department_name,
+          //           odr_id: role.odr_id,
+          //         }))
+          //       : []
+          //   }));
+          // } else {
+          //   this.refinedData = [];
+          // }
         } else {
 
           console.log('Invalid ', res);
@@ -412,12 +444,10 @@ export class OrgManagementComponent {
 
     if (this.orgForm.valid) {
       const formattedData = {
-        id: this.selectedOrgId,
         name: this.orgForm.value.name,
-        data: this.addedRoles.map((role, index) => ({
-          occurance: index + 1,
-          user_role_id: Number(role.id)
-        }))
+        org_type_id:Number(this.orgForm.value.selectedOrgtype) ,
+        zone: this.orgForm.value.selectedZone,
+        department: this.addedDepartments.map(department => department.id)
       };
 
       this.commonService.updateData('api/user/updateOrg', formattedData).subscribe({
@@ -463,7 +493,7 @@ export class OrgManagementComponent {
 
       } else if (result.dismiss === Swal.DismissReason.cancel) {
 
-       
+
       }
     });
 
@@ -499,16 +529,142 @@ export class OrgManagementComponent {
 
   filterOrg(type: string): void {
 
-    console.log('here is the type', type  );
-    
-     this.orgData = this.tempOrgData.filter(item =>
+    console.log('here is the type', type);
+
+    this.orgData = this.tempOrgData.filter(item =>
       item.org_type_name === type
     );
 
   }
 
 
-  resetOrgFilter(){
+  resetOrgFilter() {
     this.orgData = [...this.tempOrgData];
   }
+
+
+  selectedDepartmentId: string = '';
+  selectedDepartmentName: string = '';
+  addedDepartments: { id: string, department_name: string }[] = [];
+  departmentList: { id: string; department_name: string }[] = [];
+
+  newFormVisible: boolean = false;
+
+  addedDepartmentss: any[] = [];
+
+
+  addDepartment() {
+    const selectedId = this.orgForm.get('selectedDepartmentId')?.value;
+    console.log(selectedId, 'here is the selected id');
+
+    if (!selectedId) return;
+
+    const department = this.departmentList.find(dep => dep.id == selectedId);
+    console.log(department, 'here is the department');
+
+    const exists = this.addedDepartments.find(dep => dep.id == selectedId);
+
+    if (department && !exists) {
+      console.log('here is the department', this.addedDepartments);
+
+      this.addedDepartments.push({ id: department.id, department_name: department.department_name });
+      console.log('here is ', this.addedDepartments);
+    }
+
+ 
+    this.orgForm.get('selectedDepartmentId')?.setValue('');
+  }
+
+
+
+  removeDepartment(index: number) {
+    this.addedDepartments.splice(index, 1);
+  }
+
+
+  newAddedDep(selectedDepartmentId: any) {
+    this.selectedDepartmentName = this.departmentList.find(d => d.id == selectedDepartmentId)?.department_name ?? ''
+  }
+
+  // dropDownValueChanged(event: any) {
+  //   const selectedValue = event.target.value;
+  //   const selectedOrgType = this.orgTypeData.find(orgType => orgType.id == selectedValue);
+
+  //   if (selectedOrgType && selectedValue) {
+  //     this.isSelfTypeFlag = selectedOrgType.name?.toLowerCase() === 'self';
+  //     if (!this.isSelfTypeFlag) {
+  //       this.addedDepartments = [];
+  //     }
+  //   }
+  // }
+
+  dropDownValueChanged(event: any) {
+  const selectedValue = event.target.value;
+  const selectedOrgType = this.orgTypeData.find(orgType => orgType.id == selectedValue);  
+
+  if (selectedOrgType) {
+    this.isSelfTypeFlag = selectedOrgType.name?.toLowerCase() === 'self';
+
+    // Reset added departments on every org type change
+    this.addedDepartments = [];
+    this.orgForm.get('selectedDepartmentId')?.reset();
+
+
+    const zoneControl = this.orgForm.get('selectedZone');
+
+    if (this.isSelfTypeFlag) {
+      zoneControl?.disable({ emitEvent: false }); // make dropdown readonly
+      zoneControl?.setValue(null);                // reset value
+    } else {
+      zoneControl?.enable({ emitEvent: false });  // make dropdown selectable
+    }
+  }
 }
+
+zoneDropDownChanges(event: any) {
+  const selectedValue = event.target.value;
+  if(selectedValue){
+     this.addedDepartments = [];
+         this.orgForm.get('selectedDepartmentId')?.reset();
+  }
+}
+
+
+//   dropDownValueChanged(event: any) {
+//   const selectedValue = event.target.value;
+//   const selectedOrgType = this.orgTypeData.find(orgType => orgType.id == selectedValue);  
+
+
+
+//   if (selectedOrgType) {
+//     this.isSelfTypeFlag = selectedOrgType.name?.toLowerCase() === 'self';
+
+//     // Reset departments if org type is not self
+//     if (!this.isSelfTypeFlag) {
+//       this.addedDepartments = [];
+//     }
+
+//      const zoneControl = this.orgForm.get('selectedZone');
+
+//       if (this.isSelfTypeFlag) {
+//       zoneControl?.disable({ emitEvent: false }); // make dropdown readonly
+//       zoneControl?.setValue(null);                // reset value
+//     } else {
+//       zoneControl?.enable({ emitEvent: false });  // make dropdown selectable
+//     }
+//     // If org type is self, addedDepartments stays as it is
+//   }
+// }
+
+get availableDepartments() {
+  return this.departmentList.filter(
+    dept => !this.addedDepartments.some(added => added.id === dept.id)
+  );
+}
+
+
+}
+
+
+
+

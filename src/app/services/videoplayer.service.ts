@@ -32,6 +32,7 @@ export class VideoplayerService {
   videoList$ = this.videoListSource.asObservable();
   dataList$=this.SharedDataSource.asObservable();
 
+  
   imageListData$ = this.imageListSource.asObservable(); // Reusing videoListSource for image data
 
   showPopup$ = this.showPopupSource.asObservable();

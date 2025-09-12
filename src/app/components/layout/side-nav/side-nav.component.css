@@ -324,3 +324,19 @@
   background-color: #F8F8F8;
   border-radius: 20px 0 0 20px;
 }
+
+
+.sub-sub-menu {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0.5rem;
+
+
+  li a {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+  
+  }
+}

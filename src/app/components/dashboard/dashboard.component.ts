@@ -63,9 +63,12 @@ export class DashboardComponent {
 
 
   @ViewChild("chart") chart!: ChartComponent;
+  @ViewChild('nodeChart') nodeChart!: ChartComponent;
+
+
   public chartOptions!: any;
   public nodeChartOptions!: any;
-  
+
   public secondChart!: any;
   public pieChart!: any;
   public lastChartOption!: any;
@@ -74,8 +77,10 @@ export class DashboardComponent {
   lastThreeMonths: string[] = [];
   // productNames: any[] = []
   productLeadsCount: any[] = []
+  orgTypeData: any[] = [];
 
   selectedYears: string = 'Select Year';
+  selectedOrgType: any = 'Select Org Type';
   years: number[] = [];
 
   totalLeadCount = signal<number>(0);
@@ -87,6 +92,7 @@ export class DashboardComponent {
 
   monthwiseLeads = signal<any[]>([]);
   topFiveLeadsProduct = signal<any[]>([]);
+  top_Five_Performers = signal<any[]>([]);
   zoneWiseData = signal<any[]>([]);
 
   // monthsNames = signal<any[]>([]);
@@ -258,14 +264,14 @@ export class DashboardComponent {
 
 
     this.pieChart = {
-      series: [44, 55, 13, 43, 22],
+      series: [0],
       chart: {
         type: "donut",
         width: 350,
-        height: 250
+        height: 200
       },
-      labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
-
+      // labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+      labels: ["Loading..."],
       responsive: [
         {
           breakpoint: 480,
@@ -336,7 +342,7 @@ export class DashboardComponent {
       series: [
         {
           name: "Lead Generation count",
-          data: [], 
+          data: [],
           color: "#19988B"
         }
       ],
@@ -362,7 +368,7 @@ export class DashboardComponent {
         colors: ["transparent"],
       },
       xaxis: {
-        categories: [], 
+        categories: [],
         labels: {
           rotate: -45,
           style: {
@@ -517,8 +523,8 @@ export class DashboardComponent {
   ngOnInit(): void {
     this.generateLastYears();
     const currentYear = new Date().getFullYear();
+    this.getOrgType();
     this.getLeadsData(currentYear);
-
   }
 
 
@@ -528,21 +534,37 @@ export class DashboardComponent {
     this.years = Array.from({ length: 6 }, (_, i) => currentYear - i);
 
   }
-
-  selectYears(year: number): void {
-
+  selectYears(year: number,) {
     console.log(year, 'year---->');
-
     this.selectedYears = year.toString();
-    console.log('here is selected year', this.selectYears);
+    console.log('here is selected year', this.selectedYears);
 
-    this.getLeadsData(year)
+    // Pass org_type_id if provided, else undefined
+    this.getLeadsData(year);
   }
 
-  getLeadsData(year: any) {
+  selectOrgType(org_type_id: any) {
+
+    console.log(org_type_id, 'org_type_id---->');
+    const currentYear = new Date().getFullYear();
+     this.selectedOrgType = org_type_id;
+    // Pass org_type_id if provided, else undefined
+    this.getLeadsData(currentYear, this.selectedOrgType);
+  }
+
+  getLeadsData(year: any, org_type_id?: any) {
+    console.log(year, 'here yearwise called api');
+    let id;
+    if (org_type_id !== undefined && org_type_id !== null) {
+      id = org_type_id;
+    } else {
+      id = this.orgTypeData[1]?.id;
+    }
+
+    const payload = { year, id: id ?? null };
 
 
-    this.commonService.postDataWithBody('api/dashboard/getCountsForDashboard', { year }).subscribe({
+    this.commonService.postDataWithBody('api/dashboard/getCountsForDashboard', payload).subscribe({
       next: (res: any) => {
         if (res.status == 200 || res.status == 201) {
           this.totalLeadCount.set(+res.total_leads_count?.[0]?.count || 0);
@@ -553,17 +575,28 @@ export class DashboardComponent {
           this.totalCataloguesCount.set(+res.total_catalogues_count?.[0]?.count || 0);
           this.monthwiseLeads.set(res.total_lead_monthwise_count || []);
           this.topFiveLeadsProduct.set(res.top5_leads_product || []);
+          this.top_Five_Performers.set(res.top5_performer || []);
           console.log(this.topFiveLeadsProduct(), 'here is top5leads products');
 
           this.zoneWiseData.set(res.zoneWiseData || []);
+
+          const zonewiseCounts = res.zoneWiseData || [];
+
           this.monthNames = res.total_lead_monthwise_count?.[0]?.months || 0
-          console.log(this.monthNames, 'here are month');
+          console.log(this.zoneWiseData, 'here is zone wise');
+          console.log('here is the zoneWiseData', this.zoneWiseData);
+
           this.monthLeadsCount = res.total_lead_monthwise_count?.[0]?.leads || 0
           console.log(this.monthLeadsCount, 'here are monthLeadsCount');
 
           const monthlyData = res.total_lead_monthwise_count || [];
-         this.updateChartDataFromMonthlyLeads(monthlyData)
-        this.updateNodeChartOptionsFromTopProducts();
+          this.zoneWiseData.set(res.zoneWiseData || {});
+          this.updatePieChartFromZoneWiseData(res.zoneWiseData || {});
+
+          this.updateChartDataFromMonthlyLeads(monthlyData)
+          this.updateNodeChartOptionsFromTopProducts();
+          this.updatePieChartFromZoneWiseData(zonewiseCounts);
+       this.updateBarChartData(res.top5_performer || []);
 
 
         }
@@ -592,44 +625,131 @@ export class DashboardComponent {
     this.monthLeadsCount = allMonths.map(month => monthMap.get(month) || 0);
 
     this.chartOptions.series[0].data = this.monthLeadsCount;
+    console.log('her month leads count', this.monthLeadsCount);
+    console.log('here month leads count--------->', this.chartOptions.series[0].data);
     this.chartOptions.xaxis.categories = this.monthNames;
+
+
+    this.chartOptions = {
+      ...this.chartOptions,
+      series: [
+        {
+          ...this.chartOptions.series[0],
+          data: [...this.monthLeadsCount]
+        }
+      ],
+      xaxis: {
+        ...this.chartOptions.xaxis,
+        categories: [...this.monthNames]
+      }
+    };
+
+    console.log('Chart updated with new data:', this.chartOptions.series[0].data);
+
+
   }
 
-updateNodeChartOptionsFromTopProducts() {
-  const topProducts = this.topFiveLeadsProduct(); // get signal value
-  const productNames = topProducts.map(p => p.product_name);
-  const leadCounts = topProducts.map(p => +p.lead_count);
 
-  this.nodeChartOptions = {
-    ...this.nodeChartOptions,
+
+  updateNodeChartOptionsFromTopProducts() {
+    const topProducts = this.topFiveLeadsProduct();
+    const productNames = topProducts.map(p => p.product_name);
+    const leadCounts = topProducts.map(p => +p.lead_count);
+
+    this.nodeChartOptions = {
+      ...this.nodeChartOptions,
+      series: [
+        {
+          name: "Lead Generation count",
+          data: leadCounts,
+          color: "#19988B"
+        }
+      ],
+      xaxis: {
+        ...this.nodeChartOptions.xaxis,
+        categories: productNames,
+        labels: {
+          rotate: -15,
+          style: {
+            fontSize: '9px',
+            fontWeight: 300,
+            colors: ['#555']
+          },
+          trim: false
+        },
+        tooltip: {
+          enabled: true
+        }
+      }
+    };
+
+
+    setTimeout(() => {
+      this.nodeChart?.updateOptions(this.nodeChartOptions, true, true);
+    }, 0);
+  }
+
+  updatePieChartFromZoneWiseData(zonewiseCounts: any): void {
+    // Convert object to array of { name, count }
+    const entries = Object.entries(zonewiseCounts).map(([name, count]) => ({
+      name,
+      count: Number(count)
+    }));
+
+    const labels = entries.map(z => z.name);
+    const series = entries.map(z => z.count);
+
+    // Update the existing chart config (mutate instead of replace)
+    this.pieChart.labels = labels;
+    this.pieChart.series = series;
+  }
+
+
+updateBarChartData(topFivePerformers: any[]): void {
+  const labels = topFivePerformers.map(p => p.name);
+  const series = topFivePerformers.map(p => Number(p.lead_count));
+
+  this.lastChartOption = {
+    ...this.lastChartOption,
     series: [
       {
-        name: "Lead Generation count",
-        data: leadCounts,
-        color: "#19988B"
+        name: 'Leads',
+        data: series
       }
     ],
     xaxis: {
-      ...this.nodeChartOptions.xaxis,
-      categories: productNames,
-      labels: {
-        rotate: -15,
-        style: {
-          fontSize: '9px',
-          fontWeight: 300,
-          colors: ['#555']
-        },
-        trim: false
-      },
-      tooltip: {
-        enabled: true
-      }
+      categories: labels
     }
   };
 }
 
-ngAfterViewInit() {
-  this.updateNodeChartOptionsFromTopProducts();
-}
+
+
+  ngAfterViewInit() {
+    this.updateNodeChartOptionsFromTopProducts();
+    this.updatePieChartFromZoneWiseData(this.zoneWiseData());
+  }
+
+
+  getOrgType() {
+    this.commonService.getAllData('api/user/getOrgType').subscribe({
+      next: (res: any) => {
+        if (res.status == 200) {
+          this.orgTypeData = res.data
+          console.log('here are org', this.orgTypeData);
+
+        } else {
+
+          console.log('Invalid ', res);
+        }
+
+      },
+      error: (err) => {
+        console.error('Login failed', err);
+      }
+    });
+  }
+
 
 }
+

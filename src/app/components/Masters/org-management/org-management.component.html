@@ -1,7 +1,7 @@
 <div class="container-fluid custom-wrapper">
   <div class="card">
     <div class="card-body">
- 
+
       <div class="row mb-4 align-items-center">
 
         <div class="col-md-8 mb-3 mb-md-0 d-flex flex-wrap align-items-center gap-2">
@@ -50,17 +50,19 @@
       <p-table #dt [value]="orgData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[ 10, 20, 50]"
         [globalFilterFields]="['org_name', 'role']"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
-        dataKey="org_name" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+        dataKey="org_name" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true"
+        [sortField]="'id'" [sortOrder]="-1">
 
         <ng-template pTemplate="header">
           <tr class="user-table-header">
             <th>Sr.No</th>
-            <th style="text-align: center;">Org Name </th>
-            <th>Roles</th>
+            <th>Org Name </th>
+            <th> Type</th>
+            <th>Zone</th>
+            <th>Department</th>
 
 
-            <th>Occurrences</th>
-            <th>Org Type</th>
+            <!-- <th>Occurrences</th> -->
             <th>Action </th>
 
           </tr>
@@ -70,21 +72,26 @@
           <tr>
             <td>{{rowIndex +1}}</td>
             <td class="text-center align-middle wrap-text ">{{ item.org_name }}</td>
+            <td class="org-name-column">{{ item.org_type_name }}</td>
+            <td class="org-name-column">{{ item.zone }}</td>
             <td>
-              <div *ngFor="let role of item.roles; let i = index">
-                <ng-container *ngIf="role !== 'Admin'">
-                  {{ role }}
-                </ng-container>
-              </div>
+              <span class="p-column-title">Roles</span>
+              <ng-container *ngIf="item.incominRoles?.length > 0; else noRoles">
+                <ul class="custom-list-margin">
+                  <ul *ngFor="let role of item.incominRoles">{{ role }}</ul>
+                </ul>
+              </ng-container>
+              <ng-template #noRoles>NA</ng-template>
             </td>
-            <td>
+
+            <!-- <td>
               <div *ngFor="let occ of item.occurrences; let i = index">
                 <ng-container *ngIf="item.roles[i] !== 'Admin'">
                   {{ occ }}
                 </ng-container>
               </div>
-            </td>
-            <td class="org-name-column">{{ item.org_type_name }}</td>
+            </td> -->
+
             <td>
               <span class="p-column-title">Action</span>
               <div class="action-buttons">
@@ -312,6 +319,102 @@
             <button *ngIf="isEditing" type="button" class="btn btn-success custom-btn" (click)="updateOrg()">
               Update
             </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+
+<p-dialog [(visible)]="newFormVisible" [modal]="true" [draggable]="true" [resizable]="true"
+  [style]="{ width: '100%', maxWidth: '800px' }" [contentStyle]="{ padding: '0' }" styleClass="register-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  class="custom-border-popup">
+
+  <div class="org-popup-container px-5">
+    <div class="popup-header d-flex justify-content-between align-items-center p-2">
+      <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      <h4 class="mb-3 pt-3 custom-color-h4">Organization Information</h4>
+      <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">×</button>
+    </div>
+
+    <div class="popup-body p-3">
+      <div class="organization-form-container">
+        <form [formGroup]="orgForm" (ngSubmit)="submitForm()">
+          <div class="row g-3" style="align-items: center;">
+            <!-- Org Name -->
+            <div class="col-12 col-lg-4 col-md-6">
+              <label class="form-label">Organization Name <span class="error">*</span></label>
+              <input type="text" class="form-control form-control-sm custom-input custom-placeholder"
+                placeholder="Enter Organization" formControlName="name">
+              <div class="text-danger small" style="min-height: 18px;">
+                <span *ngIf="orgForm.get('name')?.invalid && orgForm.get('name')?.touched">Organization required</span>
+              </div>
+            </div>
+
+            <!-- Org Type -->
+            <div class="col-12 col-lg-4 col-md-6">
+          
+              <label class="form-label">Org Type <span class="error">*</span></label>
+              <select class="form-select form-select-sm custom-input custom-placeholder"
+                formControlName="selectedOrgtype" (change)="dropDownValueChanged($event)">
+                <option [ngValue]="null" disabled selected>--Select--</option>
+                <option *ngFor="let item of orgTypeData" [value]="item.id">{{ item.name }}</option>
+              </select>
+              <div class="text-danger small" style="min-height: 18px;">
+                <span *ngIf="orgForm.get('selectedOrgtype')?.invalid && orgForm.get('selectedOrgtype')?.touched">Org
+                  Type is required</span>
+              </div>
+            </div>
+
+            <!-- Zone -->
+            <div class="col-12 col-lg-4 col-md-6" >
+              <label class="form-label">Zone</label>
+                  
+              <select  class="form-select form-select-sm custom-input custom-placeholder" formControlName="selectedZone" (change)="zoneDropDownChanges($event)"  [disabled]="isSelfTypeFlag" 
+                 [ngClass]="{'no-arrow': isSelfTypeFlag}"  
+              >
+                <option [ngValue]="null" disabled selected>--Select--</option>
+                <option  *ngFor="let zone of zoneData" [value]="zone.id">{{ zone.name }}</option>
+              </select>
+              <div class="text-danger small" style="min-height: 18px;">
+                <span *ngIf="orgForm.get('selectedZone')?.invalid && orgForm.get('selectedZone')?.touched">Zone is
+                  required</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Department Dropdown and Add Button -->
+          <div class="row g-3 mt-2">
+            <div class="col-12 col-lg-10 col-md-8">
+              <label class="form-label">Department</label>
+              <div class="d-flex gap-2">
+                <select class="form-select form-select-sm custom-input custom-placeholder"
+                  formControlName="selectedDepartmentId">
+                  <option [ngValue]="null" disabled>--Select Dept.--</option>
+                  <option *ngFor="let dept of availableDepartments" [value]="dept.id">{{ dept.department_name }}</option>
+                </select>
+                <button type="button" class="btn btn-sm custom-add-btn" (click)="addDepartment()"    [disabled]="!isSelfTypeFlag && addedDepartments.length > 0">
+                  + Add
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Department Chips -->
+          <div *ngFor="let dept of addedDepartments; let i = index"
+            class="badge bg-light border rounded-pill px-3 py-2 g-2 position-relative text-text mt-2">
+            <span class="pe-4">{{ dept.department_name }}</span> <!-- Add padding to the right -->
+            <button type="button" class="btn-close btn-close-sm position-absolute top-0 end-0 me-1 mt-1"
+              aria-label="Remove" (click)="removeDepartment(i)">
+            </button>
+          </div>
+
+
+          <!-- Submit -->
+          <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-success custom-btn">Submit</button>
           </div>
         </form>
       </div>

@@ -13,12 +13,12 @@ import {
   BaseIcon
 } from "./chunk-XCVOXLUW.js";
 import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-H3RDQH2B.js";
-import {
   ConnectedOverlayScrollHandler,
   DomHandler
 } from "./chunk-BUGEQH7Q.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-H3RDQH2B.js";
 import {
   CommonModule,
   DOCUMENT,
@@ -2551,4 +2551,4 @@ export {
   ScrollerModule,
   SearchIcon
 };
-//# sourceMappingURL=chunk-JR6VY4X3.js.map
+//# sourceMappingURL=chunk-C5PMELGP.js.map

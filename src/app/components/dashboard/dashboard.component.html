@@ -14,7 +14,8 @@
                 <span class="text-success">↑23%</span>
               </div>
             </div>
-            <p class="text-secondary small mt-1 mb-3">The total number of leads generated this month is {{currentMonthLeadCount()}}</p>
+            <p class="text-secondary small mt-1 mb-3">The total number of leads generated this month is
+              {{currentMonthLeadCount()}}</p>
 
             <div class="d-flex gap-3 flex-wrap">
               <!-- GOEMs -->
@@ -112,7 +113,8 @@
             <div class="dropdown">
 
 
-              <button class="btn btn-sm btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown"  style="background-color: #F6F6F6; border-radius: 10px;">
+              <button class="btn btn-sm btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown"
+                style="background-color: #F6F6F6; border-radius: 10px;">
                 {{ selectedYears }} <i class="pi pi-chevron-down"></i>
               </button>
 
@@ -172,7 +174,7 @@
                 [xaxis]="secondChart.xaxis"></apx-chart>
             </div> -->
 
-             <div id="chart">
+            <div id="chart">
               <apx-chart [series]="pieChart.series" [chart]="pieChart.chart" [labels]="pieChart.labels"
                 [responsive]="pieChart.responsive" [legend]="pieChart.legend"></apx-chart>
             </div>
@@ -188,28 +190,39 @@
     <div class="col-12 col-lg-6">
       <div class="card border-0 rounded-4">
         <div class="card-body">
-          <h6 class="card-title mb-3">Top 5 Categories</h6>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="card-title mb-0">Top 5 Performers (TTM)</h6>
+
+            <!-- <div class="chart-container"> -->
+            <div class="dropdown">
+
+
+              <button class="btn btn-sm btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown">
+                {{ selectedOrgType?.name || 'Select Org Type' }}  <i class="pi pi-chevron-down"></i>
+              </button>
+
+              <ul class="dropdown-menu">
+                <li *ngFor="let org of orgTypeData" (click)="selectOrgType(org.id)">
+                  <a class="dropdown-item">{{ org.name }}</a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
           <div class="chart-container">
 
 
-            <!-- <div id="chart">
-              <apx-chart [series]="pieChart.series" [chart]="pieChart.chart" [labels]="pieChart.labels"
-                [responsive]="pieChart.responsive" [legend]="pieChart.legend"></apx-chart>
-            </div> -->
-
-             <div class="chart-container">
-
-
-              <div id="chart">
-                <apx-chart [series]="lastChartOption.series" [series]="lastChartOption.series"
-                  [chart]="lastChartOption.chart" [plotOptions]="lastChartOption.plotOptions"
-                  [dataLabels]="lastChartOption.dataLabels" [stroke]="lastChartOption.stroke"
-                  [xaxis]="lastChartOption.xaxis" [yaxis]="lastChartOption.yaxis"
-                  [fill]="lastChartOption.fill"></apx-chart>
-              </div>
-
+            <div id="chart">
+              <apx-chart [series]="lastChartOption.series" [series]="lastChartOption.series"
+                [chart]="lastChartOption.chart" [plotOptions]="lastChartOption.plotOptions"
+                [dataLabels]="lastChartOption.dataLabels" [stroke]="lastChartOption.stroke"
+                [xaxis]="lastChartOption.xaxis" [yaxis]="lastChartOption.yaxis"
+                [fill]="lastChartOption.fill"></apx-chart>
             </div>
+
           </div>
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -222,16 +235,14 @@
           <div class="chart-container">
 
             <div id="chart">
-              <apx-chart
-               #nodeChart
-                [series]="nodeChartOptions.series" [chart]="nodeChartOptions.chart"
+              <apx-chart #nodeChart [series]="nodeChartOptions.series" [chart]="nodeChartOptions.chart"
                 [dataLabels]="nodeChartOptions.dataLabels" [plotOptions]="nodeChartOptions.plotOptions"
                 [yaxis]="nodeChartOptions.yaxis" [legend]="nodeChartOptions.legend" [fill]="nodeChartOptions.fill"
                 [stroke]="nodeChartOptions.stroke" [tooltip]="nodeChartOptions.tooltip"
                 [xaxis]="nodeChartOptions.xaxis"></apx-chart>
             </div>
-  
-           
+
+
           </div>
         </div>
       </div>

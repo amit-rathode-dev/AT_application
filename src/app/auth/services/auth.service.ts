@@ -34,18 +34,20 @@ export class AuthService {
             localStorage.setItem('authToken', userData.token);
             localStorage.setItem('org_id',userData.userDetails.org_id)
             localStorage.setItem('user_id',userData.userDetails.user_id)
-            localStorage.setItem('org_name',userData.userDetails.org_name)
             localStorage.setItem('user_role_id',userData.userDetails.user_role_id)
-
-            localStorage.setItem('org_id',userData.userDetails.org_id)
-              localStorage.setItem('role_name',userData.userDetails.role_name)
+            
+            localStorage.setItem('role_name',userData.userDetails.role_name)
             localStorage.setItem('userDetails', JSON.stringify(userData.userDetails));
-
-
-
-
-
-            localStorage.setItem('org_type',userData.userDetails.org_type)
+            
+            
+            
+            
+            
+            localStorage.setItem('org_name',userData.userDetails.hierarchy[0]?.org_name)
+            localStorage.setItem('org_id',userData.userDetails.hierarchy[0]?.org_id)
+            localStorage.setItem('org_type',userData.userDetails.hierarchy[0]?.org_type);
+            // console.log('userDetails--->orgType', userData.userDetails.hierarchy[0]?.org_type);
+            
           
             return userData;
           } else {

@@ -88,11 +88,27 @@ this.showContentData = this.roleName === 'Content Manager' && this.org_type === 
   }
 
   isMasterMenuOpen = false;
+  isfinanceModuleOpen = false;
+  isOrgMenuOpen = false;
+  isUserMenuOpen = false;
   // activeRoute = ''; // set this using Router events or manually
 
   toggleMasterMenu() {
     this.isMasterMenuOpen = !this.isMasterMenuOpen;
   }
+
+  toggleFinanceModule() {
+    this.isfinanceModuleOpen = !this.isfinanceModuleOpen;
+  }
+
+  
+toggleOrgMenu() {
+  this.isOrgMenuOpen = !this.isOrgMenuOpen;
+}
+
+toggleUserMenu() {
+this.isUserMenuOpen = !this.isUserMenuOpen;
+}
 
   isMasterOpen = false;
 

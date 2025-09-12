@@ -2,11 +2,11 @@ import {
   SpinnerIcon
 } from "./chunk-CFE3LK5M.js";
 import {
-  AutoFocus
-} from "./chunk-V7SIHZWM.js";
-import {
   Ripple
 } from "./chunk-YBVXXXRL.js";
+import {
+  AutoFocus
+} from "./chunk-V7SIHZWM.js";
 import {
   DomHandler
 } from "./chunk-BUGEQH7Q.js";
@@ -1010,4 +1010,4 @@ export {
   Button,
   ButtonModule
 };
-//# sourceMappingURL=chunk-3ECTW4HZ.js.map
+//# sourceMappingURL=chunk-6HF7D7DE.js.map

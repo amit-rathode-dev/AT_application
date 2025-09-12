@@ -211,3 +211,86 @@
   border-radius: 0.25rem;
   font-weight: 500;
 }
+
+
+::ng-deep .custom-multi-org-dropdown .p-multiselect-label {
+  padding: 0.1rem 0.75rem;
+}
+
+
+
+/* ]] */
+
+::ng-deep .custom-goem-dropdown .p-multiselect {
+  width: 100% !important;
+  height: 35px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  padding: 0;
+  border: none;
+}
+
+::ng-deep .custom-goem-dropdown .p-multiselect-label {
+  line-height: 35px;
+  padding: 0 10px;
+  color: white;
+}
+
+::ng-deep .custom-goem-dropdown .p-multiselect-trigger {
+  height: 35px;
+  color: white;
+  padding-right: 10px;
+}
+
+.delete-icon {
+  width: 18px;
+}
+
+::ng-deep .p-multiselect-label.p-placeholder {
+  color: #A6A6A6 !important;
+}
+
+::ng-deep .p-multiselect-label:not(.p-placeholder) {
+  color: #2C2C2C !important;
+}
+
+::ng-deep .custom-goem-dropdown .p-multiselect {
+  background-color: #F7F7F7;
+  border: 0px solid #A7A7A7;
+}
+
+
+
+
+::ng-deep .p-checkbox  {
+  background-color: teal;
+  color: teal;
+}
+
+::ng-deep .p-multiselect ol, ul{
+  padding: 0px;
+}
+
+::ng-deep .p-multiselect-items-wrapper ul{
+  padding: 0rem;
+}
+
+::ng-deep .p-inputtext{
+padding: 0.2rem 0.3rem;
+}
+
+
+::ng-deep .p-multiselect-panel .p-multiselect-items .p-multiselect-item{
+      margin: 0;
+    padding: 0.25rem 1.2rem;
+}
+
+/* Add this to your component.scss or global styles */
+.custom-input .p-dropdown {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}
+
+.pi-trash {
+  cursor: pointer;
+}

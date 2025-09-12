@@ -161,30 +161,12 @@
         </a>
       </li>
 
-        <li *ngIf="showContentData" [class.active]="activeRoute === '/logout'">
+      <li *ngIf="showContentData" [class.active]="activeRoute === '/logout'">
         <a routerLink="/logout">
           <img src="./../../../../assets/logout.svg" class="iconimg">
           @if (!isCollapsed) { <span>Logout</span> }
         </a>
       </li>
-
-
-
-      <!-- <li *ngIf="showMediaMenu">
-        <a routerLink="/partner-Media">
-          <img src="./../../../../assets/multimedia.png" class="iconimg" />
-          <span *ngIf="!isCollapsed">Media</span>
-        </a>
-      </li> -->
-
-        <!-- <li *ngIf="showMediaMenu" [class.active]="activeRoute === '/logout'">
-        <a routerLink="/logout">
-          <img src="./../../../../assets/logout.svg" class="iconimg">
-          @if (!isCollapsed) { <span>Logout</span> }
-        </a>
-      </li> -->
-
-
 
 
       <div class="sidebar-menu-wrapper">
@@ -205,30 +187,63 @@
                   class="iconimg">Role
                 Management</a></li>
 
-            <li class="sub-menu"><a routerLink="/org"> <img src="./../../../../assets/org-icon.svg"
+            <li class="sub-menu"><a routerLink="/department"> <img src="./../../../../assets/role-management.svg"
+                  class="iconimg">Department</a>
+            </li>
+
+            <li class="sub-menu">
+              <a (click)="toggleOrgMenu()" style="cursor: pointer;">
+                <img src="./../../../../assets/org-icon.svg" class="iconimg" />
+                @if (!isCollapsed) {
+                <span>Org </span>
+                }
+                <img src="./../../../../assets/master-arrow.svg" class="iconimg" style="margin-left: 5rem;" />
+              </a>
+
+              <ul class="sub-sub-menu" *ngIf="isOrgMenuOpen">
+                <div style="margin-left: 30px;">
+                  <!-- <li><a routerLink="/role-management"><img src="./../../../../assets/multimedia.png" class="iconimg">Role</a></li> -->
+                  <li><a routerLink="/org"><img src="./../../../../assets/org-icon.svg" class="iconimg">Organization</a>
+                  </li>
+                  <!-- <li><a routerLink="/kgd"><img src="./../../../../assets/role-management.svg" class="iconimg">Department</a></li> -->
+                  <li><a routerLink="/goem"><img src="./../../../../assets/sub-org.png" class="iconimg">Goem</a></li>
+                  <li><a routerLink="/kgd"><img src="./../../../../assets/multimedia.png" class="iconimg">KGD</a></li>
+                  <li><a routerLink="/kgd"><img src="./../../../../assets/multimedia.png" class="iconimg">KGA</a></li>
+
+                </div>
+              </ul>
+            </li>
+
+            <!-- <li class="sub-menu"><a routerLink="/org"> <img src="./../../../../assets/org-icon.svg"
                   class="iconimg">Organization</a>
             </li>
 
 
             <li class="sub-menu"><a routerLink="/goem"> <img src="./../../../../assets/sub-org.png"
-                  class="iconimg">Goem</a></li>
-
+                  class="iconimg">Goem</a>
+            </li>
             <li class="sub-menu"><a routerLink="/kgd"> <img src="./../../../../assets/multimedia.png"
-                  class="iconimg">KGD</a></li>
+                  class="iconimg">KGD</a>
+            </li> -->
 
-            <li class="sub-menu"><a routerLink="/user-roles"> <img src="./../../../../assets/user-icon.svg"
-                  class="iconimg" class="iconimg">User</a>
+            <li class="sub-menu"><a routerLink="/hierarchy"> <img src="./../../../../assets/hierarchy.svg"
+                  class="iconimg">Hierarchy</a>
 
-            <li class="sub-menu"><a routerLink="/banner"> <img src="./../../../../assets/banner-icon.svg"
-                  class="iconimg">Banner</a></li>
+            </li>
+
+
+            <!-- <li class="sub-menu"><a routerLink="/user-roles"> <img src="./../../../../assets/user-icon.svg"
+                  class="iconimg" class="iconimg">User</a> -->
+
 
             <li class="sub-menu"><a routerLink="/category-type"> <img src="./../../../../assets/tag.png"
                   class="iconimg">Category Type</a></li>
 
-            <li class="sub-menu"><a routerLink="/category"> <img src="./../../../../assets/cat-icon.svg"
-                  class="sub-menu" class="iconimg">Category</a></li>
             <li class="sub-menu"><a routerLink="/fuel"> <img src="./../../../../assets/fossil-fuel.png"
                   class="iconimg">Fuel</a></li>
+
+            <li class="sub-menu"><a routerLink="/category"> <img src="./../../../../assets/cat-icon.svg"
+                  class="sub-menu" class="iconimg">Category</a></li>
             <li class="sub-menu"><a routerLink="/product-ranges"> <img src="./../../../../assets/ranges-icon.svg"
                   class="sub-menu" class="iconimg">Ranges</a></li>
 
@@ -241,6 +256,13 @@
             </li> -->
             <li class="sub-menu"><a routerLink="/media"> <img src="./../../../../assets/multimedia.png"
                   class="iconimg">Media</a></li>
+
+            <li class="sub-menu"><a routerLink="/banner"> <img src="./../../../../assets/banner-icon.svg"
+                  class="iconimg">Banner</a></li>
+
+                    <li class="sub-menu"><a routerLink="/faq"> <img src="./../../../../assets/faq.svg"
+                  class="iconimg">Faq</a></li>
+
             <!-- <li class="sub-menu"><a routerLink="/approval"> <img src="./../../../../assets/approval.svg"
                   class="iconimg">Approval</a></li> -->
 
@@ -251,6 +273,68 @@
 
         </li>
 
+        <li *ngIf="showSuperAdminMenu">
+          <a (click)="toggleFinanceModule()" style="cursor: pointer;">
+            <img src="./../../../../assets/finance.svg" class="iconimg" />
+            @if (!isCollapsed) {
+            <span>Finance</span>
+            }
+
+            <img src="./../../../../assets/master-arrow.svg" class="iconimg" style="margin-left: 4.5rem;" />
+          </a>
+
+
+          <ul class="master-sidebar" *ngIf="isfinanceModuleOpen">
+
+            <li class="sub-menu"><a routerLink="/finance-org"> <img src="./../../../../assets/org-icon.svg"
+                  class="iconimg">Organization
+              </a></li>
+
+            <li class="sub-menu"><a routerLink="/finance-region"> <img src="./../../../../assets/map-icon.svg"
+                  class="iconimg">Region</a>
+            </li>
+
+
+            <li class="sub-menu"><a routerLink="/finance-branch"> <img src="./../../../../assets/branch-icon.svg"
+                  class="iconimg">Branch</a>
+            </li>
+            <li class="sub-menu"><a routerLink="/finance-users"> <img src="./../../../../assets/user-icon.svg"
+                  class="iconimg">Users</a>
+            </li>
+
+          </ul>
+        </li>
+
+
+        <li *ngIf="showSuperAdminMenu">
+          <a (click)="toggleUserMenu()" style="cursor: pointer;">
+            <img src="./../../../../assets/user-icon.svg" class="iconimg" />
+            @if (!isCollapsed) {
+            <span>Users</span>
+            }
+
+            <img src="./../../../../assets/master-arrow.svg" class="iconimg" style="margin-left: 5.2rem;" />
+          </a>
+
+
+          <ul class="master-sidebar" *ngIf="isUserMenuOpen">
+<!-- 
+            <li class="sub-menu"><a routerLink="/user-roles"> <img src="./../../../../assets/user-icon.svg"
+                  class="iconimg">User Management
+              </a></li> -->
+
+               <li class="sub-menu"><a routerLink="/add-users"> <img src="./../../../../assets/user-icon.svg"
+                  class="iconimg"> User</a>
+            </li>
+
+            <li class="sub-menu"><a routerLink="/special-user"> <img src="./../../../../assets/user-icon.svg"
+                  class="iconimg">Special User</a>
+            </li>
+
+
+
+          </ul>
+        </li>
       </div>
 
       <li *ngIf="showSuperAdminMenu" [class.active]="activeRoute === '/logout'">

@@ -1,8 +1,8 @@
-import { Component, EventEmitter, input, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, input, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommontableComponent, TableAction, TableColumn } from '../../shared/commontable/commontable.component';
 import { MessageService } from 'primeng/api';
 
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormArray, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgComponentOutlet } from "@angular/common"
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -16,6 +16,10 @@ import { Password } from 'primeng/password';
 import { ModealHandlerService } from '../../shared/services/modeal-handler.service';
 import Swal from 'sweetalert2';
 import { NoDataPipe } from '../../../helpers/pipes/no-data.pipe';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { CheckboxModule } from 'primeng/checkbox';
+import { Subject, takeUntil } from 'rxjs';
+
 
 
 interface User {
@@ -44,7 +48,9 @@ interface User {
 @Component({
   selector: 'app-user-roles',
   standalone: true,
-  imports: [CommonModule, DropdownModule, TableModule,NoDataPipe, DialogModule, ReactiveFormsModule, ReusablemodulesComponent, PaginatorModule],
+  imports: [CommonModule, DropdownModule, TableModule, CheckboxModule,
+    MultiSelectModule
+    , NoDataPipe, DialogModule, ReactiveFormsModule, ReusablemodulesComponent, PaginatorModule],
   providers: [MessageService],
   templateUrl: './user-roles.component.html',
   styleUrl: './user-roles.component.css'
@@ -62,25 +68,128 @@ export class UserRolesComponent implements OnInit {
   designations: any[] = [];
   selectedUsers: User[] = [];
   reportingPersons: any[] = [];
+  roles: any[] = [];
+  designationsarray: any[] = [];
+  organizationsarray: any[] = [];
+  departmentsarray: any[] = [];
+  incominDepartmentData: any[] = [];
+  destroy$ = new Subject<void>();
+  departments: any[] = [
+    { id: 2, name: 'QA' },
+    { id: 3, name: 'IT' },
+    { id: 1, name: 'Production' },
+    { id: 4, name: 'Sales' }
+  ]
+
 
   Math = Math;
   selectedOrg: any;
+  newUserFormVisible: boolean = false;
+
+  selectedOrganizations: any[] = [];
+  selectedOrganizationsarray: any[] = [];
 
 
 
+  setupConditionalValidators() {
+    this.registerForm.get('isMultipleOrg')?.valueChanges.subscribe(isMultiple => {
+      const orgControl = this.registerForm.get('org_id');
+      const multipleOrgControl = this.registerForm.get('multiple_org_ids');
+      const departmentControl = this.registerForm.get('department_id');
 
-  constructor(private messageService: MessageService, private fb: FormBuilder, private commonService: CommonService, private modalHandler: ModealHandlerService) { }
+      if (isMultiple) {
+        // Multiple org mode
+        orgControl?.clearValidators();
+        departmentControl?.clearValidators();
+        multipleOrgControl?.setValidators([Validators.required]);
+      } else {
+        // Single org mode
+        multipleOrgControl?.clearValidators();
+        orgControl?.setValidators([Validators.required]);
+        departmentControl?.setValidators([Validators.required]);
+
+        // Clear multiple org selections
+        multipleOrgControl?.setValue([]);
+        this.selectedOrganizations = [];
+        this.removeDynamicDepartmentControls();
+      }
+
+      orgControl?.updateValueAndValidity();
+      multipleOrgControl?.updateValueAndValidity();
+      departmentControl?.updateValueAndValidity();
+    });
+  }
+
+  multiselectDropdown: boolean = false
+  onMultipleOrgToggle(event: any) {
+    if (!event.checked) {
+      this.registerForm.get('multiple_org_ids')?.reset();
+      this.selectedOrganizationsarray = [];
+      this.multiselectDropdown = true;
+    } else {
+      this.registerForm.get('org_id')?.reset();
+    }
+  }
+
+  onOrganizationChangee(orgId: any) {
+    // Handle single organization selection
+    this.registerForm.patchValue({ department_id: '' });
+  }
+
+  onMultipleOrganizationChange(selectedIds: any[]) {
+
+    this.selectedOrganizationsarray = this.organizationsarray.filter(org => selectedIds.includes(org.id));
+
+    console.log('Selected Organizations:]]]]', this.selectedOrganizationsarray);
+    
+    // selectedIds.forEach(id => {
+    //   if (!this.registerForm.contains(`department_${id}`)) {
+    //     this.registerForm.addControl(`department_${id}`, this.fb.control(''));
+    //   }
+    // });
+
+    
+  // clear old FormArray
+  this.orgDepartments.clear();
+
+  // create new FormArray entries
+  this.selectedOrganizationsarray.forEach(org => {
+    this.orgDepartments.push(
+      this.fb.group({
+        org_id: [org.id],
+        department_id: ["", Validators.required]
+      })
+    );
+  });
+  }
+  removeDynamicDepartmentControls() {
+    // Remove all dynamic department controls
+    Object.keys(this.registerForm.controls).forEach(key => {
+      if (key.startsWith('department_')) {
+        this.registerForm.removeControl(key);
+      }
+    });
+  }
+
+  constructor(private messageService: MessageService, private fb: FormBuilder, private commonService: CommonService, private modalHandler: ModealHandlerService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
 
 
+    this.initForm();
+
 
     this.getUserData();
     this.getTitle();
-    this.initForm();
     this.getOrgData();
+    this.getRoleData();
+    this.getDepartmentData();
     this.setPasswordValidator();
 
+  }
+
+    get orgDepartments(): FormArray {
+    return this.registerForm.get('orgDepartments') as FormArray;
   }
 
   setPasswordValidator(): void {
@@ -96,20 +205,26 @@ export class UserRolesComponent implements OnInit {
   initForm(): void {
     this.registerForm = this.fb.group({
       title_id: ["", Validators.required],
-      first_name: ["", Validators.required],
       user_name: ["", Validators.required],
+      first_name: ["", Validators.required],
       last_name: [""],
-      email: ["", [Validators.required, Validators.email]],
       phone_number: ["", Validators.required],
-      org_id: ["", Validators.required],
-      department: [],
-      reporting_id: [''],
-      role_id: ["", Validators.required],
-      user_id: [""],
-      password: ['', Validators.required],
-      software_type:['']
+      email: ["", [Validators.required, Validators.email]],
+      isMultipleOrg: [false],
+      org_id: [""],
+      multiple_org_ids: [""],
+      department_id: [""],
+      designation_id: [""],
+      reporting_id: [""],
+      password: [''],
+
+      
+       orgDepartments: this.fb.array([])
     })
+
+    this.setupConditionalValidators();
   }
+
 
 
   productCategories = [{ name: 'Category 1', value: 'cat1' }, { name: 'Category 2', value: 'cat2' }];
@@ -123,7 +238,9 @@ export class UserRolesComponent implements OnInit {
   }
 
   createNewUser() {
-    this.visible = true;
+    // this.visible = true;
+    this.newUserFormVisible = true;
+
   }
 
 
@@ -135,7 +252,7 @@ export class UserRolesComponent implements OnInit {
 
           if (res.status == 200) {
 
-            this.organizations = res.data
+            this.organizationsarray = res.data
             console.log('here is the organization data', this.organizations);
 
           } else {
@@ -150,6 +267,26 @@ export class UserRolesComponent implements OnInit {
       }
     )
   }
+
+  getRoleData() {
+    this.commonService.getAllData('api/user/getAllRole')
+      .subscribe({
+        next: (res: any) => {
+
+          if (res.status == 200) {
+            // this.roles = res.data
+            this.designationsarray = res.data;
+
+          } else {
+            console.log('error');
+          }
+        },
+        error: (err) => {
+          console.log('error ', err);
+        }
+      });
+  }
+
 
 
   getUserData() {
@@ -286,15 +423,16 @@ export class UserRolesComponent implements OnInit {
 
   closeDialog() {
     this.visible = false;
+    this.newUserFormVisible = false
     this.registerForm.reset()
   }
 
   submitForm() {
-    if (!this.isEditing) {
-      this.addUser()
-    } else {
-      this.updateUser()
-    }
+    // if (!this.isEditing) {
+    this.addUser()
+    // } else {
+    //   this.updateUser()
+    // }
 
   }
 
@@ -324,36 +462,64 @@ export class UserRolesComponent implements OnInit {
     this.registerForm.markAllAsTouched();
 
     if (this.registerForm.invalid) {
+
+      this.registerForm.markAllAsTouched();
       return;
     }
 
+    const formValue = this.registerForm.value;
 
-    console.log('here called add user function');
-    if (this.registerForm.valid) {
-      this.commonService.createData('api/user/createUser', this.registerForm.value).subscribe({
-        next: (res: any) => {
-          if (res.status == 200 || res.status == 201) {
-            this.visible = false
-            this.modalHandler.showToast(res.message || 'User Created successfully', 'success');
-            console.log('response', res);
-            this.getUserData();
-          } else {
-            this.modalHandler.showError(res.message || 'User Added gone Wrong');
-          }
-        },
-        error(err) {
-          console.log(err);
-        },
-      }
-      )
+    let orgArray: any[] = [];
+    if (formValue.isMultipleOrg) {
+      orgArray = formValue.multiple_org_ids.map((orgId: number) => ({
+        org_id: orgId,
+        department_id: formValue[`department_${orgId}`] || null,
+      }));
     } else {
-
-
-      console.log('form is not valid');
-
+      orgArray = [
+        {
+          org_id: formValue.org_id,         // corrected from formValue.id
+          department_id: formValue.department_id,
+        },
+      ];
     }
 
+    const payload = {
+      user_name: formValue.user_name,
+      title_id: formValue.title_id,
+      password: formValue.password,
+      first_name: formValue.first_name,
+      last_name: formValue.last_name,
+      email: formValue.email,
+      phone_number: formValue.phone_number,
+      org: orgArray,
+      role_id: formValue.designation_id,
+      // middle_name: formValue.middle_name ?? "",
+      department: formValue.department ?? "",
+      reporting_id: formValue.reporting_id || null,
+    };
+
+    console.log("Final Payload ===>", payload);
+
+    this.commonService.createData("api/user/createUser", payload).subscribe({
+      next: (res: any) => {
+        if (res.status == 200 || res.status == 201) {
+          this.visible = false
+          this.modalHandler.showToast(res.message || 'User Created successfully', 'success');
+          console.log('response', res);
+          this.getUserData();
+        } else {
+          this.modalHandler.showError(res.message || 'User Added gone Wrong');
+        }
+      },
+      error(err) {
+        console.log(err);
+      },
+    }
+    )
   }
+
+
 
 
   onOrganizationChange(orgId: number) {
@@ -395,10 +561,35 @@ export class UserRolesComponent implements OnInit {
 
   getReportingPerson() {
 
-    const org_id: number = this.registerForm.get('org_id')?.value || 0;
-    const user_role_id: number = Number(this.registerForm.get('role_id')?.value) || 0;
+    let org_id: number = this.registerForm.get('org_id')?.value || 0;
+    let department_id: number = 0;
+    let user_role_id: number = Number(this.registerForm.get('designation_id')?.value) || 0;
 
-    this.commonService.postDataWithBody('api/user/getUserForReportingTo', { org_id, user_role_id }).subscribe({
+    let orgPayload: any[] = [];
+
+    if (this.registerForm.get('isMultipleOrg')?.value) {
+      const orgDepartmentsArr = this.orgDepartments;
+      if (orgDepartmentsArr && orgDepartmentsArr.length > 0) {
+      orgDepartmentsArr.controls.forEach((group: any) => {
+        orgPayload.push({
+        org_id: group.get('org_id')?.value,
+        department_id: group.get('department_id')?.value,
+        user_role_id: user_role_id
+        });
+      });
+      }
+    } else {
+      org_id = this.registerForm.get('org_id')?.value || 0;
+      department_id = this.registerForm.get('department_id')?.value || 0;
+      orgPayload.push({
+      org_id: org_id,
+      department_id: department_id,
+      user_role_id: user_role_id
+      });
+    }
+
+
+    this.commonService.postDataWithBody('api/user/getUserForReportingTo', { org: orgPayload }).subscribe({
       next: (res: any) => {
         if (res.status == 200) {
           this.reportingPersons = res.data;
@@ -416,6 +607,139 @@ export class UserRolesComponent implements OnInit {
     this.getReportingPerson();
 
   }
+
+
+
+
+  titlesarray = [{ id: 1, name: 'Mr' }, { id: 2, name: 'Ms' }];
+
+  // departmentsarray = [{ department_id: 1, department_name: 'Dept 1' }, { department_id: 2, department_name: 'Dept 2' }];
+
+  reportingManagers = [{ id: 1, name: 'Manager 1' }, { id: 2, name: 'Manager 2' }];
+
+
+
+
+
+  // removeOrganization(index: number): void {
+  //   const org = this.selectedOrganizationsarray[index];
+
+  //   // 1. Remove org from the array (so it disappears from the UI)
+  //   this.selectedOrganizationsarray.splice(index, 1);
+
+  //   // 2. Remove or reset the corresponding FormControl
+  //   const controlName = 'department_' + org.id;
+  //   if (this.registerForm.contains(controlName)) {
+  //     this.registerForm.removeControl(controlName); // or .reset(null) if you want to keep it
+  //   }
+  // }
+
+  removeOrganization(index: number): void {
+    const org = this.selectedOrganizationsarray[index];
+
+    // 1. Remove org from the array (used in UI)
+    this.selectedOrganizationsarray.splice(index, 1);
+
+    // 2. Remove department form control
+    const controlName = 'department_' + org.id;
+    if (this.registerForm.contains(controlName)) {
+      this.registerForm.removeControl(controlName);
+    }
+
+    // 3. Update the multiple_org_ids formControl to remove the org ID
+    const currentSelected = this.registerForm.get('multiple_org_ids')?.value || [];
+    const updatedSelected = currentSelected.filter((id: number) => id !== org.id);
+    this.registerForm.get('multiple_org_ids')?.setValue(updatedSelected);
+
+    // 4. Trigger logic to re-sync dropdown display
+    // this.onMultipleOrganizationChange(updatedSelected);
+  }
+
+  getSelectedOrgName(): string {
+    const orgId = this.registerForm.get('org_id')?.value;
+    const selectedOrg = this.organizationsarray.find(org => org.id === orgId);
+    return selectedOrg ? selectedOrg.name : '';
+  }
+
+
+  getDepartmentData(selectedOrganizations: any[] = []) {
+    //  const org: any[] = [];
+    //  org.push(...selectedOrganizations.map(org => org.id));
+
+    // const orgIds: number[] = selectedOrganizations.map(org => org.id);
+
+    const payload = { org: [] };
+    this.commonService.postDataWithBody('api/user/getDepartmentByOrgForUserApi', payload)
+
+      .subscribe({
+        next: (res: any) => {
+
+          if (res.status == 200) {
+            // Assuming res.data is your response array
+            this.incominDepartmentData = [];
+            (res.data || []).forEach((org: any) => {
+              (org.department || []).forEach((dept: any) => {
+                this.departmentsarray.push({
+                  id: dept.id,
+                  department_name: dept.name,
+                  org_id: org.org_id,
+                  org_name: org.org_name
+                });
+              });
+            });
+            console.log(this.departmentsarray, 'here departments array');
+
+
+          } else {
+            console.log('error');
+          }
+
+        },
+        error: (err) => {
+          this.modalHandler.showError(
+            err.error.message ? err.error.message : 'Something went wrong!'
+          );
+        }
+      });
+  }
+
+
+  multipleOrgClosed() {
+    console.log('multipleOrgClosed called');
+    const selectedIds = this.registerForm.get('multiple_org_ids')?.value || [];
+    this.selectedOrganizationsarray = this.organizationsarray.filter(org => selectedIds.includes(org.id));
+    // this.getDepartmentData();
+
+    this.cd.detectChanges();
+  }
+
+
+  handleMultipleOrgChange(selectedOrgs: any[]) {
+  this.onMultipleOrganizationChange(selectedOrgs);
+  this.multipleOrgClosed();   
+  // this.multipleOrgFormControlsCreated(selectedOrgs);
+}
+
+  multipleOrgFormControlsCreated(selectedOrgs: any[]) {
+    this.selectedOrganizationsarray = selectedOrgs;
+
+    console.log('Selected Organizations:', this.selectedOrganizationsarray);
+    
+    // clear old array
+    this.orgDepartments.clear();
+
+    selectedOrgs.forEach(org => {
+      this.orgDepartments.push(
+        this.fb.group({
+          org_id: [org.id],
+          department_id: ["", Validators.required]
+        })
+      );
+    });
+  }
+
+
+
 
 
 

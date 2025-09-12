@@ -1,0 +1,296 @@
+<div class="container-fluid custom-wrapper">
+  <div class="card">
+    <div class="card-body">
+
+      <div class="row mb-4">
+
+
+        <div class="col-md-6  mb-3 mb-md-0">
+          <div class="search-container">
+            <input type="text" class="form-control custm-search search-input" placeholder="Search Users..."
+              (input)="applyFilterGlobal($event, 'contains')">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+        </div>
+
+        <div class="col-md-6 text-end">
+          <button class="btn btn-success btn-sm" type="button" (click)="createNewUser()"><span
+              class="pi pi-plus p-1"></span> Create New</button>
+
+        </div>
+      </div>
+
+
+      <p-table #dt [value]="users" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[ 10, 20, 50,100]"
+        [globalFilterFields]="['name','first_name','user_name','last_name','email','role_name','org_name', 'zoneId', 'emailId', 'department', 'designation','phone_number']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id"
+        styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" class="product-table">
+        <ng-template pTemplate="header">
+          <tr class="user-table-header">
+            <th>Sr.No</th>
+            <th>User Name</th>
+            <th>First Name</th>
+            <th>Last Name </th>
+            <th>Email ID</th>
+            <th>Phone No</th>
+            <th>Organization</th>
+            <th>Department</th>
+            <th>Role</th>
+            <th>Reporting Person</th>
+
+            <th>Status</th>
+
+            <th>Action</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-user let-i="rowIndex">
+          <tr [ngClass]="{'selected-row': isSelected(user)}">
+            <td><span class="p-column-title">#</span>{{i + 1}}</td>
+            <td><span class="p-column-title">User Name</span>{{ user.user_name }}</td>
+            <td><span class="p-column-title">First Name</span>{{ user.first_name }}</td>
+            <td><span class="p-column-title">Last Name</span>{{ user.last_name }}</td>
+            <td><span class="p-column-title">Email</span>{{ user.email }}</td>
+            <td><span class="p-column-title">Phone</span>{{ user.phone_number }}</td>
+            <td>
+              <span class="p-column-title">Organization</span>
+              <ng-container *ngIf="user.hierarchy?.length > 0; else noOrg">
+                <ul class="list-unstyled mb-0">
+                  <li *ngFor="let h of user.hierarchy">{{ h.org_name }}</li>
+                </ul>
+              </ng-container>
+              <ng-template #noOrg>--</ng-template>
+            </td>
+
+            <td>
+              <span class="p-column-title">Department</span>
+              <ng-container *ngIf="user.hierarchy?.length > 0; else noDept">
+                <ul class="list-unstyled mb-0">
+                  <li *ngFor="let h of user.hierarchy">{{ h.department_name }}</li>
+                </ul>
+              </ng-container>
+              <ng-template #noDept>--</ng-template>
+            </td>
+            <td><span class="p-column-title">Role</span>{{ user.role_name }}</td>
+            <td><span class="p-column-title">Role</span>{{ user.reporting_to_name | noData }}</td>
+
+            <td> <span [ngClass]="user.isactive ? 'text-success' : 'text-danger'">
+                {{ user.isactive ? 'Active' : 'Inactive' }}
+              </span></td>
+
+            <td>
+              <span class="p-column-title">Action</span>
+              <div class="action-buttons">
+
+                <a> <img src="/assets/edit-icon.svg" (click)="editUser(user)"></a>
+
+                <a> <img src="/assets/trash-icon.svg" (click)="deleteUser(user)"> </a>
+
+              </div>
+            </td>
+
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="newUserFormVisible" [modal]="true" [draggable]="false" [resizable]="false"
+  [style]="{width: '100%', maxWidth: '700px'}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+  [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+  
+  >
+  <div class="register-popup-container">
+
+    <div class="popup-header d-flex justify-content-between align-items-center p-3 pb-5">
+      <div class="logo-container">
+        <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+      </div>
+       <h5 class="mb-3 custom-color-h4">Create User</h5>
+      <div class="closeDialog">
+        <button type="button" class="close-btn" (click)="closeDialog()" aria-label="Close">
+          <span class="pi pi-times" style="font-size: 1.5rem;"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="popup-body px-5">
+
+      <form [formGroup]="registerForm" (ngSubmit)="submitForm()">
+
+        <div class="row mb-3 px-3">
+          <div class="col-md-3">
+            <label for="title" class="label-color">Title <span class="error">*</span></label>
+            <select class="form-select form-select-sm custom-input form-control" id="title" formControlName="title_id">
+              <option value="" selected hidden>Select Title</option>
+              <option *ngFor="let title of titles" [value]="title.id">
+                {{ title.name }}
+              </option>
+            </select>
+            <div class="text-danger small"
+              *ngIf="registerForm.get('title_id')?.invalid && registerForm.get('title_id')?.touched">
+              Title is required
+            </div>
+          </div>
+
+
+          <div class="col-md-3">
+            <label for="username" class="label-color">User Name <span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="User Name" formControlName="user_name">
+            <small class="text-danger"
+              *ngIf="registerForm.get('user_name')?.invalid && registerForm.get('user_name')?.touched">
+              User Name is required
+            </small>
+          </div>
+          <div class="col-md-3">
+            <label for="middleName" class="label-color">First Name <span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="First Name" formControlName="first_name">
+            <small class="text-danger"
+              *ngIf="registerForm.get('first_name')?.invalid && registerForm.get('first_name')?.touched">
+              First Name is required
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label for="lastName" class="label-color">Last Name <span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="Last Name" formControlName="last_name">
+          </div>
+        </div>
+
+        <div class="row mb-3 px-3">
+          <div class="col-md-4">
+            <label for="phone_number" class="label-color">Phone Number <span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="Phone Number" formControlName="phone_number"
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)">
+            <small class="text-danger"
+              *ngIf="registerForm.get('phone_number')?.invalid && registerForm.get('phone_number')?.touched">
+              Phone Number is required
+            </small>
+          </div>
+          <div class="col-md-8">
+            <label for="emailId" class="label-color">Email ID <span class="error">*</span></label>
+            <input type="email" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="Email ID" formControlName="email">
+            <small class="text-danger" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+              Email is required
+            </small>
+          </div>
+        </div>
+
+
+        <div class="row mb-3 px-3">
+          <div class="col-md-12">
+            <label for="username" class="label-color">Password<span class="error">*</span></label>
+            <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
+              placeholder="password" formControlName="password">
+            <small class="text-danger"
+              *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+              Password is required
+            </small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="form-check">
+            <p-checkbox binary="true" inputId="multipleOrg" formControlName="isMultipleOrg"
+              (onChange)="onMultipleOrgToggle($event)"></p-checkbox>
+            <label for="multipleOrg" class="label-color ml-2" style="margin-left: 10px;">Multiple Organization</label>
+          </div>
+        </div>
+
+        <div class="mb-3 px-3 organization-dropdown-wrapper" *ngIf="!registerForm.get('isMultipleOrg')?.value">
+          <label for="organization" class="label-color">Organization</label>
+          <p-dropdown [options]="organizationsarray" formControlName="org_id" optionLabel="name" optionValue="id" (onChange)="handleSingleOrg($event.value)"
+            placeholder="Select Organization" [style]="{'width':'100%',
+            'height':'30px'
+          }" styleClass="w-100 my-local-dd custom-input"></p-dropdown>
+        </div>
+
+
+        <div class="mb-3 px-3" *ngIf="!registerForm.get('isMultipleOrg')?.value && registerForm.get('org_id')?.value">
+          <label for="department" class="form-label">Department
+            <span class="form-label">
+              for {{ getSelectedOrgName() }}
+            </span>
+          </label>
+          <p-dropdown [options]="departmentsarray" formControlName="department_id" optionLabel="department_name" (onChange)="getDesignations($event)"
+            optionValue="department_id" placeholder="Select Department" styleClass="w-100 custom-input">
+          </p-dropdown>
+        </div>
+
+
+        <div class="col-md-12 mb-3 px-3" *ngIf="registerForm.get('isMultipleOrg')?.value">
+          <label for="multipleOrganization" class="form-label label-color">Organization</label>
+          <div class="card flex justify-content-center">
+            <p-multiSelect [options]="organizationsarray" formControlName="multiple_org_ids" optionLabel="name"
+              optionValue="id" placeholder="Select Organizations" class="custom-goem-dropdown w-100"
+              styleClass="custom-input" appendTo="body" (onChange)="handleMultipleOrgChange($event.value)">
+
+
+
+              <ng-template let-org pTemplate="item">
+                <div class="custom-item">{{ org.name }}</div>
+              </ng-template>
+
+            </p-multiSelect>
+          </div>
+
+
+        </div>
+
+        <div class="mb-3 px-3" *ngIf="registerForm.get('isMultipleOrg')?.value && orgDepartments.controls.length > 0"
+          formArrayName="orgDepartments">
+
+          <div *ngFor="let group of orgDepartments.controls; let i = index" [formGroupName]="i"
+            class="d-flex align-items-start mb-3 gap-2 flex-wrap">
+
+            <div style="width: 340px; word-wrap: break-word;">
+              <label class="form-label mb-2">
+                Choose Department for {{ selectedOrganizationsarray[i].name }}
+              </label>
+            </div>
+
+            <div class="flex-grow-1" style="min-width: 150px;">
+              <p-dropdown [options]="getDepartmentsForOrg(selectedOrganizationsarray[i].id)"  formControlName="department_id" optionLabel="department_name"
+                  optionValue="department_id" (onChange)="getDesignations($event)"  placeholder="--Select Dept.--" styleClass="w-100 custom-input">
+              </p-dropdown>
+            </div>
+
+            <div class="d-flex align-items-center">
+              <button type="button" class="btn btn-link p-0" title="Remove" (click)="removeOrganization(i)">
+                <i class="pi pi-trash" style="font-size: 1.2rem; color: teal;"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="mb-3 px-3">
+          <label for="designation" class="label-color">Designation</label>
+          <p-dropdown [options]="designationsarray" formControlName="designation_id" optionLabel="user_role" optionValue="usrl_id"
+            placeholder="Select Designation" [style]="{'width':'100%'}" styleClass="custom-input"
+            (onChange)="onRoleChange($event)"></p-dropdown>
+        </div>
+
+        <div class="mb-3 px-3">
+          <label for="reportingManager" class="label-color">Reporting Manager</label>
+          <p-dropdown [options]="reportingManagers" formControlName="reporting_id" optionLabel="username" optionValue="user_id"
+            placeholder="Select Reporting Manager" [style]="{'width':'100%'}" styleClass="custom-input"></p-dropdown>
+        </div>
+
+        <div class="d-flex justify-content-center mt-5 mb-4">
+          <button *ngIf="!isEditing" type="submit"
+            class="btn btn-success custom-btn btn-width update-button">Submit</button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</p-dialog>

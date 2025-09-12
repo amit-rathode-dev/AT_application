@@ -1,0 +1,202 @@
+<div class="container-fluid custom-wrapper">
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row mb-4">
+                <div class="col-md-6  mb-3 mb-md-0">
+                    <div class="search-container">
+                        <input type="text" class="form-control custm-search search-input"
+                            placeholder="Search Finance Org..." (input)="applyFilterGlobal($event, 'contains')">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-success btn-sm" type="button" (click)="createNew()"><span
+                            class="pi pi-plus p-1"></span> Create New</button>
+                </div>
+            </div>
+
+
+
+            <p-table #dt [value]="financeOrgData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[7, 10, 20, 50]"
+                [globalFilterFields]="['name']"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+                dataKey="id" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+
+                <ng-template pTemplate="header">
+                    <tr class="user-table-header">
+                        <th pSortableColumn="srno">Sr.No </th>
+                        <th pSortableColumn="name">Branch </th>
+                        <th pSortableColumn="name">Region </th>
+                        <th pSortableColumn="name">Zone</th>
+                        <th pSortableColumn="name">Finance Org </th>
+                        <th>Action</th>
+                    </tr>
+                </ng-template>
+
+
+                <ng-template pTemplate="body" let-item let-i="rowIndex">
+                    <tr>
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ item.name || 'NA' }}</td>
+                        <td>{{ item.name || 'NA' }}</td>
+                        <td>{{ item.name || 'NA' }}</td>
+                        <td>{{ item.name || 'NA' }}</td>
+                        <td>
+                            <div class="action-buttons">
+
+                                <a (click)="deleteRole(item)"> <img src="/assets/trash-icon.svg" class="iconimg2"> </a>
+
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="true" [resizable]="true"
+    [style]="{ width: '100%', maxWidth: '800px' }" [contentStyle]="{ padding: '0' }" styleClass="register-popup"
+    [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+    class="custom-border-popup">
+
+    <div class="org-popup-container px-5">
+        <div class="popup-header d-flex justify-content-between align-items-center p-2">
+            <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+            <h4 class="mb-3 pt-3 custom-color-h4">Organization Information</h4>
+            <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">×</button>
+        </div>
+
+        <div class="popup-body p-3">
+            <div class="organization-form-container">
+
+                <form [formGroup]="financeUsers" (ngSubmit)="submitForm()">
+
+                    <!-- Row 1: Organization Name | Org Type | Zone -->
+                    <div class="row g-3" style="align-items: center;">
+                        <div class="col-12 col-lg-3 col-md-6">
+                            <label class="form-label">Finance Name <span class="error">*</span></label>
+                            <input type="text" class="form-control form-control-sm custom-input custom-placeholder"
+                                placeholder="Enter Organization" formControlName="financeName">
+                            <div class="text-danger small">
+                                <span
+                                    *ngIf="financeUsers.get('name')?.invalid && financeUsers.get('name')?.touched">Organization
+                                    required</span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-4 col-md-6">
+                            <label class="form-label">Region <span class="error">*</span></label>
+                            <select class="form-select form-select-sm custom-input custom-placeholder"
+                                formControlName="selectedRegion">
+                                <option [ngValue]="null" disabled selected>--Select--</option>
+                                <option *ngFor="let item of orgTypeData" [value]="item.id">{{ item.name }}</option>
+                            </select>
+                            <div class="text-danger small">
+                                <span
+                                    *ngIf="financeUsers.get('selectedOrgtype')?.invalid && financeUsers.get('selectedOrgtype')?.touched">
+                                    Org Type is required
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-4 col-md-6">
+                            <label class="form-label">Zone</label>
+                            <select class="form-select form-select-sm custom-input custom-placeholder"
+                                formControlName="selectedZone">
+                                <option [ngValue]="null" disabled selected>--Select--</option>
+                                <option *ngFor="let zone of zoneData" [value]="zone.id">{{ zone.name }}</option>
+                            </select>
+                            <div class="text-danger small">
+                                <span
+                                    *ngIf="financeUsers.get('selectedZone')?.invalid && financeUsers.get('selectedZone')?.touched">Zone
+                                    is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Department (Dropdown) + Add Button -->
+                    <div class="row g-3 mt-2">
+                        <div class="col-12 col-md-5">
+                            <label class="form-label">Select Branch <span class="error">*</span></label>
+                            <select class="form-select form-select-sm custom-input custom-placeholder"
+                                formControlName="selectedBranch">
+                                <option [ngValue]="null" disabled selected>--Select--</option>
+                                <option *ngFor="let zone of branchData" [value]="zone.id">{{ zone.name }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-5">
+                            <label class="form-label">Select KOEL ASM <span class="error">*</span></label>
+                            <select class="form-select form-select-sm custom-input custom-placeholder" id="asm"
+                                formControlName="selectedAsm">
+                                <option [ngValue]="null" disabled selected>--Select--</option>
+                                <option *ngFor="let zone of asmData" [value]="zone.id">{{ zone.name }}</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="row g-3 mt-2">
+                        <div class="col-12 col-md-5">
+                            <label class="form-label">Name</label>
+                            <input type="email" class="form-control form-control-sm custom-input" formControlName="name"
+                                placeholder="Enter Name" />
+
+                        </div>
+
+                        <div class="col-12 col-md-5">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="email" class="form-control form-control-sm custom-input"
+                                formControlName="mobileNumber" placeholder="Enter Number" />
+                        </div>
+
+                        <div class="col-12 col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-sm btn-secondary custom-add-btn w-100"
+                                (click)="addUserDetails()">
+                                + Add
+                            </button>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Department Table (Only Show if Values Exist) -->
+                    <div class="table-responsive mt-3" *ngIf="addedUserDetails.length > 0">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Email</th>
+                                    <th style="width: 100px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let dept of addedUserDetails; let i = index">
+                                    <td>{{ dept.name }}</td>
+                                    <td>{{ dept.email || '—' }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm text-danger">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn btn-success custom-btn">Submit</button>
+                    </div>
+                </form>
+
+
+
+            </div>
+        </div>
+    </div>
+</p-dialog>

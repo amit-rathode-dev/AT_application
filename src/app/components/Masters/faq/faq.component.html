@@ -1,0 +1,178 @@
+<div class="container-fluid custom-wrapper">
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row mb-4">
+                <div class="col-md-6  mb-3 mb-md-0">
+                    <div class="search-container">
+                        <input type="text" class="form-control custm-search search-input"
+                            placeholder="Search Finance Org..." (input)="applyFilterGlobal($event, 'contains')">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-success btn-sm" type="button" (click)="createNew()"><span
+                            class="pi pi-plus p-1"></span> Create New</button>
+                </div>
+            </div>
+
+
+
+            <!-- <p-table #dt [value]="faqData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[7, 10, 20, 50]"
+                [globalFilterFields]="['name']"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+                dataKey="id" styleClass="p-datatable-responsive-demo" responsiveLayout="scroll" [scrollable]="true">
+
+
+
+                    <ng-template pTemplate="header">
+                        <tr class="user-table-header">
+                            <th style="width: 5%">Sr.No</th>
+                            <th style="width: 10%">Node</th>
+                            <th style="width: 25%">Question</th>
+                            <th style="width: 50%">Answer</th>
+                            <th style="width: 10%">Action</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-item let-i="rowIndex">
+                        <tr>
+                            <td style="width: 5%">{{ i + 1 }}</td>
+                            <td style="width: 10%">{{ item.product_name || 'NA' }}</td>
+                            <td class="wrap-question">{{ item.question || 'NA' }}</td>
+                            <td class="wrap-answer">{{ item.answer || 'NA' }}</td>
+                            <td style="width: 10%">
+                                <div class="action-buttons">
+                                    <a (click)="deleteRole(item)">
+                                        <img src="/assets/trash-icon.svg" class="iconimg2">
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+            </p-table> -->
+
+            <p-table #dt class="faq-table"
+         [value]="faqData" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[7,10,20,50]"
+         [globalFilterFields]="['name']" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+         [rowHover]="true" dataKey="id" responsiveLayout="scroll" [scrollable]="true">
+ <ng-template pTemplate="header">
+    <tr class="user-table-header">
+      <th style="width:5%">Sr.No</th>
+      <th style="width:12%">Node</th>
+      <th style="width:33%">Question</th>
+      <th style="width:45%">Answer</th>
+      <th style="width:5%">Action</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-item let-i="rowIndex">
+    <tr>
+      <td>{{ i + 1 }}</td>
+      <td>{{ item.product_name || 'NA' }}</td>
+      <td class="wrap-question">{{ item.question || 'NA' }}</td>
+      <td class="wrap-answer">{{ item.answer || 'NA' }}</td>
+      <td>
+        <div class="action-buttons">
+          <a (click)="deleteRole(item)">
+            <img src="/assets/trash-icon.svg" class="iconimg2">
+          </a>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="true" [resizable]="true"
+    [style]="{width: '100%', maxWidth: '700px'}" [contentStyle]="{padding: '0'}" styleClass="register-popup"
+    [showHeader]="false" [closeOnEscape]="true" [dismissableMask]="true" (onHide)="closeDialog()"
+    class="custom-border-popup">
+
+    <div class="role-popup-container">
+        <div class="popup-header d-flex justify-content-between align-items-center">
+            <div class="logo-container">
+                <img src="assets/Kirloskar-Powergen.svg" alt="Kirloskar" height="30">
+            </div>
+            <h4 class="mb-3 custom-color-h4">Creat FAQ</h4>
+            <button type="button" aria-label="Close" (click)="closeDialog()" class="close-btn">×</button>
+        </div>
+
+        <div class="popup-body p-3">
+            <div class=" d-flex justify-content-center w-100 mb-5">
+            </div>
+
+
+
+            <form [formGroup]="faqForm" (ngSubmit)="submitForm()">
+
+
+
+
+                <div class="mb-2 px-3">
+                    <label class="form-label">Category<span class="text-danger">*</span></label>
+                    <select class="form-select form-select-sm custom-input custom-placeholder"
+                        formControlName="category_id" (change)="onCategoryChange()">
+                        <option [ngValue]="null" disabled>--Select--</option>
+                        <option *ngFor="let cat of categoryData" [ngValue]="cat.id">{{ cat.name }}</option>
+                    </select>
+
+                    <div class="text-danger small" style="min-height: 18px;">
+                        <span *ngIf="faqForm.get('category_id')?.invalid && faqForm.get('category_id')?.touched">
+                            Category
+                            is
+                            required</span>
+                    </div>
+                </div>
+
+
+
+                <div class="mb-2 px-3">
+                    <label class="form-label">Node<span class="text-danger">*</span></label>
+                    <select class="form-select form-select-sm custom-input custom-placeholder"
+                        formControlName="product_id">
+                        <option [ngValue]="null" disabled selected>--Select--</option>
+                        <option *ngFor="let itr of filteredNodeData" [ngValue]="itr.id">{{ itr.name }}</option>
+                    </select>
+                    <div class="text-danger small" style="min-height: 18px;">
+                        <span *ngIf="faqForm.get('product_id')?.invalid && faqForm.get('product_id')?.touched">Node
+                            is
+                            required</span>
+                    </div>
+                </div>
+
+
+                <div class="mb-2 px-3">
+                    <label for="name" class="form-label">Question <span class="text-danger">*</span></label>
+                    <textarea class="form-control form-control-sm custom-input custom-placeholder"
+                        placeholder="Enter Question" formControlName="question"></textarea>
+                    <small class="text-danger"
+                        *ngIf="faqForm.get('question')?.invalid && faqForm.get('question')?.touched">
+                        Question is required
+                    </small>
+                </div>
+
+                <div class="mb-2 px-3">
+                    <label for="answer" class="form-label">Answer <span class="text-danger">*</span></label>
+                    <textarea id="answer" class="form-control form-control-sm custom-input custom-placeholder"
+                        placeholder="Enter Answer" formControlName="answer" rows="3"></textarea>
+                    <small class="text-danger" *ngIf="faqForm.get('answer')?.invalid && faqForm.get('answer')?.touched">
+                        Answer is required
+                    </small>
+                </div>
+
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-success custom-btn btn-width update-button">Submit</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</p-dialog>

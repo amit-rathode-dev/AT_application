@@ -72,8 +72,6 @@ export class ViewMediComponent {
 
     console.log(payload, 'payload------>');
 
-
-
     this.commonService.updateData('api/product/updateStatusForMediaForPartner', payload).subscribe({
       next: (res: any) => {
         if (res.status == 200 || res.status == 201) {

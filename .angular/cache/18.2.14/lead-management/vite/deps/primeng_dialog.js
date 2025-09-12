@@ -7,7 +7,7 @@ import {
 import {
   ButtonDirective,
   ButtonModule
-} from "./chunk-3ECTW4HZ.js";
+} from "./chunk-6HF7D7DE.js";
 import {
   animate,
   animation,
@@ -20,11 +20,11 @@ import {
   TimesIcon
 } from "./chunk-I65PI4FQ.js";
 import "./chunk-CFE3LK5M.js";
-import "./chunk-V7SIHZWM.js";
 import {
   Ripple,
   RippleModule
 } from "./chunk-YBVXXXRL.js";
+import "./chunk-V7SIHZWM.js";
 import "./chunk-XCVOXLUW.js";
 import {
   DomHandler

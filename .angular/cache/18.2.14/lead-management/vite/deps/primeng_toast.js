@@ -6,9 +6,6 @@ import {
   TimesCircleIcon
 } from "./chunk-3AUV2MGX.js";
 import {
-  CheckIcon
-} from "./chunk-APQP377A.js";
-import {
   animate,
   animateChild,
   query,
@@ -24,6 +21,9 @@ import {
   Ripple,
   RippleModule
 } from "./chunk-YBVXXXRL.js";
+import {
+  CheckIcon
+} from "./chunk-APQP377A.js";
 import "./chunk-XCVOXLUW.js";
 import {
   DomHandler

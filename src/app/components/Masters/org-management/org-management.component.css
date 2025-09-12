@@ -151,6 +151,8 @@
   background-color: #C57C5C;
   color: #fff;
   border: none;
+  width: 80px;
+
 }
 
 .custom-header th {
@@ -224,9 +226,9 @@
   height: 2.25rem;
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
-  border: 1px solid #d1d5db;
+  /* border: 1px solid #d1d5db; */
   border-radius: 0.25rem;
-  background-color: #fff;
+  background-color: #F7F7F7;
   
   &:focus {
     outline: none;
@@ -289,4 +291,33 @@
   padding: 0.5rem 1.5rem;
   border-radius: 0.25rem;
   font-weight: 500;
+}
+
+
+.rounded-pill{
+  margin-right: 10px;
+} 
+
+.text-text{
+  color: teal;
+}
+
+
+.custom-list-margin{
+  margin: 0rem;
+}
+
+
+.no-arrow {
+  -webkit-appearance: none;  /* Chrome, Safari */
+  -moz-appearance: none;     /* Firefox */
+  appearance: none;          /* Standard */
+  background: transparent;   /* Remove background arrow */
+  padding-right: 0.5rem;     /* optional spacing */
+}
+
+.no-arrow[disabled] {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  color: #555;
 }

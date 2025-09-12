@@ -34,6 +34,14 @@ import { LeadGenerationComponent } from './components/features/lead-generation/l
 import { ProfileComponent } from './components/features/profile/profile.component';
 import { MyAccountComponent } from './components/features/my-account/my-account.component';
 import { LeadsProfileComponent } from './components/features/leads-profile/leads-profile.component';
+import { DepartmentComponent } from './components/Masters/department/department.component';
+import { HierarchyComponent } from './components/Masters/hierarchy/hierarchy.component';
+import { FinanceOrgComponent } from './components/Finance/finance-org/finance-org.component';
+import { FinanceRegionComponent } from './components/Finance/finance-region/finance-region.component';
+import { FinanceBranchComponent } from './components/Finance/finance-branch/finance-branch.component';
+import { FinanceUsersComponent } from './components/Finance/finance-users/finance-users.component';
+import { FaqComponent } from './components/Masters/faq/faq.component';
+import { DynamicUserFormComponent } from './components/Masters/dynamic-user-form/dynamic-user-form.component';
 
 
 export const routes: Routes = [
@@ -63,6 +71,12 @@ export const routes: Routes = [
       {
         path: 'add-user',
         component: AddUserComponent,
+        canActivate: [roleGuard,],
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
+      },
+      {
+        path: 'add-users',
+        component: DynamicUserFormComponent,
         canActivate: [roleGuard,],
         data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
@@ -128,14 +142,14 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
-      {
-        path: 'partner-Media',
-        component: PartnerMediaComponent,
-        canActivate: [roleGuard],
-          // data: { role_name: ['!Super Admin'], org_type: 'Self' }
+      // {
+      //   path: 'partner-Media',
+      //   component: PartnerMediaComponent,
+      //   canActivate: [roleGuard],
+      //     // data: { role_name: ['!Super Admin'], org_type: 'Self' }
 
-        data: { role_name: ['ZSM'], org_type: 'Self' }
-      },
+      //   data: { role_name: ['ZSM'], org_type: 'Self' }
+      // },
 
       {
         path: 'approval',
@@ -162,6 +176,52 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         data: { role_name: ['Super Admin'], org_type: 'Self' }
       },
+      {
+        path: 'department',
+        component: DepartmentComponent,
+        canActivate: [roleGuard],
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
+      },
+
+      {
+        path: 'hierarchy',
+        component: HierarchyComponent,
+        canActivate: [roleGuard],
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
+      },
+      {
+        path: 'faq',
+        component: FaqComponent,
+        canActivate: [roleGuard],
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
+      },
+      {
+        path: 'finance-org',
+        component: FinanceOrgComponent,
+        canActivate: [roleGuard],
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
+      },
+
+      {
+        path: 'finance-region',
+        component: FinanceRegionComponent,
+        canActivate: [roleGuard],
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
+      },
+
+      {
+        path: 'finance-branch',
+        component: FinanceBranchComponent,
+        canActivate: [roleGuard],
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
+      },
+      {
+        path: 'finance-users',
+        component: FinanceUsersComponent,
+        canActivate: [roleGuard],
+        data: { role_name: ['Super Admin'], org_type: 'Self' }
+      },
+
       {
         path: 'home',
         component: HomeComponent,
@@ -255,7 +315,7 @@ export const routes: Routes = [
                 (m) => m.KgdDataComponent
               )
           },
-            {
+          {
             path: 'kgd-details',
             loadComponent: () =>
               import('./components/features/filtered-kgds/filtered-kgds.component').then(

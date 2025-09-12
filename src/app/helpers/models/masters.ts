@@ -9,6 +9,13 @@ export interface roles {
   created_at: string;
 }
 
+export interface departmentData {
+  id: number;
+  name: string;
+  created_at: string;
+}
+
+
 export interface ParentAsm {
   id: number;
   name: string;

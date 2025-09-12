@@ -1,0 +1,293 @@
+.cusom-container {
+
+  width: calc(1250px + 4px);
+}
+
+.body {
+  background: #DFEEEC;
+
+}
+
+.custom-wrapper {
+  margin-top: 4rem;
+}
+
+
+.p-button.p-button-success {
+  color: #ffffff;
+  background: #24AFA1A8 !important;
+  border: 1px solid #24AFA1A8 !important;
+}
+
+
+:host ::ng-deep {
+  .user-table-header {
+    background-color: #5bc0be;
+    color: white;
+  }
+
+  .p-datatable .p-datatable-thead>tr>th {
+    background-color: #5bc0be;
+    color: white;
+    font-weight: 500;
+    padding: 0.75rem;
+  }
+
+  .p-datatable .p-datatable-tbody>tr.selected-row {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+  }
+
+  .p-datatable .p-datatable-tbody>tr:hover {
+    background-color: #f0f8ff;
+  }
+
+  .p-inputtext {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    .action-buttons {
+      justify-content: flex-start;
+    }
+
+    .p-datatable-responsive-demo .p-datatable-tbody>tr>td .p-column-title {
+      display: inline-block;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+
+:host ::ng-deep .user-table-header th {
+  background-color: #24AFA1A8 !important;
+  color: white !important;
+}
+
+
+::ng-deep .p-dialog.register-popup {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.role-popup-container {
+  background: #fff;
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+}
+
+.popup-header {
+
+  padding-bottom: 1rem;
+}
+
+.popup-body h4 {
+  color: #158b7f;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.role-input.form-control {
+  width: 400px;
+  padding: 6px;
+  border-radius: 8px;
+  background-color: #F7F7F7;
+  border: 0px solid #ccc;
+}
+
+.btn.btn-success:hover {
+  background-color: #11776f;
+  border-color: #11776f;
+}
+
+.btn.btn-danger {
+  display: none;
+}
+
+.btn-close {
+
+  border: none;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+
+
+.swal2-confirm-custom {
+  background-color: #28a745 !important;
+  color: white !important;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.swal2-cancel-custom {
+  background-color: transparent !important;
+  color: #6c757d !important;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.custom-css-search {
+  border-radius: 25px;
+}
+
+.custom-btn {
+  height: 60px;
+  background-color: #19988B;
+  ;
+}
+
+
+
+
+/* GENERAL CONTAINER */
+
+
+
+
+
+.p-button.p-button-success {
+  color: #ffffff;
+  background: #24AFA1A8 !important;
+  border: 1px solid #24AFA1A8 !important;
+}
+
+.custom-btn {
+
+  height: 40px;
+  width: 18rem;
+  margin-top: 5px;
+ background-color: #19988B;  
+}
+
+
+::ng-deep .p-datatable .p-datatable-tbody>tr {
+  border-bottom: 1px dashed #ccc !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody>tr:last-child {
+  border-bottom: none !important;
+}
+
+
+.update-button {
+  width: rem;
+}
+
+
+::ng-deep .p-datatable td,
+::ng-deep .p-datatable th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+ ::ng-deep .swal2-confirm-custom{
+  background-color: teal !important; 
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+ ::ng-deep.swal2-cancel-custom {
+
+  background-color:  #e0e0e0 !important; ; 
+  color: #6c757d !important;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+
+
+
+/* ::ng-deep .p-datatable .wrap-question {
+  white-space: normal !important;
+  word-break: break-word;
+  max-width: 250px;
+}
+
+::ng-deep .p-datatable .wrap-answer {
+  white-space: normal !important;
+  word-break: break-word;
+  max-width: 250px;
+} */
+
+/* 
+::ng-deep .p-datatable td {
+  white-space: normal !important;
+  word-wrap: break-word;
+  vertical-align: top; 
+}
+
+::ng-deep .wrap-question,
+::ng-deep .wrap-answer {
+  max-width: 250px; 
+  white-space: normal !important;
+  word-break: break-word;
+} */
+
+
+/* ============ Strong, global override for p-table / p-datatable scrollable tables ============ */
+
+/* target header/body tables (legacy .p-datatable and newer .p-table names) */
+.faq-table .p-datatable-scrollable-header-table,
+.faq-table .p-datatable-scrollable-body-table,
+.faq-table .p-table-scrollable-header-table,
+.faq-table .p-table-scrollable-body-table,
+.faq-table table {
+  table-layout: fixed !important; /* lock columns so widths work */
+  width: 100% !important;
+}
+
+/* allow wrapping on header cells and body cells (high specificity + important) */
+.faq-table .p-datatable-thead > tr > th,
+.faq-table .p-table thead th,
+.faq-table .p-datatable-tbody > tr > td,
+.faq-table .p-table tbody td,
+.faq-table thead th,
+.faq-table tbody td {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important; /* breaks long tokens/URLs */
+  word-break: break-word !important;
+  vertical-align: top !important;      /* text starts at top, matches figma */
+  padding-top: 12px;                   /* tweak spacing to look like design */
+}
+
+/* If your table puts content inside inner elements, make sure they also wrap */
+.faq-table .p-cell-content,
+.faq-table td > div,
+.faq-table td > span {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+/* Column-specific width caps to control wrapping behaviour */
+.faq-table .wrap-question { max-width: 38ch;
+ padding-left: 1rem;     /* space before all lines */
+  text-indent: -1rem; } /* ~question column */
+.faq-table .wrap-answer   { max-width: 60ch;
+ padding-left: 1rem;     /* space before all lines */
+  text-indent:  1.7rem; } /* ~answer column (bigger) */
+
+/* final safety net for any remaining rules */
+.faq-table td, .faq-table th {
+  white-space: normal !important;
+}
