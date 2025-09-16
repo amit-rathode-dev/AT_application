@@ -1,4 +1,7 @@
 node_modules
+
+dist/
+out/
 chunk-*.js
 angular/cache/
 vite/deps/
