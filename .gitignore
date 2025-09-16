@@ -1,1 +1,9 @@
 node_modules
+
+
+node_modules
+chunk-*.js
+angular/cache/
+vite/deps/
+*.js.map
+*.js
