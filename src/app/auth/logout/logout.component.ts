@@ -39,6 +39,7 @@ export class LogoutComponent {
         localStorage.removeItem('org_id');
         localStorage.removeItem('user_role_id');
           localStorage.removeItem('org');
+                    localStorage.removeItem('org_type');
     
         // Swal.fire({
         //   title: 'Success!',

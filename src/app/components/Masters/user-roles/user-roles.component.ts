@@ -94,6 +94,8 @@ export class UserRolesComponent implements OnInit {
   }
 
   initForm(): void {
+     const passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,25}$/;
+
     this.registerForm = this.fb.group({
       title_id: ["", Validators.required],
       first_name: ["", Validators.required],
@@ -106,8 +108,8 @@ export class UserRolesComponent implements OnInit {
       reporting_id: [''],
       role_id: ["", Validators.required],
       user_id: [""],
-      password: ['', Validators.required],
-      software_type:['']
+      password: ['', [Validators.required, Validators.pattern(passwordPattern)]],
+      software_type:[''],
     })
   }
 

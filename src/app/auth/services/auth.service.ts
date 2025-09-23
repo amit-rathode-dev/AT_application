@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { EncryptionService } from '../../helpers/models/encryption.service';
+import { EncryptionService } from '../../services/encryption.service'; // ✅ import the service
 
 @Injectable({
   providedIn: 'root'
@@ -24,17 +24,26 @@ export class AuthService {
           if (userData.status == '200') {
 
             // ✅ Encrypt the token before storing
-            const encryptedToken = this.encryptionService.encrypt(userData.token);
-            localStorage.setItem('authToken', encryptedToken);
+            //     const encryptedToken = this.encryptionService.encrypt(userData.token);
+            // localStorage.setItem('authToken', userData.token);
 
-            // (the rest of your localStorage items can remain plain or also be encrypted)
+            // // (the rest of your localStorage items can remain plain or also be encrypted)
             localStorage.setItem('org_id', userData.userDetails.org_id);
             localStorage.setItem('user_id', userData.userDetails.user_id);
-            localStorage.setItem('org_name', userData.userDetails.org_name);
+            // localStorage.setItem('org_name', userData.userDetails.org_name);
             localStorage.setItem('user_role_id', userData.userDetails.user_role_id);
-            localStorage.setItem('role_name', userData.userDetails.role_name);
-            localStorage.setItem('userDetails', JSON.stringify(userData.userDetails));
-            localStorage.setItem('org_type', userData.userDetails.org_type);
+            // localStorage.setItem('role_name', userData.userDetails.role_name);
+            // localStorage.setItem('userDetails', JSON.stringify(userData.userDetails));
+            // localStorage.setItem('org_type', userData.userDetails.org_type);
+
+            this.encryptionService.saveItem('authToken', userData.token);
+            // this.encryptionService.saveItem('org_id', userData.userDetails.org_id);
+            // this.encryptionService.saveItem('user_id', userData.userDetails.user_id);
+            this.encryptionService.saveItem('org_name', userData.userDetails.org_name);
+            // this.encryptionService.saveItem('user_role_id', userData.userDetails.user_role_id);
+            this.encryptionService.saveItem('role_name', userData.userDetails.role_name);
+            this.encryptionService.saveItem('userDetails', userData.userDetails); // ✅ object handled
+            this.encryptionService.saveItem('org_type', userData.userDetails.org_type);
 
             return userData;
           } else {
@@ -42,5 +51,33 @@ export class AuthService {
           }
         })
       );
+  }
+
+  getToken(): string | null {
+    return this.encryptionService.getItem('authToken');
+  }
+
+  getOrgType(): string | null {
+    const orgType = this.encryptionService.getItem('org_type');
+    return orgType ? orgType.toLowerCase() : null;
+  }
+
+  getRoleName(): string | null {
+    const roleName = this.encryptionService.getItem('role_name');
+    return roleName ? roleName.toLowerCase() : null;
+  }
+
+  // getUserDetails(): any | null {
+  //   const userDetails = this.encryptionService.getItem('userDetails');
+  //   return userDetails ? JSON.parse(userDetails) : null;
+  // }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
+
+  logout(): void {
+    localStorage.clear();
+    this.router.navigate(['/login']);
   }
 }

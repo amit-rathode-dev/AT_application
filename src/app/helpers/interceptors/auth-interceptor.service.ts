@@ -34,9 +34,11 @@
 
 
 
-import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandlerFn, HttpEvent, HttpInterceptorFn } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandlerFn, HttpEvent, HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
+import { EncryptionService } from '../../services/encryption.service';
+import { ModealHandlerService } from '../../components/shared/services/modeal-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -47,20 +49,56 @@ export class AuthInterceptorService {
     req: HttpRequest<any>, 
     next: HttpHandlerFn
   ): Observable<HttpEvent<any>> => {
+
+    const encrypdecryppService = inject(EncryptionService)
+
     
     const token = localStorage.getItem('authToken');
+      const modalHandler = inject(ModealHandlerService);
 
-    if (token) {
-      const clonedReq = req.clone({
-        setHeaders: {
-          // 'auth-token': token  
-          'auth-token': token ? token : ''
-        }
-      });
-      return next(clonedReq);
-    }
+    const decryptedToken = token ? encrypdecryppService.getItem('authToken') :null
 
-    return next(req); 
+     
+
+    
+    console.log(token,'token in interceptor');
+    
+
+    // if (token) {
+    //   const clonedReq = req.clone({
+    //     setHeaders: {
+    //       // 'auth-token': token  
+    //       'auth-token': decryptedToken ? decryptedToken : ''
+    //     }
+    //   });
+    //   return next(clonedReq);
+    // }
+
+    // return next(req); 
+
+
+      const clonedReq = token
+      ? req.clone({
+          setHeaders: {
+            'auth-token': decryptedToken || ''
+          }
+        })
+      : req;
+
+
+    return next(clonedReq).pipe(
+      catchError((err: HttpErrorResponse) => {
+        let msg = err.error?.message || 'Something went wrong!';
+
+        if (err.status === 429) msg += ' Please try again after 5 minutes.';
+        else if (err.status === 401) msg = 'Unauthorized. Please login again.';
+
+        modalHandler.showError(msg);
+
+        return throwError(() => err);
+      })
+    );
+    
   }
 }
 

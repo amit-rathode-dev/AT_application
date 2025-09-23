@@ -47,108 +47,163 @@ export class LoginComponent {
 
   ngOnInit(): void {
 
-    this.orgName = localStorage.getItem('org_name');
-    this.orgType =localStorage.getItem('org_type');
-    this.organizationId = localStorage.getItem('org_id');
-    this.roleName = localStorage.getItem('role_name');
-    this.roleId = localStorage.getItem('user_role_id')
+    // this.orgName = localStorage.getItem('org_name');
+    // this.orgType =localStorage.getItem('org_type');
+    // this.organizationId = localStorage.getItem('org_id');
+    // this.roleName = localStorage.getItem('role_name');
+    // this.roleId = localStorage.getItem('user_role_id')
 
 
-    // this.showSuperAdminMenu = this.orgName === 'KOEL' && this.roleName === 'Super Admin';
-        this.showSuperAdminMenu = this.orgType === 'Self' && this.roleName === 'Super Admin';
+    // // this.showSuperAdminMenu = this.orgName === 'KOEL' && this.roleName === 'Super Admin';
+    //     this.showSuperAdminMenu = this.orgType === 'Self' && this.roleName === 'Super Admin';
 
-    // this.showMediaMenu = this.roleName !== 'super Admin' && this.orgName !== 'KOEL'; working
+    // // this.showMediaMenu = this.roleName !== 'super Admin' && this.orgName !== 'KOEL'; working
     
-    // this.showMediaMenu = this.roleName !== 'super Admin' && this.orgType !== 'KOEL';
-      this.showMediaMenu = this.roleName !== 'super Admin' && this.orgType !== 'Self';
+    // // this.showMediaMenu = this.roleName !== 'super Admin' && this.orgType !== 'KOEL';
+    //   this.showMediaMenu = this.roleName !== 'super Admin' && this.orgType !== 'Self';
+    // // this.showNonadminMenu =
+    // //   ['asm', 'rsm', 'sales'].includes((this.roleName || '').toLowerCase()) &&
+    // //   this.orgName === 'KOEL';
+
     // this.showNonadminMenu =
     //   ['asm', 'rsm', 'sales'].includes((this.roleName || '').toLowerCase()) &&
-    //   this.orgName === 'KOEL';
-
-    this.showNonadminMenu =
-      ['asm', 'rsm', 'sales'].includes((this.roleName || '').toLowerCase()) &&
-      this.orgType === 'Self';
+    //   this.orgType === 'Self';
 
     
-        // this.showContentData =  this.orgName === 'KOEL' && this.roleName === 'Content Manager';
-        this.showContentData =  this.orgType === 'Self' && this.roleName === 'Content Manager';
+    //     // this.showContentData =  this.orgName === 'KOEL' && this.roleName === 'Content Manager';
+    //     this.showContentData =  this.orgType === 'Self' && this.roleName === 'Content Manager';
 
-      console.log(this.showContentData, 'showContentData value' );
+    //   console.log(this.showContentData, 'showContentData value' );
       
 
 
     this.loginForm = this.fb.group({
       user_name: ['', [Validators.required]],
-      password: ['']
+      password: ['',Validators.required]
     });
   }
 
-  onSubmit(): void {
+  // onSubmit(): void {
 
-    console.log("onSubmit function is callled");
-
-
-    if (this.loginForm.valid) {
-
-      console.log(this.loginForm.value, 'here are the valuessss');
+  //   console.log("onSubmit function is callled");
 
 
-      this.authService.login(this.loginForm.value).subscribe({
-        next: (res: any) => {
-          if (res.status == 200) {
+  //   if (this.loginForm.valid) {
 
-            this.modalHandler.showToast(res['message']);
-            this.router.navigate(['/dashboard'])
-            const user = res.userDetails;
+  //     console.log(this.loginForm.value, 'here are the valuessss');
 
-            // const orgName = user?.org_name?.toLowerCase();
-                const orgType = user?.org_type?.toLowerCase();
-            const roleName = user?.role_name?.toLowerCase();
 
-        //  this.showContentData = orgName === 'KOEL' && roleName === 'Content Manager';
+  //     this.authService.login(this.loginForm.value).subscribe({
+  //       next: (res: any) => {
+  //         if (res.status == 200) {
 
-             this.showContentData = orgType === 'Self' && roleName === 'Content Manager';
+  //           this.modalHandler.showToast(res['message']);
+  //           this.router.navigate(['/dashboard'])
+  //           const user = res.userDetails;
 
-         console.log(this.showContentData, 'showContentData value' );
+         
+  //               const orgType = user?.org_type?.toLowerCase();
+  //           const roleName = user?.role_name?.toLowerCase();
+
+  //            this.showContentData = orgType === 'Self' && roleName === 'Content Manager';
+
+  //        console.log(this.showContentData, 'showContentData value' );
       
 
-            if ((orgType === 'self' || orgType === 'Self') && roleName === 'super admin') {
-              this.router.navigate(['/dashboard']);
-            } else if (
-              orgType === 'self' &&
-              ['asm','ASM','zsm', 'rsm','sales'].includes(roleName)
-            ) {
-              this.router.navigate(['/home']);
-            }
-            if ((orgType !== 'self' && orgType !== 'self') || (roleName === 'Owner' || roleName === 'SR1' || roleName === 'SR2' || roleName === 'Sales')) {
-              this.router.navigate(['/partner-Media']);
-            } else if ((orgType === 'Self' || orgType ==='self') && roleName === 'content manager') {
+  //           if ((orgType === 'self' || orgType === 'Self') && roleName === 'super admin') {
+  //             this.router.navigate(['/dashboard']);
+  //           } else if (
+  //             orgType === 'self' &&
+  //             ['asm','ASM','zsm', 'rsm','sales'].includes(roleName)
+  //           ) {
+  //             this.router.navigate(['/home']);
+  //           }
+  //           if ((orgType !== 'self' && orgType !== 'self') || (roleName === 'Owner' || roleName === 'SR1' || roleName === 'SR2' || roleName === 'Sales')) {
+  //             this.router.navigate(['/partner-Media']);
+  //           } else if ((orgType === 'Self' || orgType ==='self') && roleName === 'content manager') {
 
-              this.router.navigate(['/manager-approval']);
-            }
+  //             this.router.navigate(['/manager-approval']);
+  //           }
             
          
 
-            // this.modal.showToast(response.message || 'Login successful', 'success');
-          } else {
-            console.log(res['message'], 'error message');
+            
+  //         } else {
+  //           console.log(res['message'], 'error message');
 
-            this.modalHandler.showError(res.message || 'The username or email you provided are incorrect');
-          }
+  //           this.modalHandler.showError(res.message || 'The username or email you provided are incorrect');
+  //         }
 
 
-        },
-        error: (err) => {
-          console.log(err.message, '+++++')
-          this.modalHandler.showError(err.message || 'Login Isssue occured');
-          console.error('Login failed', err);
-        }
-      });
+  //       },
+  //       error: (err) => {
+  //         console.log(err.message, '+++++')
+  //         this.modalHandler.showError(err.message || 'Login Isssue occured');
+  //         console.error('Login failed', err);
+  //       }
+  //     });
 
-    } else {
-      console.log('Form is invalid');
-    }
+  //   } else {
+  //     console.log('Form is invalid');
+  //   }
+  // }
+
+onSubmit(): void {
+  
+  this.loginForm.markAllAsTouched();
+  if (this.loginForm.invalid) {
+    console.log('Form is invalid');
+    return;
   }
+
+  this.authService.login(this.loginForm.value).subscribe({
+    next: (res: any) => {
+      if (res && res.status == '200') {
+        console.log('Login success', res);
+
+        this.modalHandler.showToast(res.message);
+
+        const orgType = this.authService.getOrgType();
+        const roleName = this.authService.getRoleName();
+
+        console.log(roleName, 'roleName after login');
+               console.log(orgType, 'orgtype after login');
+        
+
+    
+        if (orgType == 'self' && roleName == 'super admin') {
+          this.router.navigate(['/dashboard']);
+        } else if (
+          orgType === 'self' &&
+          ['asm', 'zsm', 'rsm', 'sales'].includes(roleName || '')
+        ) {
+          this.router.navigate(['/home']);
+        } else if (
+          orgType !== 'self' ||
+          ['owner', 'sr1', 'sr2', 'sales'].includes(roleName || '')
+        ) {
+          this.router.navigate(['/partner-Media']);
+        } else if (orgType === 'self' && roleName === 'content manager') {
+          this.router.navigate(['/manager-approval']);
+        } else {
+          this.router.navigate(['/dashboard']); // default
+        }
+      }
+      //  else {
+      //   this.modalHandler.showError(
+      //     res?.message || 'The username or email you provided are incorrect'
+      //   );
+      // }
+    },
+    // error: (err) => {
+    //   console.error('Login error', err);
+    //   this.modalHandler.showError(err.message || 'Login issue occurred');
+    // }
+  });
+}
+
+
+
   onForgotPassword() {
     console.log('Forgot Password Clicked');
   }

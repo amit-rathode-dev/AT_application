@@ -54,7 +54,7 @@
             <td><span class="p-column-title">Phone</span>{{ user.phone_number }}</td>
             <td><span class="p-column-title">Organization</span>{{ user.org_name }}</td>
             <td><span class="p-column-title">Role</span>{{ user.role_name }}</td>
-                    <td><span class="p-column-title">Role</span>{{ user.reporting_to_name | noData }}</td>
+            <td><span class="p-column-title">Role</span>{{ user.reporting_to_name | noData }}</td>
 
             <td> <span [ngClass]="user.isactive ? 'text-success' : 'text-danger'">
                 {{ user.isactive ? 'Active' : 'Inactive' }}
@@ -124,7 +124,7 @@
           <div class="col-md-3">
             <label for="username" class="label-color">User Name <span class="error">*</span></label>
             <input type="text" class="form-control form-control-sm custom-placeholder custom-input"
-              placeholder="User Name" formControlName="user_name">
+              placeholder="User Name" formControlName="user_name" maxlength="25">
             <small class="text-danger"
               *ngIf="registerForm.get('user_name')?.invalid && registerForm.get('user_name')?.touched">
               User Name is required
@@ -176,10 +176,15 @@
           <div class="col-md-12">
             <label for="emailId" class="label-color">Password <span class="error">*</span></label>
             <input type="password" class="form-control form-control-sm custom-placeholder custom-input"
-              placeholder="Password" formControlName="password">
+              placeholder="Password" formControlName="password" maxlength="25">
             <small class="text-danger"
               *ngIf="!isEditing && registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched">
               Password is required
+            </small>
+            <small class="text-danger" *ngIf="registerForm.get('password')?.errors?.['pattern'] &&
+             (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)">
+              Password must be 8-25 characters long and contain at least one uppercase letter, one number, and one
+              special character.
             </small>
 
           </div>
@@ -188,7 +193,7 @@
         <div class="mb-3 px-3 organization-dropdown-wrapper">
           <label for="organization" class="label-color">organization <span class="error">*</span></label>
           <p-dropdown [options]="organizations" formControlName="org_id" optionLabel="name" optionValue="id"
-            [filter]="true" (onChange)="onOrganizationChange($event.value)" placeholder=" Select Organization"  [style]="{'width':'100%',
+            [filter]="true" (onChange)="onOrganizationChange($event.value)" placeholder=" Select Organization" [style]="{'width':'100%',
             'height':'30px'
           }" styleClass="w-100 my-local-dd custom-input">
           </p-dropdown>
@@ -244,15 +249,15 @@
 
         </div>
 
-         <div class="mb-0 px-3 pb-4">
+        <div class="mb-0 px-3 pb-4">
 
 
-          <label for="designation" class="label-color">Mobile Type<span class="error">*</span></label>
+          <label for="designation" class="label-color">Software Type<span class="error">*</span></label>
           <select class="form-select form-select-sm custom-input form-control" id="designation"
             formControlName="software_type">
-             <option value="" disabled hidden>Select Software Type</option>
-            <option value="iOS"  >iOS</option>
-            <option value="Android"  >Android</option>
+            <option value="" disabled hidden>Select Software Type</option>
+            <option value="iOS">iOS</option>
+            <option value="Android">Android</option>
           </select>
 
         </div>
