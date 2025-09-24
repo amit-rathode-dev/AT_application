@@ -36,7 +36,7 @@ export class AuthService {
             sessionStorage.setItem('userDetails', JSON.stringify(userData.userDetails));
             sessionStorage.setItem('org_type', userData.userDetails.org_type);
 
-            this.encryptionService.saveItem('authToken', userData.token);
+            // this.encryptionService.saveItem('authToken', userData.token);
             // this.encryptionService.saveItem('org_id', userData.userDetails.org_id);
             // this.encryptionService.saveItem('user_id', userData.userDetails.user_id);
             // this.encryptionService.saveItem('org_name', userData.userDetails.org_name);

@@ -90,38 +90,67 @@ import { ModealHandlerService } from '../../components/shared/services/modeal-ha
 
 //   }
 // }
+// -----
+
+// export class AuthInterceptorService {
+//   intercept: HttpInterceptorFn = (
+//     req: HttpRequest<any>,
+//     next: HttpHandlerFn
+//   ): Observable<HttpEvent<any>> => {
+
+//     const encrypdecryppService = inject(EncryptionService);
+//     const token = sessionStorage.getItem('authToken');
+//     const modalHandler = inject(ModealHandlerService);
+
+//     const decryptedToken = token ? encrypdecryppService.getItem('authToken') : null;
+
+//     const clonedReq = decryptedToken
+//       ? req.clone({
+//         setHeaders: {
+//           'auth-token': decryptedToken || ''
+//         }
+//       })
+//       : req;
 
 
+//     return next(clonedReq).pipe(
+//       catchError((err: HttpErrorResponse) => {
+//         const msg = err.error?.message || 'Something went wrong!';
+//         modalHandler.showError(msg);
+
+//         return throwError(() => new Error(msg));
+//       })
+//     );
+
+//   }
+// }
+
+
+
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthInterceptorService {
+
   intercept: HttpInterceptorFn = (
     req: HttpRequest<any>,
     next: HttpHandlerFn
   ): Observable<HttpEvent<any>> => {
 
-    const encrypdecryppService = inject(EncryptionService);
-    const token = sessionStorage.getItem('authToken');
     const modalHandler = inject(ModealHandlerService);
 
-    const decryptedToken = token ? encrypdecryppService.getItem('authToken') : null;
 
-    const clonedReq = decryptedToken
-      ? req.clone({
-        setHeaders: {
-          'auth-token': decryptedToken || ''
-        }
-      })
-      : req;
-
+    const clonedReq = req.clone({
+      withCredentials: true
+    });
 
     return next(clonedReq).pipe(
-      catchError((err: HttpErrorResponse) => {
+      catchError((err) => {
         const msg = err.error?.message || 'Something went wrong!';
         modalHandler.showError(msg);
 
         return throwError(() => new Error(msg));
       })
     );
-
   }
 }
-

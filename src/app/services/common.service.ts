@@ -13,7 +13,7 @@ export class CommonService {
 
 
 getAllData(url: string): Observable<any> {
-  return this.http.get<any>(`${environment.apiUrl + url}`,{ withCredentials: true } );
+  return this.http.get<any>(`${environment.apiUrl + url}`, );
 }
 
 getAllDataWithParams(url: string, params: any): Observable<any> {
