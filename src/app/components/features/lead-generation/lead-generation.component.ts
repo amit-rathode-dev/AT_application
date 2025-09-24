@@ -49,8 +49,8 @@ selectedGoemId: number = 0;
   org_Type:any=''
 Cities:any=[]
   constructor(private fb: FormBuilder,private commonServise:CommonService, private modalHandler: ModealHandlerService) {
-    this.asm_id=Number(localStorage.getItem('user_id'));
-      this.org_Type=(localStorage.getItem('org_type'));
+    this.asm_id=Number(sessionStorage.getItem('user_id'));
+      this.org_Type=(sessionStorage.getItem('org_type'));
     const today = new Date();
     today.setHours(0, 0, 0, 0); // resets time to 00:00
     this.minDate = today;

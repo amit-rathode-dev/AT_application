@@ -31,15 +31,15 @@ export class LogoutComponent {
     }).then(result => {
       if (result.isConfirmed) {
 
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user_id');
-        localStorage.removeItem('org_name');
-        localStorage.removeItem('role_name');
-        localStorage.removeItem('userDetails');
-        localStorage.removeItem('org_id');
-        localStorage.removeItem('user_role_id');
-          localStorage.removeItem('org');
-                    localStorage.removeItem('org_type');
+        sessionStorage.removeItem('authToken');
+        sessionStorage.removeItem('user_id');
+        sessionStorage.removeItem('org_name');
+        sessionStorage.removeItem('role_name');
+        sessionStorage.removeItem('userDetails');
+        sessionStorage.removeItem('org_id');
+        sessionStorage.removeItem('user_role_id');
+          sessionStorage.removeItem('org');
+                    sessionStorage.removeItem('org_type');
     
         // Swal.fire({
         //   title: 'Success!',

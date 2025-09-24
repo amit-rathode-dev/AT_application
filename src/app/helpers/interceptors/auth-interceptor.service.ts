@@ -9,24 +9,24 @@
 //   export class AuthInterceptorService {
 
 //     intercept: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
-//       const token = localStorage.getItem('authToken'); 
-  
+//       const token = sessionStorage.getItem('authToken'); 
+
 //       const username = 'Admin';
 //       const password = 'Admin';
 
 //       const basicAuthToken = btoa(`${username}:${password}`);
-//       // const token = localStorage.getItem('authToken')
-      
+//       // const token = sessionStorage.getItem('authToken')
+
 //       if (token) {
 //         const clonedReq = req.clone({
-          
+
 //           setHeaders: {
 //            'auth-token': token ? token : ''
 //           }
 //         });
 //         return next(clonedReq); 
 //       }
-  
+
 //       return next(req);  
 //     }
 // }
@@ -43,63 +43,85 @@ import { ModealHandlerService } from '../../components/shared/services/modeal-ha
 @Injectable({
   providedIn: 'root'
 })
-export class AuthInterceptorService {
+// export class AuthInterceptorService {
 
+//   intercept: HttpInterceptorFn = (
+//     req: HttpRequest<any>, 
+//     next: HttpHandlerFn
+//   ): Observable<HttpEvent<any>> => {
+
+//     const encrypdecryppService = inject(EncryptionService)
+
+
+//     const token = sessionStorage.getItem('authToken');
+//       const modalHandler = inject(ModealHandlerService);
+
+//     const decryptedToken = token ? encrypdecryppService.getItem('authToken') :null
+
+
+
+
+//     console.log(token,'token in interceptor');
+
+
+
+
+//       const clonedReq = decryptedToken
+//       ? req.clone({
+//           setHeaders: {
+//             'auth-token': decryptedToken || ''
+//           }
+//         })
+//       : req;
+
+
+//     return next(clonedReq).pipe(
+//       catchError((err: HttpErrorResponse) => {
+//         let msg = err.error?.message || 'Something went wrong!';
+
+//         if (err.status === 429) msg += ' Please try again after 5 minutes.';
+//         else if (err.status === 401) msg = 'Unauthorized. Please login again.';
+
+//         modalHandler.showError(msg);
+
+//         return throwError(() => err);
+//       })
+//     );
+
+//   }
+// }
+
+
+export class AuthInterceptorService {
   intercept: HttpInterceptorFn = (
-    req: HttpRequest<any>, 
+    req: HttpRequest<any>,
     next: HttpHandlerFn
   ): Observable<HttpEvent<any>> => {
 
-    const encrypdecryppService = inject(EncryptionService)
+    const encrypdecryppService = inject(EncryptionService);
+    const token = sessionStorage.getItem('authToken');
+    const modalHandler = inject(ModealHandlerService);
 
-    
-    const token = localStorage.getItem('authToken');
-      const modalHandler = inject(ModealHandlerService);
+    const decryptedToken = token ? encrypdecryppService.getItem('authToken') : null;
 
-    const decryptedToken = token ? encrypdecryppService.getItem('authToken') :null
-
-     
-
-    
-    console.log(token,'token in interceptor');
-    
-
-    // if (token) {
-    //   const clonedReq = req.clone({
-    //     setHeaders: {
-    //       // 'auth-token': token  
-    //       'auth-token': decryptedToken ? decryptedToken : ''
-    //     }
-    //   });
-    //   return next(clonedReq);
-    // }
-
-    // return next(req); 
-
-
-      const clonedReq = token
+    const clonedReq = decryptedToken
       ? req.clone({
-          setHeaders: {
-            'auth-token': decryptedToken || ''
-          }
-        })
+        setHeaders: {
+          'auth-token': decryptedToken || ''
+        }
+      })
       : req;
 
 
     return next(clonedReq).pipe(
       catchError((err: HttpErrorResponse) => {
-        let msg = err.error?.message || 'Something went wrong!';
-
-        if (err.status === 429) msg += ' Please try again after 5 minutes.';
-        else if (err.status === 401) msg = 'Unauthorized. Please login again.';
-
+        const msg = err.error?.message || 'Something went wrong!';
         modalHandler.showError(msg);
 
-        return throwError(() => err);
+        return throwError(() => new Error(msg));
       })
     );
-    
+
   }
 }
-
 

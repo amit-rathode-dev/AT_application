@@ -65,7 +65,7 @@ export class AppComponent {
   }
 
   private autoLogout() {
-    localStorage.clear();
+    sessionStorage.clear();
     this.router.navigate(['/auth']);
   }
 }

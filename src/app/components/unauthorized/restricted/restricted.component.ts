@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 export class RestrictedComponent {
 
   ngOnInit(): void {
-      const role=localStorage.getItem('role_name');
-       const org=localStorage.getItem('org_name');
+      const role=sessionStorage.getItem('role_name');
+       const org=sessionStorage.getItem('org_name');
   }
 }

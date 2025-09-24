@@ -24,7 +24,7 @@
 
 //   saveToken(token: string): void {
 //     const encrypted = this.encrypt(token);
-//     localStorage.setItem('auth_token', encrypted);
+//     sessionStorage.setItem('auth_token', encrypted);
 //   }
 
 //   saveItem(key: string, value: any): void {
@@ -37,12 +37,12 @@
 //     }
 
 //     const encrypted = this.encrypt(stringValue);
-//     localStorage.setItem(key, encrypted);
+//     sessionStorage.setItem(key, encrypted);
 //   }
 
 
 //   getItem<T = any>(key: string): T | null {
-//     const encrypted = localStorage.getItem(key);
+//     const encrypted = sessionStorage.getItem(key);
 //     if (encrypted) {
 //       const decrypted = this.decrypt(encrypted);
 //       try {
@@ -58,7 +58,7 @@
 
 
 //   getToken(): string | null {
-//     const encrypted = localStorage.getItem('auth_token');
+//     const encrypted = sessionStorage.getItem('auth_token');
 //     if (encrypted) {
 //       return this.decrypt(encrypted);
 //     }
@@ -67,7 +67,7 @@
 
 
 //   clearToken(): void {
-//     localStorage.removeItem('auth_token');
+//     sessionStorage.removeItem('auth_token');
 //   }
 
 // }
@@ -101,11 +101,11 @@ export class EncryptionService {
 
   saveToken(token: string): void {
     if (!token) return;
-    localStorage.setItem('auth_token', this.encrypt(token));
+    sessionStorage.setItem('auth_token', this.encrypt(token));
   }
 
   getToken(): string | null {
-    const encrypted = localStorage.getItem('auth_token')?.trim();
+    const encrypted = sessionStorage.getItem('auth_token')?.trim();
     if (!encrypted) return null;
 
     const decrypted = this.decrypt(encrypted);
@@ -119,13 +119,13 @@ export class EncryptionService {
     if (typeof value === 'string') stringValue = value;
     else stringValue = JSON.stringify(value);
 
-    localStorage.setItem(key, this.encrypt(stringValue));
+    sessionStorage.setItem(key, this.encrypt(stringValue));
   }
 
   getItem<T = any>(key: string): T | null {
     if (!key) return null;
 
-    const encrypted = localStorage.getItem(key)?.trim();
+    const encrypted = sessionStorage.getItem(key)?.trim();
     if (!encrypted) return null;
 
     const decrypted = this.decrypt(encrypted);
@@ -139,10 +139,10 @@ export class EncryptionService {
   }
 
   clearToken(): void {
-    localStorage.removeItem('auth_token');
+    sessionStorage.removeItem('auth_token');
   }
 
   clearItem(key: string): void {
-    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
   }
 }

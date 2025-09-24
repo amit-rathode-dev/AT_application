@@ -26,7 +26,7 @@ prodId:number=0
 
    org_id:number;
      constructor(private commonService:CommonService,private sanitizer: DomSanitizer,private route:ActivatedRoute) {
-       this.org_id =  Number(localStorage.getItem('org_id'));
+       this.org_id =  Number(sessionStorage.getItem('org_id'));
        // console.log(this.org_id)
        this.route.queryParams.subscribe(param=>{
         const product_Id = Number(param['prod_id']);

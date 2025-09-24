@@ -14,7 +14,7 @@ export class NotificationsComponent {
  notifications:any = [];
 
   constructor(private location: Location,private commonService:CommonService) {
-    this.org_id =  Number(localStorage.getItem('org_id'));
+    this.org_id =  Number(sessionStorage.getItem('org_id'));
 
   }
   ngOnInit(){

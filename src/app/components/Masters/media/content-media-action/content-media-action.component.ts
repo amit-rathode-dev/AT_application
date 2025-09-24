@@ -35,8 +35,8 @@ showPopup: boolean = false;
 
   ngOnInit() {
 
-    this.userRole = localStorage.getItem('role_name') || '';
-    this.organizationName = localStorage.getItem('org_name') || '';
+    this.userRole = sessionStorage.getItem('role_name') || '';
+    this.organizationName = sessionStorage.getItem('org_name') || '';
 
           
       const role = this.userRole.toLowerCase();
@@ -69,7 +69,7 @@ showPopup: boolean = false;
   onSubmit() {
 
     console.log('Submitted status:', this.selectedStatus);
-    const userId = localStorage.getItem('user_id') || '';
+    const userId = sessionStorage.getItem('user_id') || '';
     const payload = {
       id: this.mediaData?.id,
       special_user_status: this.selectedStatus,

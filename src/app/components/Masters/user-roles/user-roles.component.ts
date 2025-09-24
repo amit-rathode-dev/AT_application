@@ -44,7 +44,7 @@ interface User {
 @Component({
   selector: 'app-user-roles',
   standalone: true,
-  imports: [CommonModule, DropdownModule, TableModule,NoDataPipe, DialogModule, ReactiveFormsModule, ReusablemodulesComponent, PaginatorModule],
+  imports: [CommonModule, DropdownModule, TableModule, NoDataPipe, DialogModule, ReactiveFormsModule, ReusablemodulesComponent, PaginatorModule],
   providers: [MessageService],
   templateUrl: './user-roles.component.html',
   styleUrl: './user-roles.component.css'
@@ -94,7 +94,7 @@ export class UserRolesComponent implements OnInit {
   }
 
   initForm(): void {
-     const passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,25}$/;
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,25}$/;
 
     this.registerForm = this.fb.group({
       title_id: ["", Validators.required],
@@ -109,7 +109,7 @@ export class UserRolesComponent implements OnInit {
       role_id: ["", Validators.required],
       user_id: [""],
       password: ['', [Validators.required, Validators.pattern(passwordPattern)]],
-      software_type:[''],
+      software_type: [''],
     })
   }
 
@@ -321,41 +321,38 @@ export class UserRolesComponent implements OnInit {
     )
   }
 
-  addUser() {
+addUser() {
+  this.registerForm.markAllAsTouched();
 
-    this.registerForm.markAllAsTouched();
-
-    if (this.registerForm.invalid) {
-      return;
-    }
-
-
-    console.log('here called add user function');
-    if (this.registerForm.valid) {
-      this.commonService.createData('api/user/createUser', this.registerForm.value).subscribe({
-        next: (res: any) => {
-          if (res.status == 200 || res.status == 201) {
-            this.visible = false
-            this.modalHandler.showToast(res.message || 'User Created successfully', 'success');
-            console.log('response', res);
-            this.getUserData();
-          } else {
-            this.modalHandler.showError(res.message || 'User Added gone Wrong');
-          }
-        },
-        error(err) {
-          console.log(err);
-        },
-      }
-      )
-    } else {
-
-
-      console.log('form is not valid');
-
-    }
-
+  if (this.registerForm.invalid) {
+    return;
   }
+
+  if (this.registerForm.valid) {
+    
+    const payload = { ...this.registerForm.value };
+
+
+    if (!payload.user_id) {
+      delete payload.user_id;
+    }
+
+    this.commonService.createData('api/user/createUser', payload).subscribe({
+      next: (res: any) => {
+        if (res.status == 200 || res.status == 201) {
+          this.visible = false;
+          this.modalHandler.showToast(res.message || 'User Created successfully', 'success');
+          this.getUserData();
+        } else {
+          this.modalHandler.showError(res.message || 'User Added gone Wrong');
+        }
+      },
+      error(err) {
+        console.log(err);
+      }
+    });
+  }
+}
 
 
   onOrganizationChange(orgId: number) {

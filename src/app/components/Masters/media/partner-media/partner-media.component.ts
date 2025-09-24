@@ -220,8 +220,8 @@ export class PartnerMediaComponent {
   getMediaData() {
          console.log('here called api error');
     // const isOwn = true;
-    const org_id = localStorage.getItem('org_id') || '';
-    const user_id = localStorage.getItem('user_id') || '';
+    const org_id = sessionStorage.getItem('org_id') || '';
+    const user_id = sessionStorage.getItem('user_id') || '';
 
 
     this.commonService.postDataWithBody('api/product/getAllMediaForPartnerByUserIdAndOrg', { org_id, user_id }).subscribe({
@@ -285,8 +285,8 @@ export class PartnerMediaComponent {
       formData.append('attachment', file);
     }
 
-    const orgId = localStorage.getItem('org_id') || '';
-    const userId = localStorage.getItem('user_id') || '';
+    const orgId = sessionStorage.getItem('org_id') || '';
+    const userId = sessionStorage.getItem('user_id') || '';
 
     formData.append('org_id', orgId);
     formData.append('user_id', userId);

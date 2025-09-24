@@ -47,11 +47,11 @@ export class LoginComponent {
 
   ngOnInit(): void {
 
-    // this.orgName = localStorage.getItem('org_name');
-    // this.orgType =localStorage.getItem('org_type');
-    // this.organizationId = localStorage.getItem('org_id');
-    // this.roleName = localStorage.getItem('role_name');
-    // this.roleId = localStorage.getItem('user_role_id')
+    // this.orgName = sessionStorage.getItem('org_name');
+    // this.orgType =sessionStorage.getItem('org_type');
+    // this.organizationId = sessionStorage.getItem('org_id');
+    // this.roleName = sessionStorage.getItem('role_name');
+    // this.roleId = sessionStorage.getItem('user_role_id')
 
 
     // // this.showSuperAdminMenu = this.orgName === 'KOEL' && this.roleName === 'Super Admin';
@@ -163,8 +163,13 @@ onSubmit(): void {
 
         this.modalHandler.showToast(res.message);
 
-        const orgType = this.authService.getOrgType();
-        const roleName = this.authService.getRoleName();
+        // const orgType = this.authService.getOrgType();
+        // const roleName = this.authService.getRoleName();
+            const user = res.userDetails;
+             const orgType = user?.org_type?.toLowerCase();
+            const roleName = user?.role_name?.toLowerCase();
+
+
 
         console.log(roleName, 'roleName after login');
                console.log(orgType, 'orgtype after login');
@@ -189,16 +194,22 @@ onSubmit(): void {
           this.router.navigate(['/dashboard']); // default
         }
       }
+      else {
+        // ✅ Business failure case (handled here, not interceptor)
+        this.modalHandler.showError(
+          res?.message || 'The username or password you provided is incorrect.'
+        );
+      }
       //  else {
       //   this.modalHandler.showError(
       //     res?.message || 'The username or email you provided are incorrect'
       //   );
       // }
     },
-    // error: (err) => {
-    //   console.error('Login error', err);
-    //   this.modalHandler.showError(err.message || 'Login issue occurred');
-    // }
+    error: (err) => {
+      console.error('Login error', err);
+      this.modalHandler.showError(err.message || 'Login issue occurred');
+    }
   });
 }
 

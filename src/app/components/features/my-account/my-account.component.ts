@@ -12,7 +12,7 @@ export class MyAccountComponent {
  userId:any;
  userData:any=[]
   constructor(private commonServise:CommonService){
-this.userId=Number(localStorage.getItem('user_id'))
+this.userId=Number(sessionStorage.getItem('user_id'))
   }
   ngOnInit(){
     this.getuserData()

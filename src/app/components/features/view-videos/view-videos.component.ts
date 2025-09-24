@@ -25,7 +25,7 @@ export class ViewVideosComponent {
   org_id:number;
   prodId:any=0
   constructor(private sanitizer: DomSanitizer,private commonService:CommonService,private route:ActivatedRoute) {
-    this.org_id =  Number(localStorage.getItem('org_id'));
+    this.org_id =  Number(sessionStorage.getItem('org_id'));
     // console.log(this.org_id)
     this.route.queryParams.subscribe(param=>{
       const product_Id = Number(param['prod_id']);

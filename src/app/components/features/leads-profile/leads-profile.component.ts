@@ -91,15 +91,15 @@ export class LeadsProfileComponent {
   }
 
   ngOnInit() {
-    const storedUserDetails = localStorage.getItem('userDetails');
+    const storedUserDetails = sessionStorage.getItem('userDetails');
     if (storedUserDetails) {
       this.userDetails = JSON.parse(storedUserDetails); 
     } else {
       this.userDetails = {};
     }
-    this.role = localStorage.getItem('role_name') ?? '';
-    this.role_id = localStorage.getItem('user_role_id') ?? '';
-    this.user_id = localStorage.getItem('user_id') ?? '';
+    this.role = sessionStorage.getItem('role_name') ?? '';
+    this.role_id = sessionStorage.getItem('user_role_id') ?? '';
+    this.user_id = sessionStorage.getItem('user_id') ?? '';
 
 
     console.log(this.userDetails, 'here are userdetails from l0ocalstorage');

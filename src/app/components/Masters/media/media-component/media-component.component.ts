@@ -426,8 +426,8 @@ export class MediaComponentComponent {
   //   }
 
 
-  //   const orgId = localStorage.getItem('org_id') || '';
-  //   const userId = localStorage.getItem('user_id') || '';
+  //   const orgId = sessionStorage.getItem('org_id') || '';
+  //   const userId = sessionStorage.getItem('user_id') || '';
 
   //   formData.append('org_id', orgId);
   //   formData.append('user_id', userId);
@@ -764,8 +764,8 @@ export class MediaComponentComponent {
     }
 
 
-    formData.append('org_id', localStorage.getItem('org_id') || '');
-    formData.append('user_id', localStorage.getItem('user_id') || '');
+    formData.append('org_id', sessionStorage.getItem('org_id') || '');
+    formData.append('user_id', sessionStorage.getItem('user_id') || '');
 
 
     this.commonService

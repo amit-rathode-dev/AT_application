@@ -34,8 +34,8 @@ export class ViewMediComponent {
 
   ngOnInit() {
 
-    this.userRole = localStorage.getItem('role_name') || '';
-    this.organizationName = localStorage.getItem('org_name') || '';
+    this.userRole = sessionStorage.getItem('role_name') || '';
+    this.organizationName = sessionStorage.getItem('org_name') || '';
 
     this.mediaService.videoList$.subscribe(list => {
       this.mediaData = list;
@@ -60,7 +60,7 @@ export class ViewMediComponent {
   onSubmit() {
 
     console.log('Submitted status:', this.selectedStatus);
-    const userId = localStorage.getItem('user_id') || '';
+    const userId = sessionStorage.getItem('user_id') || '';
     const payload = {
       id: this.mediaData?.id,
       admin_status: this.selectedStatus,

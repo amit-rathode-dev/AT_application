@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { EncryptionService } from '../../services/encryption.service'; // ✅ import the service
 
@@ -18,32 +18,32 @@ export class AuthService {
 
   login(data: any): Observable<any[]> {
     return this.http
-      .post<any[]>(`${environment.apiUrl}userTokenLess/loginUser`, data)
+      .post<any[]>(`${environment.apiUrl}userTokenLess/loginUser`, data )
       .pipe(
         map((userData: any) => {
           if (userData.status == '200') {
 
             // ✅ Encrypt the token before storing
             //     const encryptedToken = this.encryptionService.encrypt(userData.token);
-            // localStorage.setItem('authToken', userData.token);
+            // sessionStorage.setItem('authToken', userData.token);
 
-            // // (the rest of your localStorage items can remain plain or also be encrypted)
-            localStorage.setItem('org_id', userData.userDetails.org_id);
-            localStorage.setItem('user_id', userData.userDetails.user_id);
-            // localStorage.setItem('org_name', userData.userDetails.org_name);
-            localStorage.setItem('user_role_id', userData.userDetails.user_role_id);
-            // localStorage.setItem('role_name', userData.userDetails.role_name);
-            // localStorage.setItem('userDetails', JSON.stringify(userData.userDetails));
-            // localStorage.setItem('org_type', userData.userDetails.org_type);
+            // // (the rest of your sessionStorage items can remain plain or also be encrypted)
+            sessionStorage.setItem('org_id', userData.userDetails.org_id);
+            sessionStorage.setItem('user_id', userData.userDetails.user_id);
+            sessionStorage.setItem('org_name', userData.userDetails.org_name);
+            sessionStorage.setItem('user_role_id', userData.userDetails.user_role_id);
+            sessionStorage.setItem('role_name', userData.userDetails.role_name);
+            sessionStorage.setItem('userDetails', JSON.stringify(userData.userDetails));
+            sessionStorage.setItem('org_type', userData.userDetails.org_type);
 
             this.encryptionService.saveItem('authToken', userData.token);
             // this.encryptionService.saveItem('org_id', userData.userDetails.org_id);
             // this.encryptionService.saveItem('user_id', userData.userDetails.user_id);
-            this.encryptionService.saveItem('org_name', userData.userDetails.org_name);
+            // this.encryptionService.saveItem('org_name', userData.userDetails.org_name);
             // this.encryptionService.saveItem('user_role_id', userData.userDetails.user_role_id);
-            this.encryptionService.saveItem('role_name', userData.userDetails.role_name);
-            this.encryptionService.saveItem('userDetails', userData.userDetails); // ✅ object handled
-            this.encryptionService.saveItem('org_type', userData.userDetails.org_type);
+            // this.encryptionService.saveItem('role_name', userData.userDetails.role_name);
+            // this.encryptionService.saveItem('userDetails', userData.userDetails); // ✅ object handled
+            // this.encryptionService.saveItem('org_type', userData.userDetails.org_type);
 
             return userData;
           } else {
@@ -52,7 +52,23 @@ export class AuthService {
         })
       );
   }
-
+// login(data: any): Observable<any> {
+//   return this.http
+//     .post<any>(`${environment.apiUrl}userTokenLess/loginUser`, data, { withCredentials: true })
+//     .pipe(
+//       map((userData: any) => {
+//         if (userData.status === 200 || userData.status === '200') { // Handle both numeric and string status
+//           return userData;
+//         } else {
+//           throw new Error(userData.message || 'Login failed');
+//         }
+//       }),
+//       catchError(error => {
+//         console.error('Login error:', error);
+//         throw error; // Propagate error for component handling
+//       })
+//     );
+// }
   getToken(): string | null {
     return this.encryptionService.getItem('authToken');
   }
@@ -77,7 +93,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.clear();
+    sessionStorage.clear();
     this.router.navigate(['/login']);
   }
 }
