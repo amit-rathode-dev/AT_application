@@ -18,7 +18,7 @@ export class AuthService {
 
   login(data: any): Observable<any[]> {
     return this.http
-      .post<any[]>(`${environment.apiUrl}userTokenLess/loginUser`, data )
+      .post<any[]>(`${environment.apiUrl}api/serTokenLess/loginUser`, data )
       .pipe(
         map((userData: any) => {
           if (userData.status == '200') {
