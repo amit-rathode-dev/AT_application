@@ -11,5 +11,11 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config'; // Updated appConfig ko import karen
 import { AppComponent } from './app/app.component';
 
+if (window.top && window.top !== window.self) {
+  window.top.location.href = window.self.location.href;
+}
+
+
 bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));
+

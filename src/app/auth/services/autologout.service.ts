@@ -77,7 +77,7 @@ private showWarning() {
 }
 
   private logout() {
-    this.auth.logout(); // clear token, redirect to login
+    this.auth.logout(); 
   }
 
   
