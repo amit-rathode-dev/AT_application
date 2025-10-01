@@ -163,11 +163,11 @@ onSubmit(): void {
 
         this.modalHandler.showToast(res.message);
 
-        // const orgType = this.authService.getOrgType();
-        // const roleName = this.authService.getRoleName();
+        const orgType = this.authService.getOrgType();
+        const roleName = this.authService.getRoleName();
             const user = res.userDetails;
-             const orgType = user?.org_type?.toLowerCase();
-            const roleName = user?.role_name?.toLowerCase();
+            //  const orgType = user?.org_type?.toLowerCase();
+            // const roleName = user?.role_name?.toLowerCase();
 
 
 

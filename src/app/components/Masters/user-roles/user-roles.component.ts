@@ -396,6 +396,7 @@ addUser() {
 
     const org_id: number = this.registerForm.get('org_id')?.value || 0;
     const user_role_id: number = Number(this.registerForm.get('role_id')?.value) || 0;
+    // const zone_name: string = String(this.registerForm.get('zone')?.value) || '';
 
     this.commonService.postDataWithBody('api/user/getUserForReportingTo', { org_id, user_role_id }).subscribe({
       next: (res: any) => {

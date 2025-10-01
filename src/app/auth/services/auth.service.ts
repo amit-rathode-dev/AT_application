@@ -17,33 +17,55 @@ export class AuthService {
   ) { }
 
   login(data: any): Observable<any[]> {
+   // Encrypt only sensitive fields
+  const payload = {
+    user_name: this.encryptionService.encrypt(data.user_name),
+    password: this.encryptionService.encrypt(data.password)
+  };
+
     return this.http
-      .post<any[]>(`${environment.apiUrl}api/serTokenLess/loginUser`, data )
+      .post<any[]>(`${environment.apiUrl}api/userTokenLess/loginUser`,  payload )
       .pipe(
         map((userData: any) => {
+    // return this.http
+    //   .post<any[]>(`${environment.apiUrl}api/userTokenLess/loginUser`, data)
+    //   .pipe(
+    //     map((userData: any) => {
           if (userData.status == '200') {
+
+            const detailsToStore = {
+              org_id: userData.userDetails?.org_id,
+              org_type: userData.userDetails?.org_type,
+              role_name: userData.userDetails?.role_name,
+              user_role_id: userData.userDetails?.user_role_id,
+              org_name: userData.userDetails?.org_name,
+              isactive: userData.userDetails?.isactive,
+              user_id: userData.userDetails?.user_id
+            };
 
             // ✅ Encrypt the token before storing
             //     const encryptedToken = this.encryptionService.encrypt(userData.token);
             // sessionStorage.setItem('authToken', userData.token);
 
             // // (the rest of your sessionStorage items can remain plain or also be encrypted)
-            sessionStorage.setItem('org_id', userData.userDetails.org_id);
-            sessionStorage.setItem('user_id', userData.userDetails.user_id);
-            sessionStorage.setItem('org_name', userData.userDetails.org_name);
-            sessionStorage.setItem('user_role_id', userData.userDetails.user_role_id);
-            sessionStorage.setItem('role_name', userData.userDetails.role_name);
-            sessionStorage.setItem('userDetails', JSON.stringify(userData.userDetails));
-            sessionStorage.setItem('org_type', userData.userDetails.org_type);
+            // sessionStorage.setItem('org_id', userData.userDetails.org_id);
+            // sessionStorage.setItem('user_id', userData.userDetails.user_id);
+            // sessionStorage.setItem('org_name', userData.userDetails.org_name);
+            // sessionStorage.setItem('user_role_id', userData.userDetails.user_role_id);
+            // sessionStorage.setItem('role_name', userData.userDetails.role_name);
+            // // sessionStorage.setItem('userDetails', JSON.stringify(userData.userDetails));
+            // sessionStorage.setItem('org_type', userData.userDetails.org_type);
 
-            // this.encryptionService.saveItem('authToken', userData.token);
-            // this.encryptionService.saveItem('org_id', userData.userDetails.org_id);
-            // this.encryptionService.saveItem('user_id', userData.userDetails.user_id);
-            // this.encryptionService.saveItem('org_name', userData.userDetails.org_name);
-            // this.encryptionService.saveItem('user_role_id', userData.userDetails.user_role_id);
-            // this.encryptionService.saveItem('role_name', userData.userDetails.role_name);
-            // this.encryptionService.saveItem('userDetails', userData.userDetails); // ✅ object handled
-            // this.encryptionService.saveItem('org_type', userData.userDetails.org_type);
+            // sessionStorage.setItem('userDetails', JSON.stringify(detailsToStore));
+
+            this.encryptionService.saveItem('authToken', userData.token);
+            this.encryptionService.saveItem('org_id', userData.userDetails.org_id);
+            this.encryptionService.saveItem('user_id', userData.userDetails.user_id);
+            this.encryptionService.saveItem('org_name', userData.userDetails.org_name);
+            this.encryptionService.saveItem('user_role_id', userData.userDetails.user_role_id);
+            this.encryptionService.saveItem('role_name', userData.userDetails.role_name);
+            this.encryptionService.saveItem('org_type', userData.userDetails.org_type);
+            this.encryptionService.saveItem('userDetails',JSON.stringify(detailsToStore)); // ✅ object handled
 
             return userData;
           } else {
@@ -52,23 +74,23 @@ export class AuthService {
         })
       );
   }
-// login(data: any): Observable<any> {
-//   return this.http
-//     .post<any>(`${environment.apiUrl}userTokenLess/loginUser`, data, { withCredentials: true })
-//     .pipe(
-//       map((userData: any) => {
-//         if (userData.status === 200 || userData.status === '200') { // Handle both numeric and string status
-//           return userData;
-//         } else {
-//           throw new Error(userData.message || 'Login failed');
-//         }
-//       }),
-//       catchError(error => {
-//         console.error('Login error:', error);
-//         throw error; // Propagate error for component handling
-//       })
-//     );
-// }
+  // login(data: any): Observable<any> {
+  //   return this.http
+  //     .post<any>(`${environment.apiUrl}userTokenLess/loginUser`, data, { withCredentials: true })
+  //     .pipe(
+  //       map((userData: any) => {
+  //         if (userData.status === 200 || userData.status === '200') { // Handle both numeric and string status
+  //           return userData;
+  //         } else {
+  //           throw new Error(userData.message || 'Login failed');
+  //         }
+  //       }),
+  //       catchError(error => {
+  //         console.error('Login error:', error);
+  //         throw error; // Propagate error for component handling
+  //       })
+  //     );
+  // }
   getToken(): string | null {
     return this.encryptionService.getItem('authToken');
   }

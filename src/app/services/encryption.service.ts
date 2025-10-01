@@ -79,7 +79,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class EncryptionService {
 
-  private readonly SECRET = 'your-secret-key';
+  private readonly SECRET = 'tshjbsakjbfsayurgwjffnsjbfhasbgfyeb56327rry3rhwajhfsaafhs';
 
   constructor() {}
 

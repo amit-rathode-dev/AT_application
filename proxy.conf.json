@@ -1,0 +1,9 @@
+
+{
+  "/banner": {
+    "target": "https://itsm.augtrans.com:7055",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

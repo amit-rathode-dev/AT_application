@@ -64,15 +64,18 @@
           "configurations": {
             "production": {
               "buildTarget": "lead-management:build:production"
+            
             },
             "development": {
-              "buildTarget": "lead-management:build:development"
+              "buildTarget": "lead-management:build:development",
+               "proxyConfig": "proxy.conf.json" 
             },
             "ssl": {
               "buildTarget": "lead-management:build:development",
               "ssl": true,
               "sslKey": "D:/VAS/vapt_At_sales_application/AT_application/ssl/lead-management.key",
-              "sslCert": "D:/VAS/vapt_At_sales_application/AT_application/ssl/lead-management.cert"
+              "sslCert": "D:/VAS/vapt_At_sales_application/AT_application/ssl/lead-management.cert",
+                "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

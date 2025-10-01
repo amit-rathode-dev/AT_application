@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "start:ssl": "node --no-warnings ./node_modules/@angular/cli/bin/ng serve --configuration=ssl --port=4500"
   },
   "private": true,
   "dependencies": {
